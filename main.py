@@ -6,35 +6,15 @@ We consider that all elements are spherical
 """
 
 # Imports
-import math
-import random
 ## Representation
 #import matplotlib.pyplot as plt
 import pyxel
 # Local
+from maths_local import *
 import elems
 import ui
 
-# Types
-## type vect = tuple[float, float]
 
-class Vec2D:
-    """
-    Define a simple 2D vector with methods
-    """
-    def __init__(self, x: float, y: float) -> None:
-        self.x: float = x
-        self.y: float = y
-        
-    def magnitude(self) -> float:
-        return math.sqrt(self.x ** 2 + self.y ** 2)
-
-    def normalize(self) -> None:
-        magnitude: float = self.magnitude()
-        self.x = self.x / magnitude
-        self.y = self.y/ magnitude
-        
-        assert(self.magnitude != 1)
     
         
         
@@ -43,7 +23,7 @@ class Vec2D:
 # GUI
 class Board:
     def __init__(
-        self, system: dict[str, tuple], width: int = 128, height: int = 128, title: str = "Simulation", fps: int = 30, 
+        self, system: dict[str, ui.InputElem], width: int = 128, height: int = 128, title: str = "Simulation", fps: int = 30, 
         edges: str = "none", mass_softener: float = 1000.0,
         gravitational_constant: float = (10**-11), exponent_softener: float = 0.0, bounce_factor: float = 1.0,
     ) -> None:
@@ -87,11 +67,11 @@ class Board:
         for element_name, element_stats in system.items():
             self.system[element_name] = elems.Elem(
                 self, 
-                mass=element_stats[0],
-                position=element_stats[1],
-                name=element_stats[2],
-                size=element_stats[3],
-                force_vector=element_stats[4]
+                mass = element_stats.mass,
+                position = element_stats.position,
+                name = element_stats.name,
+                size = element_stats.size,
+                velocity = element_stats.velocity
             )
         
         
@@ -106,9 +86,9 @@ class Board:
         self.elemsX: list[float] = []
         self.elemsY: list[float] = []
         # print("## Initialization of the elements: ")
-        for name, elem in self.system.items():
-            self.elemsX.append(elem.position[0])
-            self.elemsY.append(elem.position[1])
+        for _, elem in self.system.items():
+            self.elemsX.append(elem.position.x)
+            self.elemsY.append(elem.position.y)
             # print("-", elem)
 
         # Init simulation screen
@@ -190,15 +170,15 @@ class Board:
         # Calc interactions
         ## Check for each element, all elements.
         for elemMain in self.system.values():
-            elemMain.force_vector = (0, 0)
+            elemMain.force_vector = Vector2D(0, 0)
             # print(elemMain.name, ":", elemMain.forceVector[0], elemMain.forceVector[1], end=" - ")
             for elemTarget in self.system.values():
                 if elemMain != elemTarget:
-                    target_force: tuple[float, float] = elemMain.gravitational_force_from(elemTarget)
-                    elemMain.force_vector = (
-                        elemMain.force_vector[0] + target_force[0],
-                        elemMain.force_vector[1] + target_force[1]
-                    )
+                    target_force: Vector2D = elemMain.gravitational_force_from(elemTarget.position, elemTarget.size, elemTarget.mass)
+                    
+                    elemMain.force_vector.x += target_force.x
+                    elemMain.force_vector.y += target_force.y
+                
         # print()
         # Move
         for elem in self.system.values():
@@ -211,7 +191,7 @@ class Board:
         # Clear all
         pyxel.cls(0)
         # All elems
-        for name, elem in self.system.items():
+        for _, elem in self.system.items():
             elem.draw()
 
         # Text
@@ -220,11 +200,6 @@ class Board:
 
 
 
-def mean(vect: list[float]) -> float:
-    """
-    Compute vector mean
-    """
-    return math.sqrt((vect[0]**2) + (vect[1]**2))
 
 
 # Run
