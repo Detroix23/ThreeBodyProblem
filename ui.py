@@ -35,6 +35,18 @@ def listing_input(text: str, allowed: str = 'int') -> str:
 
     return input_result
 
+
+class Layers:
+    """
+    Define what things and layers to show. 
+    """
+    def __init__(self, elems: bool, grid: bool, hud: bool) -> None:
+        self.elems: bool = elems
+        self.grid: bool = grid
+        self.hud: bool = hud
+        
+
+
 def app_cmd() -> None:
     """
     Basic starting sequence for the user, in CMD.
@@ -97,7 +109,7 @@ def app_cmd() -> None:
         else:
             print("# Mode selected: default (use default value)")
 
-        system_input["Plan1"] = InputElem(10500, Vector2D(445, 560), "Plan1", 15, Vector2D(10, 0))
+        system_input["Plan1"] = InputElem(10500, Vector2D(445, 560), "Plan1", 15, Vector2D(0, 0))
         system_input["Plan2"] = InputElem(400, Vector2D(580, 450), "Plan2", 4, Vector2D(0, 10))
         system_input["Plan3"] = InputElem(300, Vector2D(400, 400), "Plan3", 3, Vector2D(0, 10))
         system_input["Plan4"] = InputElem(300, Vector2D(300, 350), "Plan4", 3, Vector2D(0, 10))
@@ -112,9 +124,11 @@ def app_cmd() -> None:
 
     # Completion
     SIM: main.Board = main.Board(
-        width=1000, height=1000, title="Simulation", fps=30, edges="none", 
-        system=system_input, mass_softener=1, gravitational_constant=(6.67*(10**1)),
-        exponent_softener=-0.0, bounce_factor=1.0
+        system=system_input, width=1000, height=1000, title="Simulation", fps=25,
+        gravitational_constant=(6.67*(10**2)),
+        edges="none", bounce_factor=1.0,
+        mass_softener=1, exponent_softener=-0.0,
+        draw_velocity=True, draw_force=True, draw_text=True
     )
     print(f"! Used SIM={SIM}")
 

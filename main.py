@@ -23,9 +23,10 @@ import ui
 # GUI
 class Board:
     def __init__(
-        self, system: dict[str, ui.InputElem], width: int = 128, height: int = 128, title: str = "Simulation", fps: int = 30, 
-        edges: str = "none", mass_softener: float = 1000.0,
-        gravitational_constant: float = (10**-11), exponent_softener: float = 0.0, bounce_factor: float = 1.0,
+        self, system: dict[str, ui.InputElem], width: int, height: int, title: str, fps: int, 
+        gravitational_constant: float, edges: str, bounce_factor: float,  
+        mass_softener: float, exponent_softener: float, 
+        draw_velocity: bool = True, draw_force: bool = True, draw_text: bool = True
     ) -> None:
         """
         Initialize the game.
@@ -51,7 +52,13 @@ class Board:
         self.zoom: float = 1
         self.time_speed: float = 0
         self.time_speed_previous: float = 1
+        self.frame_per_frame: int = 1
 
+        # UI
+        self.draw_velocity: bool = draw_velocity
+        self.draw_force: bool = draw_force
+        self.draw_text: bool = draw_text
+        
         # Text
         self.texts_main: list[str] = [
             ""
@@ -112,16 +119,22 @@ class Board:
 
         elif pyxel.btn(pyxel.KEY_1):
             self.time_speed = 0.1
+            self.frame_per_frame = 1
         elif pyxel.btn(pyxel.KEY_2):
             self.time_speed = 0.5
+            self.frame_per_frame = 2
         elif pyxel.btn(pyxel.KEY_3):
             self.time_speed = 1
+            self.frame_per_frame = 3
         elif pyxel.btn(pyxel.KEY_4):
             self.time_speed = 2
+            self.frame_per_frame = 4
         elif pyxel.btn(pyxel.KEY_5):
             self.time_speed = 4
+            self.frame_per_frame = 5
         elif pyxel.btn(pyxel.KEY_6):
             self.time_speed = 10
+            self.frame_per_frame = 10
 
         # Zoom
         if pyxel.btn(pyxel.KEY_PAGEUP) and self.zoom > 0.0:
@@ -164,25 +177,25 @@ class Board:
         if self.first_update:
             print("- Game running")
             self.first_update = not self.first_update
-        # Inputs
-        self.user_inputs()
-
-        # Calc interactions
-        ## Check for each element, all elements.
-        for elemMain in self.system.values():
-            elemMain.force_vector = Vector2D(0, 0)
-            # print(elemMain.name, ":", elemMain.forceVector[0], elemMain.forceVector[1], end=" - ")
-            for elemTarget in self.system.values():
-                if elemMain != elemTarget:
-                    target_force: Vector2D = elemMain.gravitational_force_from(elemTarget.position, elemTarget.size, elemTarget.mass)
+        if pyxel.frame_count % self.frame_per_frame == 0:      
+            # Inputs
+            self.user_inputs()
+            # Calc interactions
+            ## Check for each element, all elements.
+            for elemMain in self.system.values():
+                elemMain.force_vector = Vector2D(0, 0)
+                # print(elemMain.name, ":", elemMain.forceVector[0], elemMain.forceVector[1], end=" - ")
+                for elemTarget in self.system.values():
+                    if elemMain != elemTarget:
+                        target_force: Vector2D = elemMain.gravitational_force_from(elemTarget.position, elemTarget.size, elemTarget.mass)
+                        
+                        elemMain.force_vector.x += target_force.x
+                        elemMain.force_vector.y += target_force.y
                     
-                    elemMain.force_vector.x += target_force.x
-                    elemMain.force_vector.y += target_force.y
-                
-        # print()
-        # Move
-        for elem in self.system.values():
-            elem.move()
+            # print()
+            # Move
+            for elem in self.system.values():
+                elem.move()
 
     def draw(self) -> None:
         """
@@ -193,9 +206,14 @@ class Board:
         # All elems
         for _, elem in self.system.items():
             elem.draw()
-
+            if self.draw_force:
+                elem.force_vector.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=3) 
+            if self.draw_velocity:
+                elem.velocity.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=5)
+            
         # Text
-        self.text_main()
+        if self.draw_text:
+            self.text_main()
 
 
 

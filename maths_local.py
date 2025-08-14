@@ -4,6 +4,7 @@ Maths functions.
 """
 
 import math
+import pyxel
 
 class Vector2D:
     """
@@ -13,6 +14,9 @@ class Vector2D:
         self.x: float = x
         self.y: float = y
     
+    def __str__(self) -> str:
+        return f"Vector2D: x = {self.x}, y = {self.y}"
+        
     @property
     def magnitude(self) -> float:
         return math.sqrt(self.x ** 2 + self.y ** 2)
@@ -21,8 +25,7 @@ class Vector2D:
         magnitude: float = self.magnitude
         self.x = self.x / magnitude
         self.y = self.y / magnitude
-        
-        assert(self.magnitude != 1)
+    
         
     def to_list(self) -> list[float]:
         return [self.x, self.y]
@@ -33,3 +36,9 @@ class Vector2D:
     def to_tuple(self) -> tuple[float, float]:
         return (self.x, self.y)
 
+    
+    def draw_on(self, x: float, y: float, size: float, color: int) -> None:
+        if not (math.isclose(self.x, 0) and math.isclose(self.y, 0)): 
+            pyxel.line(x, y, x + self.x * size, y + self.y * size, col=color)
+
+    

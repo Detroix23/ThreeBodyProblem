@@ -19,7 +19,7 @@ class Elem:
     
     def __init__(
         self, BOARD: main.Board, mass: int, position: Vector2D, velocity: Vector2D,
-        color: int = 5, size: int = 2, name: str = ""
+        color: int = 5, size: int = 2, name: str = "",
     ) -> None:
         """
         Creation of the elem, with "mass, vInit, xStart, yStart, color=5, size=2".
@@ -45,16 +45,15 @@ class Elem:
         """
         Compute distance between this elem and the target elem
         """
-        return math.sqrt((self.position.x - target_position.x) ** 2 + (self.position.y - target_position.y) ** 2)
+        return math.sqrt((target_position.x - self.position.x) ** 2 + (target_position.y - self.position.y) ** 2)
     
     def gravitational_force_from(self, target_position: Vector2D, target_size: int, target_mass: float) -> Vector2D:
         """
         Find the gravitational force vector
         """
         # Direction
-        vector_distance: tuple[float, float] = (self.position.x - target_position.x, self.position.y - target_position.y)
-        theta = math.atan2(vector_distance[1], vector_distance[0])          ### Radians
-        ## theta_deg = math.degrees(theta)
+        vector_distance: Vector2D = Vector2D(x = target_position.x - self.position.x, y = target_position.y - self.position.y)
+        vector_distance.normalize()
         # Distance (limited)
         distance: float = self.distance_to(target_position)
         if distance < ((self.size + 1) / 2 + (target_size + 1) / 2):
@@ -62,8 +61,7 @@ class Elem:
         # F force value
         force: float = (self.BOARD.gravitational_constant * target_mass) / (distance ** (2 + self.BOARD.exponent_softener))
         # Force vector
-        ### Rectification because we go anti-trigonometric way, clockwise.
-        vector_force: Vector2D = Vector2D(x = force * -math.cos(theta), y = force * -math.sin(theta))
+        vector_force: Vector2D = Vector2D(x = force * vector_distance.x, y = force * vector_distance.y)
 
         return vector_force
 
@@ -74,10 +72,16 @@ class Elem:
         """
         Move the elem, according to force vector at a scale (mass) and checking collision
         """
-        # Force
+        # Apply force
+        self.velocity = Vector2D(
+            x = self.velocity.x + self.force_vector.x / (self.mass * self.BOARD.mass_softener),
+            y = self.velocity.y + self.force_vector.y / (self.mass * self.BOARD.mass_softener)
+        )
+        
+        # Apply velocity
         self.position = Vector2D(
-            x = self.position.x + (self.force_vector.x / (self.mass * self.BOARD.mass_softener + 1) * self.BOARD.time_speed),
-            y = self.position.y + (self.force_vector.y / (self.mass * self.BOARD.mass_softener + 1) * self.BOARD.time_speed)
+            x = self.position.x + self.velocity.x,
+            y = self.position.y + self.velocity.y
         )
 
         # Check edges
@@ -123,6 +127,7 @@ class Elem:
         """
         Draw itself on the board
         """
+        
         # Draw on computed values
         size: int = int(self.size * self.BOARD.zoom)
         position_x: int = int((self.position.x + self.BOARD.camera_x) * self.BOARD.zoom)
