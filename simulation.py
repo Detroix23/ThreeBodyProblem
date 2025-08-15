@@ -52,7 +52,8 @@ class Board:
         self.zoom: float = 1
         self.time_speed: float = 0
         self.time_speed_previous: float = 1
-        self.frame_per_frame: int = 1
+        self.frame_per_frame: int = 9999999
+        self.frame_per_frame_previous: int = 1
 
         # UI
         self.draw_velocity: bool = draw_velocity
@@ -62,9 +63,11 @@ class Board:
         
         # Grid
         self.grid_frequency: int = 16
-        self.grid_force_weight: float = 0.3
+        self.grid_force_weight: float = 0.1
         # True to move the points, False to fix the point but show the vectors
         self.grid_move_point: bool = True
+        self.grid_color_grid: int = 10
+        self.grid_color_point: int = 11
         
         # Text
         self.texts_main: list[str] = []
@@ -104,7 +107,7 @@ class Board:
             # print("-", elem)
 
         # Grid
-        self.grid_main: Grid = Grid(self.grid_frequency, False, self.grid_force_weight, board = self) 
+        self.grid_main: Grid = Grid(self.grid_frequency, False, self.grid_force_weight, self.grid_color_grid, self.grid_color_point, board = self) 
 
         # Init simulation screen
         pyxel.init(width=width, height=height, title=title, fps=fps)
@@ -119,11 +122,14 @@ class Board:
         Listen to user inputs
         """
         # Time controls
-        if pyxel.btn(pyxel.KEY_SPACE) and self.time_speed != 0:
+        if pyxel.btnr(pyxel.KEY_SPACE) and self.time_speed != 0:
             self.time_speed_previous = self.time_speed
+            self.frame_per_frame_previous = self.frame_per_frame
             self.time_speed = 0
-        elif pyxel.btn(pyxel.KEY_SPACE):
+            self.frame_per_frame = 9999999
+        elif pyxel.btnr(pyxel.KEY_SPACE):
             self.time_speed = self.time_speed_previous
+            self.frame_per_frame = self.frame_per_frame_previous
 
         elif pyxel.btn(pyxel.KEY_1):
             self.time_speed = 0.1
@@ -133,16 +139,16 @@ class Board:
             self.frame_per_frame = 2
         elif pyxel.btn(pyxel.KEY_3):
             self.time_speed = 1
-            self.frame_per_frame = 3
+            self.frame_per_frame = 5
         elif pyxel.btn(pyxel.KEY_4):
             self.time_speed = 2
-            self.frame_per_frame = 4
+            self.frame_per_frame = 10
         elif pyxel.btn(pyxel.KEY_5):
             self.time_speed = 4
-            self.frame_per_frame = 5
+            self.frame_per_frame = 20
         elif pyxel.btn(pyxel.KEY_6):
             self.time_speed = 10
-            self.frame_per_frame = 10
+            self.frame_per_frame = self.fps
 
         # Zoom
         if pyxel.btn(pyxel.KEY_PAGEUP) and self.zoom > 0.0:
@@ -153,6 +159,10 @@ class Board:
             self.zoom += 0.05
             #self.width = int(self.width * self.zoom)
             #self.height = int(self.height * self.zoom)
+        elif pyxel.btn(pyxel.KEY_HOME):
+            self.zoom = 1
+            self.camera_x = 0
+            self.camera_y = 0
 
         # Camera position
         if pyxel.btn(pyxel.KEY_LEFT):
@@ -164,13 +174,17 @@ class Board:
         elif pyxel.btn(pyxel.KEY_UP):
             self.camera_y -= int(10 / self.zoom)
 
+        # Grid
+        if pyxel.btnr(pyxel.KEY_G):
+            self.draw_grid = not self.draw_grid
+        
     def text_main(self, text_color: int = 8) -> None:
         x = y = 10
         self.texts_main = [
-            "# Three Body Problem - title=" + self.title + "; edges=" + self.edges + ", fps=" + str(self.fps) + ", frames=" + str(pyxel.frame_count),
-            "- Controls: zoom=" + str(self.zoom) + ", camera: x=" + str(self.camera_x) + "; y=" + str(self.camera_y) + "",
-            "- Time: speed=" + str(self.time_speed) + "",
-            "- Elements: total=" + str(len(self.system)) + "",
+            f"# Three Body Problem - title={self.title}; edges={self.edges}, fps={str(self.fps)}, frames={str(pyxel.frame_count)}",
+            f"- Controls: zoom={str(self.zoom)}, camera: x={str(self.camera_x)}; y={str(self.camera_y)}",
+            f"- Time: speed={str(self.time_speed)}, fpf={self.frame_per_frame}",
+            f"- Elements: total={str(len(self.system))}",
             "---"
         ]
         for txt in self.texts_main:
@@ -185,11 +199,14 @@ class Board:
         if self.first_update:
             print("- Game running")
             self.first_update = not self.first_update
+        # Inputs
+        self.user_inputs()
+        # Frame limiter for the game
         if pyxel.frame_count % self.frame_per_frame == 0:      
-            # Inputs
-            self.user_inputs()
-            # Calc interactions
-            ## Check for each element, all elements.
+            # Grid
+            if self.draw_grid:
+                self.grid_main.generate_points()
+            # Interactions for each element, all elements.
             for elemMain in self.system.values():
                 elemMain.force_vector = Vector2D(0, 0)
                 # print(elemMain.name, ":", elemMain.forceVector[0], elemMain.forceVector[1], end=" - ")
@@ -199,14 +216,12 @@ class Board:
                         
                         elemMain.force_vector.x += target_force.x
                         elemMain.force_vector.y += target_force.y
-                    
+            
             # print()
             # Move
             for elem in self.system.values():
                 elem.move()
-                
-        if self.draw_grid:
-            self.grid_main.generate_points()
+        
         
     def draw(self) -> None:
         """
@@ -214,6 +229,8 @@ class Board:
         """
         # Clear all
         pyxel.cls(0)
+        if self.draw_grid:
+            self.grid_main.draw()
         # All elems
         for _, elem in self.system.items():
             elem.draw()
@@ -221,14 +238,10 @@ class Board:
                 elem.force_vector.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=3) 
             if self.draw_velocity:
                 elem.velocity.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=5)
-            
         # Text
         if self.draw_text:
             self.text_main()
             
-        if self.draw_grid:
-            self.grid_main.draw()
-              
 
 class Elem:
     """
@@ -418,23 +431,27 @@ class Grid:
     """
     Represent the space-time grid
     """
-    def __init__(self, frequency: float, zoom_dependance: bool, force_weight: float, board: Board) -> None:
+    def __init__(self, frequency: float, zoom_dependance: bool, force_weight: float, color_grid: int, color_point: int, board: Board) -> None:
         self.frequency: float = frequency
         self.zoom_dependance: bool = zoom_dependance
+        self.color_grid: int = color_grid
+        self.color_point: int = color_point
         self.board: Board = board
         self.force_weight: float = force_weight
-        self.points: list[Point] = []
+        # Use lists index to find neighbours, Point cords to draw lines
+        self.points: list[list[Point]] = [[]]
     
     def generate_points(self) -> None:
-        self.points: list[Point] = []
+        self.points = [[]]
         
         dx: int = int(float(self.board.width)  / self.frequency)
         dy: int = int(float(self.board.height) / self.frequency)
         
         
-        for y in range(0, self.board.height, dy):
-            for x in range(0, self.board.width, dx):
-                point: Point = Point(x, y, self.force_weight, board=self.board)
+        for y in range(0, self.board.height + 2 * dy, dy):
+            points_x: list[Point] = []
+            for x in range(0, self.board.width + 2 * dx, dx):
+                point: Point = Point(x - dx, y - dy, self.force_weight, board=self.board)
                 point.force = Vector2D(0, 0)
                 # Check G-Force for all bodies
                 for elemTarget in self.board.system.values():
@@ -446,16 +463,31 @@ class Grid:
                     point.x += int(point.force.x)
                     point.y += int(point.force.y)
                     
-                self.points.append(point)
+                points_x.append(point)
+            self.points.append(points_x)
 
 
     def draw(self) -> None:
-        # Draw points
-        for point in self.points:
-            draw_point(point.x, point.y, color=11)
-            if not self.board.grid_move_point:
-                point.force.draw_on(point.x, point.y, 1, color=10)
+        points_y: list[list[Point]] = self.points
+        i: int = 0
+        while i < len(points_y):
+            j: int = 0
+            points_x: list[Point] = points_y[i]
+            while j < len(points_x):
+                point: Point = points_x[j]
+                # Draw points
+                draw_point(point.x, point.y, color=self.color_point)
+                if not self.board.grid_move_point:
+                    point.force.draw_on(point.x, point.y, 1, color=10)
+                
+                # Draw grid lines, if there are points (facing +y, then to +x)
+                if i + 1 < len(points_y):
+                    pyxel.line(point.x, point.y, points_y[i + 1][j].x, points_y[i + 1][j].y, col=self.color_grid)
+                if j + 1 < len(points_x):
+                    pyxel.line(point.x, point.y, points_x[j + 1].x, points_x[j + 1].y, col=self.color_grid)                
 
+                j += 1
+            i += 1
 
 
 

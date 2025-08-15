@@ -6,7 +6,7 @@ Run: 2nd
 import random
 
 from maths_local import *
-
+import main
 
 # dict[str, tuple[int, tuple[int, int], str, int, tuple[float, float]]]
 class InputElem:
@@ -66,13 +66,29 @@ def app_cmd() -> dict[str, InputElem]:
     if user_mode == "rand":
         print("# Mode selected: rand (random generation)")
         number_elements: int = random.randint(3, 5)
+        border_coverage: float = 0.2
+        borders: dict[str, int] = {
+            "West": int(main.BOARD_WIDTH * border_coverage),
+            "East": int(main.BOARD_WIDTH * (1 - border_coverage)),
+            "North": int(main.BOARD_HEIGHT * border_coverage),
+            "South": int(main.BOARD_HEIGHT * (1 - border_coverage))
+        }
+        weight_min: int = 100
+        weight_max: int = 10000
+        
         i: int = 1
         while i <= number_elements:
             name_random: str = "Plan" + str(i)
-            mass_random: int = random.randint(200, 800)
-            position_x_random = random.randint(400, 600)
-            position_y_random = random.randint(400, 600)
-            system_input[name_random] = InputElem(mass_random, Vector2D(position_x_random, position_y_random), name_random, int(mass_random / 100), Vector2D(0, 0))
+            mass_random: int = random.randint(weight_min, weight_max)
+            position_x_random = random.randint(borders["West"], borders["East"])
+            position_y_random = random.randint(borders["North"], borders["South"])
+            system_input[name_random] = InputElem(
+                mass_random, 
+                Vector2D(position_x_random, position_y_random), 
+                name_random, 
+                int(mass_random / 100), 
+                Vector2D(0, 0)
+            )
             i += 1
 
     elif user_mode == "conf":
