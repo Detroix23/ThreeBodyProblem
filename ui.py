@@ -1,11 +1,12 @@
 """
 THREE BODY PROBLEM
 User configs
+Run: 2nd
 """
 import random
 
 from maths_local import *
-import main
+
 
 # dict[str, tuple[int, tuple[int, int], str, int, tuple[float, float]]]
 class InputElem:
@@ -47,7 +48,7 @@ class Layers:
         
 
 
-def app_cmd() -> None:
+def app_cmd() -> dict[str, InputElem]:
     """
     Basic starting sequence for the user, in CMD.
     """
@@ -123,14 +124,7 @@ def app_cmd() -> None:
     print("Starting...")
 
     # Completion
-    SIM: main.Board = main.Board(
-        system=system_input, width=1000, height=1000, title="Simulation", fps=25,
-        gravitational_constant=(6.67*(10**2)),
-        edges="none", bounce_factor=1.0,
-        mass_softener=1, exponent_softener=-0.0,
-        draw_velocity=True, draw_force=True, draw_text=True
-    )
-    print(f"! Used SIM={SIM}")
+    return system_input
 
 if __name__ == "__main__":
     print("THREE BODY PROBLEM - Libraries.")

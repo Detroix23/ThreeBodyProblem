@@ -1,0 +1,465 @@
+"""
+THREE BODY PROBLEM
+GUI
+Run 3rd
+"""
+
+import pyxel
+from maths_local import *
+import ui
+
+
+# GUI
+class Board:
+    def __init__(
+        self, 
+        system: dict[str, ui.InputElem], 
+        width: int, 
+        height: int, 
+        title: str, 
+        fps: int, 
+        gravitational_constant: float, 
+        edges: str, 
+        bounce_factor: float,  
+        mass_softener: float, 
+        exponent_softener: float, 
+        draw_velocity: bool = True, 
+        draw_force: bool = True, 
+        draw_text: bool = True, 
+        draw_grid: bool = True,
+    ) -> None:
+        """
+        Initialize the game.
+        Args:
+            @edges (string): {none, hard, bounce, tor}
+        """
+        # Vars
+        ### Distance expoential softener
+        self.exponent_softener: float = exponent_softener    
+        self.gravitational_constant: float = gravitational_constant
+        ### Mass factor
+        self.mass_softener: float = mass_softener      
+        self.edges: str = edges
+        self.width: int = width
+        self.height: int = height
+        self.title: str = title
+        self.fps: int = fps
+        self.bounce_factor: float = bounce_factor
+
+        # Controls
+        self.camera_x: int = 0
+        self.camera_y: int = 0
+        self.zoom: float = 1
+        self.time_speed: float = 0
+        self.time_speed_previous: float = 1
+        self.frame_per_frame: int = 1
+
+        # UI
+        self.draw_velocity: bool = draw_velocity
+        self.draw_force: bool = draw_force
+        self.draw_text: bool = draw_text
+        self.draw_grid: bool = draw_grid
+        
+        # Grid
+        self.grid_frequency: int = 16
+        self.grid_force_weight: float = 0.3
+        # True to move the points, False to fix the point but show the vectors
+        self.grid_move_point: bool = True
+        
+        # Text
+        self.texts_main: list[str] = []
+
+        # Debug
+        self.first_update = True
+
+        # Init elements
+        ## Elements
+        self.system: dict[str, Elem] = {}
+        
+        for element_name, element_stats in system.items():
+            self.system[element_name] = Elem(
+                self, 
+                mass = element_stats.mass,
+                position = element_stats.position,
+                name = element_stats.name,
+                size = element_stats.size,
+                velocity = element_stats.velocity
+            )
+        
+        
+        print("- Provided system: ")
+        print(system)
+        print("- Saved system: ")
+        print(self.system)
+        
+        ## Representation
+        ### Positions
+
+        self.elemsX: list[float] = []
+        self.elemsY: list[float] = []
+        # print("## Initialization of the elements: ")
+        for _, elem in self.system.items():
+            self.elemsX.append(elem.position.x)
+            self.elemsY.append(elem.position.y)
+            # print("-", elem)
+
+        # Grid
+        self.grid_main: Grid = Grid(self.grid_frequency, False, self.grid_force_weight, board = self) 
+
+        # Init simulation screen
+        pyxel.init(width=width, height=height, title=title, fps=fps)
+        print("- Pyxel board initialized")
+        
+        # Run
+        pyxel.run(self.update, self.draw)
+        print("# Game ended")
+
+    def user_inputs(self) -> None:
+        """
+        Listen to user inputs
+        """
+        # Time controls
+        if pyxel.btn(pyxel.KEY_SPACE) and self.time_speed != 0:
+            self.time_speed_previous = self.time_speed
+            self.time_speed = 0
+        elif pyxel.btn(pyxel.KEY_SPACE):
+            self.time_speed = self.time_speed_previous
+
+        elif pyxel.btn(pyxel.KEY_1):
+            self.time_speed = 0.1
+            self.frame_per_frame = 1
+        elif pyxel.btn(pyxel.KEY_2):
+            self.time_speed = 0.5
+            self.frame_per_frame = 2
+        elif pyxel.btn(pyxel.KEY_3):
+            self.time_speed = 1
+            self.frame_per_frame = 3
+        elif pyxel.btn(pyxel.KEY_4):
+            self.time_speed = 2
+            self.frame_per_frame = 4
+        elif pyxel.btn(pyxel.KEY_5):
+            self.time_speed = 4
+            self.frame_per_frame = 5
+        elif pyxel.btn(pyxel.KEY_6):
+            self.time_speed = 10
+            self.frame_per_frame = 10
+
+        # Zoom
+        if pyxel.btn(pyxel.KEY_PAGEUP) and self.zoom > 0.0:
+            self.zoom -= 0.05 * self.zoom
+            #self.width = int(self.width * self.zoom)
+            #self.height = int(self.height * self.zoom)
+        elif pyxel.btn(pyxel.KEY_PAGEDOWN) and self.zoom < 15.0:
+            self.zoom += 0.05
+            #self.width = int(self.width * self.zoom)
+            #self.height = int(self.height * self.zoom)
+
+        # Camera position
+        if pyxel.btn(pyxel.KEY_LEFT):
+            self.camera_x -= int(10 / self.zoom)
+        elif pyxel.btn(pyxel.KEY_RIGHT):
+            self.camera_x += int(10 / self.zoom)
+        if pyxel.btn(pyxel.KEY_DOWN):
+            self.camera_y += int(10 / self.zoom)
+        elif pyxel.btn(pyxel.KEY_UP):
+            self.camera_y -= int(10 / self.zoom)
+
+    def text_main(self, text_color: int = 8) -> None:
+        x = y = 10
+        self.texts_main = [
+            "# Three Body Problem - title=" + self.title + "; edges=" + self.edges + ", fps=" + str(self.fps) + ", frames=" + str(pyxel.frame_count),
+            "- Controls: zoom=" + str(self.zoom) + ", camera: x=" + str(self.camera_x) + "; y=" + str(self.camera_y) + "",
+            "- Time: speed=" + str(self.time_speed) + "",
+            "- Elements: total=" + str(len(self.system)) + "",
+            "---"
+        ]
+        for txt in self.texts_main:
+            pyxel.text(x, y, txt, text_color)
+            y += 6
+
+    def update(self) -> None:
+        """
+        Update simulation
+        """
+        # Debug
+        if self.first_update:
+            print("- Game running")
+            self.first_update = not self.first_update
+        if pyxel.frame_count % self.frame_per_frame == 0:      
+            # Inputs
+            self.user_inputs()
+            # Calc interactions
+            ## Check for each element, all elements.
+            for elemMain in self.system.values():
+                elemMain.force_vector = Vector2D(0, 0)
+                # print(elemMain.name, ":", elemMain.forceVector[0], elemMain.forceVector[1], end=" - ")
+                for elemTarget in self.system.values():
+                    if elemMain != elemTarget:
+                        target_force: Vector2D = elemMain.gravitational_force_from(elemTarget.position, elemTarget.size, elemTarget.mass)
+                        
+                        elemMain.force_vector.x += target_force.x
+                        elemMain.force_vector.y += target_force.y
+                    
+            # print()
+            # Move
+            for elem in self.system.values():
+                elem.move()
+                
+        if self.draw_grid:
+            self.grid_main.generate_points()
+        
+    def draw(self) -> None:
+        """
+        Draw all simulation
+        """
+        # Clear all
+        pyxel.cls(0)
+        # All elems
+        for _, elem in self.system.items():
+            elem.draw()
+            if self.draw_force:
+                elem.force_vector.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=3) 
+            if self.draw_velocity:
+                elem.velocity.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=5)
+            
+        # Text
+        if self.draw_text:
+            self.text_main()
+            
+        if self.draw_grid:
+            self.grid_main.draw()
+              
+
+class Elem:
+    """
+    Define a stellar element
+    """
+    CHECK_RADIUS = 100
+    
+    def __init__(
+        self, BOARD: Board, mass: int, position: Vector2D, velocity: Vector2D,
+        color: int = 5, size: int = 2, name: str = "",
+    ) -> None:
+        """
+        Creation of the elem, with "mass, vInit, xStart, yStart, color=5, size=2".
+        """
+        self.BOARD: Board = BOARD
+        self.mass: float = mass  
+        self.position: Vector2D = position
+        
+        self.velocity: Vector2D = velocity
+        self.force_vector: Vector2D = Vector2D(x = 0, y = 0)
+
+        self.size: int = size
+        self.color: int = color
+        self.name: str = name
+
+    def __str__(self) -> str:
+        return f"Elem {self.name} - Position: x={self.position.x}; y={self.position.y}, Mass: m={self.mass}, Force: x={self.force_vector.x}; y={self.force_vector.y}."
+    
+    def __repr__(self) -> str:
+        return f"Elem {self.name} - Position: x={self.position.x}; y={self.position.y}, Mass: m={self.mass}, Force: x={self.force_vector.x}; y={self.force_vector.y}."
+    
+    def distance_to(self, target_position: Vector2D) -> float:
+        """
+        Compute distance between this elem and the target elem
+        """
+        return math.sqrt((target_position.x - self.position.x) ** 2 + (target_position.y - self.position.y) ** 2)
+    
+    def gravitational_force_from(self, target_position: Vector2D, target_size: int, target_mass: float) -> Vector2D:
+        """
+        Find the gravitational force vector
+        """
+        direction: int = 1
+        # Direction
+        vector_distance: Vector2D = Vector2D(x = target_position.x - self.position.x, y = target_position.y - self.position.y)
+        vector_distance.normalize()
+        # Distance
+        distance: float = self.distance_to(target_position)
+        # Limit artifically distance and prevent division by 0
+        distance_min: float = ((self.size + 1) / 2 + (target_size + 1) / 2)
+        if distance < distance_min:
+            distance = distance_min
+        
+        # F force value
+        force: float = (self.BOARD.gravitational_constant * target_mass) / (distance ** (2 + self.BOARD.exponent_softener))
+        # Force vector
+        vector_force: Vector2D = Vector2D(x = force * vector_distance.x * direction, y = force * vector_distance.y * direction)
+        # Watch for overshot of planets
+        velocity_next: Vector2D = Vector2D(
+            x = self.velocity.x + self.force_vector.x / (self.mass * self.BOARD.mass_softener),
+            y = self.velocity.y + self.force_vector.y / (self.mass * self.BOARD.mass_softener)
+        )
+        if velocity_next.magnitude >= distance:
+            direction = -1
+            velocity_next_magnitude: float = velocity_next.magnitude
+            velocity_next.normalize()
+            velocity_next.mult((velocity_next_magnitude - distance) * direction)
+        
+        
+        return vector_force
+
+    def does_collide_with(self, target_position: Vector2D) -> bool:
+        return False
+
+    def move(self) -> None:
+        """
+        Move the elem, according to force vector at a scale (mass) and checking collision
+        """
+        # Apply force
+        self.velocity = Vector2D(
+            x = self.velocity.x + self.force_vector.x / (self.mass * self.BOARD.mass_softener),
+            y = self.velocity.y + self.force_vector.y / (self.mass * self.BOARD.mass_softener)
+        )
+        
+        # Apply velocity
+        self.position = Vector2D(
+            x = self.position.x + self.velocity.x,
+            y = self.position.y + self.velocity.y
+        )
+
+        # Check edges
+        # Disabled for now
+        """
+        for axis1 in (0, 1):
+            axis2: int = abs(axis1 - 1)
+            force_vector_list: list[float] = self.force_vector.to_list()
+            position_list: list[float] = self.position.to_list()
+
+            if self.position[axis1] + self.size / 2 >= self.BOARD.width:
+                if self.BOARD.edges == "bounce":
+                    force_vector_list[axis1] = self.force_vector[axis1] * -self.BOARD.bounce_factor
+                    force_vector_list[axis2] = self.force_vector[axis2]
+                    ### Force it to be in the board and count reflexion
+                    position_list[axis1] = 2 * self.BOARD.width - self.size / 2 - self.position[axis1]
+
+                elif self.BOARD.edges == "hard":
+                    force_vector_list[axis1] = 0.0
+                    force_vector_list[axis2] = self.force_vector[axis2]
+                    ### Force it to be in the board
+                    position_list[axis1] = self.BOARD.width - self.size / 2
+                    
+            elif self.position[axis1] <= 0:
+                if self.BOARD.edges == "bounce":
+                    force_vector_list[axis1] = self.force_vector[axis1] * -self.BOARD.bounce_factor
+                    force_vector_list[axis2] = self.force_vector[axis2]
+                    ### Force it to be in the board and count reflexion
+                    position_list[axis1] = 0
+
+                elif self.BOARD.edges == "hard":
+                    force_vector_list[axis1] = 0.0
+                    force_vector_list[axis2] = self.force_vector[axis2]
+                    ### Force it to be in the board
+                    position_list[axis1] = 0
+
+
+            self.force_vector = (force_vector_list[0], force_vector_list[1])
+            self.position = (position_list[0], position_list[1])
+        """
+
+    def draw(self) -> None:
+        """
+        Draw itself on the board
+        """
+        
+        # Draw on computed values
+        size: int = int(self.size * self.BOARD.zoom)
+        position_x: int = int((self.position.x + self.BOARD.camera_x) * self.BOARD.zoom)
+        position_y: int = int((self.position.y + self.BOARD.camera_y) * self.BOARD.zoom)
+
+        pyxel.rect(position_x - size / 2, position_y - size / 2, size, size, col=self.color)
+        pyxel.rect(position_x, position_y, 1, 1, col=self.color + 1)
+
+
+class Point:
+    """
+    Point of the grid 
+    """
+    
+    def __init__(self, x: int, y: int, force_weight: float, board: Board) -> None:
+        self.x: int = x
+        self.y: int = y
+        self.BOARD: Board = board
+        self.force_weight: float = force_weight
+        self.force: Vector2D = Vector2D(0, 0)
+        
+        
+    def distance_to(self, target_position: Vector2D) -> float:
+        """
+        Compute distance between this elem and the target elem
+        """
+        return math.sqrt((target_position.x - self.x) ** 2 + (target_position.y - self.y) ** 2)
+    
+    def gravitational_force_from(self, target_position: Vector2D, target_size: int, target_mass: float) -> Vector2D:
+        """
+        Find the gravitational force vector
+        """
+        direction: int = 1
+        # Direction
+        vector_distance: Vector2D = Vector2D(x = target_position.x - self.x, y = target_position.y - self.y)
+        vector_distance.normalize()
+        # Distance
+        distance: float = self.distance_to(target_position)
+        if distance < 1:
+            distance = 1
+        
+        # F force value
+        force: float = (self.BOARD.gravitational_constant * target_mass) / (distance ** (2 + self.BOARD.exponent_softener)) * self.force_weight
+        if force > distance:
+            force = distance
+        # Force vector
+        vector_force: Vector2D = Vector2D(x = force * vector_distance.x * direction, y = force * vector_distance.y * direction)
+        
+        
+        return vector_force
+
+
+class Grid:
+    """
+    Represent the space-time grid
+    """
+    def __init__(self, frequency: float, zoom_dependance: bool, force_weight: float, board: Board) -> None:
+        self.frequency: float = frequency
+        self.zoom_dependance: bool = zoom_dependance
+        self.board: Board = board
+        self.force_weight: float = force_weight
+        self.points: list[Point] = []
+    
+    def generate_points(self) -> None:
+        self.points: list[Point] = []
+        
+        dx: int = int(float(self.board.width)  / self.frequency)
+        dy: int = int(float(self.board.height) / self.frequency)
+        
+        
+        for y in range(0, self.board.height, dy):
+            for x in range(0, self.board.width, dx):
+                point: Point = Point(x, y, self.force_weight, board=self.board)
+                point.force = Vector2D(0, 0)
+                # Check G-Force for all bodies
+                for elemTarget in self.board.system.values():
+                    target_force: Vector2D = point.gravitational_force_from(elemTarget.position, elemTarget.size, elemTarget.mass)    
+                    point.force.x += target_force.x
+                    point.force.y += target_force.y
+                
+                if self.board.grid_move_point:
+                    point.x += int(point.force.x)
+                    point.y += int(point.force.y)
+                    
+                self.points.append(point)
+
+
+    def draw(self) -> None:
+        # Draw points
+        for point in self.points:
+            draw_point(point.x, point.y, color=11)
+            if not self.board.grid_move_point:
+                point.force.draw_on(point.x, point.y, 1, color=10)
+
+
+
+
+def draw_point(x: int, y: int, color: int) -> None:
+    radius: int = 3
+    pyxel.rect(x - radius, y - radius, radius * 2, radius * 2, col=color)
+

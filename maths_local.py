@@ -41,4 +41,17 @@ class Vector2D:
         if not (math.isclose(self.x, 0) and math.isclose(self.y, 0)): 
             pyxel.line(x, y, x + self.x * size, y + self.y * size, col=color)
 
+    def mult(self, factor: float) -> None:
+        """
+        Multiply the values of the vector
+        """
+        self.x = self.x * factor
+        self.y = self.y * factor
+        
+    def add(self, value: float) -> None:
+        """
+        Add values to the vector
+        """
+        self.x = self.x + value
+        self.y = self.y + value
     

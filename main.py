@@ -3,227 +3,41 @@ THREE BODY PROBLEM
 Simulation of planet movement
 Use of gravitational formula: F = (m1*m2) / d**2
 We consider that all elements are spherical
+Run: 1st
 """
 
 # Imports
-## Representation
-#import matplotlib.pyplot as plt
-import pyxel
 # Local
-from maths_local import *
-import elems
+import simulation
 import ui
-
 
     
         
         
 
 # Simulation
-# GUI
-class Board:
-    def __init__(
-        self, system: dict[str, ui.InputElem], width: int, height: int, title: str, fps: int, 
-        gravitational_constant: float, edges: str, bounce_factor: float,  
-        mass_softener: float, exponent_softener: float, 
-        draw_velocity: bool = True, draw_force: bool = True, draw_text: bool = True
-    ) -> None:
-        """
-        Initialize the game.
-        Args:
-            @edges (string): {none, hard, bounce, tor}
-        """
-        # Vars
-        ### Distance expoential softener
-        self.exponent_softener: float = exponent_softener    
-        self.gravitational_constant: float = gravitational_constant
-        ### Mass factor
-        self.mass_softener: float = mass_softener      
-        self.edges: str = edges
-        self.width: int = width
-        self.height: int = height
-        self.title: str = title
-        self.fps: int = fps
-        self.bounce_factor: float = bounce_factor
-
-        # Controls
-        self.camera_x: int = 0
-        self.camera_y: int = 0
-        self.zoom: float = 1
-        self.time_speed: float = 0
-        self.time_speed_previous: float = 1
-        self.frame_per_frame: int = 1
-
-        # UI
-        self.draw_velocity: bool = draw_velocity
-        self.draw_force: bool = draw_force
-        self.draw_text: bool = draw_text
-        
-        # Text
-        self.texts_main: list[str] = [
-            ""
-        ]
-
-        # Debug
-        self.first_update = True
-
-        # Init elements
-        ## Elements
-        self.system: dict[str, elems.Elem] = {}
-        
-        for element_name, element_stats in system.items():
-            self.system[element_name] = elems.Elem(
-                self, 
-                mass = element_stats.mass,
-                position = element_stats.position,
-                name = element_stats.name,
-                size = element_stats.size,
-                velocity = element_stats.velocity
-            )
-        
-        
-        print("- Provided system: ")
-        print(system)
-        print("- Saved system: ")
-        print(self.system)
-        
-        ## Representation
-        ### Positions
-
-        self.elemsX: list[float] = []
-        self.elemsY: list[float] = []
-        # print("## Initialization of the elements: ")
-        for _, elem in self.system.items():
-            self.elemsX.append(elem.position.x)
-            self.elemsY.append(elem.position.y)
-            # print("-", elem)
-
-        # Init simulation screen
-        pyxel.init(width=width, height=height, title=title, fps=fps)
-        print("- Pyxel board initialized")
-        
-        # Run
-        pyxel.run(self.update, self.draw)
-        print("# Game ended")
-
-    def user_inputs(self) -> None:
-        """
-        Listen to user inputs
-        """
-        # Time controls
-        if pyxel.btn(pyxel.KEY_SPACE) and self.time_speed != 0:
-            self.time_speed_previous = self.time_speed
-            self.time_speed = 0
-        elif pyxel.btn(pyxel.KEY_SPACE):
-            self.time_speed = self.time_speed_previous
-
-        elif pyxel.btn(pyxel.KEY_1):
-            self.time_speed = 0.1
-            self.frame_per_frame = 1
-        elif pyxel.btn(pyxel.KEY_2):
-            self.time_speed = 0.5
-            self.frame_per_frame = 2
-        elif pyxel.btn(pyxel.KEY_3):
-            self.time_speed = 1
-            self.frame_per_frame = 3
-        elif pyxel.btn(pyxel.KEY_4):
-            self.time_speed = 2
-            self.frame_per_frame = 4
-        elif pyxel.btn(pyxel.KEY_5):
-            self.time_speed = 4
-            self.frame_per_frame = 5
-        elif pyxel.btn(pyxel.KEY_6):
-            self.time_speed = 10
-            self.frame_per_frame = 10
-
-        # Zoom
-        if pyxel.btn(pyxel.KEY_PAGEUP) and self.zoom > 0.0:
-            self.zoom -= 0.05 * self.zoom
-            #self.width = int(self.width * self.zoom)
-            #self.height = int(self.height * self.zoom)
-        elif pyxel.btn(pyxel.KEY_PAGEDOWN) and self.zoom < 15.0:
-            self.zoom += 0.05
-            #self.width = int(self.width * self.zoom)
-            #self.height = int(self.height * self.zoom)
-
-        # Camera position
-        if pyxel.btn(pyxel.KEY_LEFT):
-            self.camera_x -= int(10 / self.zoom)
-        elif pyxel.btn(pyxel.KEY_RIGHT):
-            self.camera_x += int(10 / self.zoom)
-        if pyxel.btn(pyxel.KEY_DOWN):
-            self.camera_y += int(10 / self.zoom)
-        elif pyxel.btn(pyxel.KEY_UP):
-            self.camera_y -= int(10 / self.zoom)
-
-    def text_main(self, text_color: int = 8) -> None:
-        x = y = 10
-        self.texts_main = [
-            "# Three Body Problem - title=" + self.title + "; edges=" + self.edges + ", fps=" + str(self.fps) + ", frames=" + str(pyxel.frame_count),
-            "- Controls: zoom=" + str(self.zoom) + ", camera: x=" + str(self.camera_x) + "; y=" + str(self.camera_y) + "",
-            "- Time: speed=" + str(self.time_speed) + "",
-            "- Elements: total=" + str(len(self.system)) + "",
-            "---"
-        ]
-        for txt in self.texts_main:
-            pyxel.text(x, y, txt, text_color)
-            y += 6
-
-    def update(self) -> None:
-        """
-        Update simulation
-        """
-        # Debug
-        if self.first_update:
-            print("- Game running")
-            self.first_update = not self.first_update
-        if pyxel.frame_count % self.frame_per_frame == 0:      
-            # Inputs
-            self.user_inputs()
-            # Calc interactions
-            ## Check for each element, all elements.
-            for elemMain in self.system.values():
-                elemMain.force_vector = Vector2D(0, 0)
-                # print(elemMain.name, ":", elemMain.forceVector[0], elemMain.forceVector[1], end=" - ")
-                for elemTarget in self.system.values():
-                    if elemMain != elemTarget:
-                        target_force: Vector2D = elemMain.gravitational_force_from(elemTarget.position, elemTarget.size, elemTarget.mass)
-                        
-                        elemMain.force_vector.x += target_force.x
-                        elemMain.force_vector.y += target_force.y
-                    
-            # print()
-            # Move
-            for elem in self.system.values():
-                elem.move()
-
-    def draw(self) -> None:
-        """
-        Draw all simulation
-        """
-        # Clear all
-        pyxel.cls(0)
-        # All elems
-        for _, elem in self.system.items():
-            elem.draw()
-            if self.draw_force:
-                elem.force_vector.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=3) 
-            if self.draw_velocity:
-                elem.velocity.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=5)
-            
-        # Text
-        if self.draw_text:
-            self.text_main()
 
 
-
-
-
-
-# Run
+# Run 1st.
 if __name__ == "__main__":
     
-    ui.app_cmd()
+    SIM: simulation.Board = simulation.Board(
+        system=ui.app_cmd(), 
+        width=1000, 
+        height=1000, 
+        title="Simulation", 
+        fps=25,
+        gravitational_constant=(6.67*(10**2)),
+        edges="none", 
+        bounce_factor=1.0,
+        mass_softener=1, 
+        exponent_softener=-0.0,
+        draw_velocity=True, 
+        draw_force=True, 
+        draw_text=True,
+        draw_grid=True
+    )
+    print(f"! Used SIM={SIM}")
 
     print("---\nEnd")
 
