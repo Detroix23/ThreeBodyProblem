@@ -6,6 +6,7 @@ Maths functions.
 import math
 import pyxel
 
+
 class Vector2D:
     """
     Define a simple 2D vector with methods
@@ -54,4 +55,3 @@ class Vector2D:
         """
         self.x = self.x + value
         self.y = self.y + value
-    

@@ -91,6 +91,10 @@ def app_cmd() -> dict[str, InputElem]:
         }
         weight_min: int = 100
         weight_max: int = 10000
+        velocity_x_max: float = 1.5
+        velocity_y_max: float = 1.5
+        velocity_x_min: float = -1.5
+        velocity_y_min: float = -1.5
         
         i: int = 1
         while i <= number_elements:
@@ -103,7 +107,7 @@ def app_cmd() -> dict[str, InputElem]:
                 Vector2D(position_x_random, position_y_random), 
                 name_random, 
                 int(mass_random / 100), 
-                Vector2D(0, 0)
+                Vector2D(random.uniform(velocity_x_min, velocity_x_max), random.uniform(velocity_y_min, velocity_y_max))
             )
             i += 1
 
