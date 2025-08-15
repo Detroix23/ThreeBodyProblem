@@ -8,13 +8,29 @@ Run: 1st
 
 # Imports
 # Local
+import modules.settings
 import simulation
 
+TITLE: str = "Simulation"
 BOARD_WIDTH: int  = 1000
 BOARD_HEIGHT: int = 1000
+FPS: int = 25
+
+G: float = (6.67*(10**2))
+EDGE: modules.settings.Edge = modules.settings.Edge.NONE
+BOUNCE_FACTOR: float = 1.0
+MASS_SOFTENER: float = 1.0
+EXPONENENT_SOFTENER: float = -0.0
+DRAW_VELOCITY: bool = True
+DRAW_FORCE: bool = False
+DRAW_TEXT: bool = True
+DRAW_GRID: bool = True
+FUSION: bool = False
+
+DEFAULT_MODE: modules.settings.SimMode = modules.settings.SimMode.RANDOM 
 
 import ui
-
+import modules.writter
 
         
         
@@ -25,24 +41,33 @@ import ui
 # Run 1st.
 if __name__ == "__main__":
     
-    SIM: simulation.Board = simulation.Board(
-        system=ui.app_cmd(), 
-        width=BOARD_WIDTH, 
-        height=BOARD_HEIGHT, 
-        title="Simulation", 
-        fps=25,
-        gravitational_constant=(6.67*(10**2)),
-        edges="none", 
-        bounce_factor=1.0,
-        mass_softener=1, 
-        exponent_softener=-0.0,
-        draw_velocity=True, 
-        draw_force=False, 
-        draw_text=True,
-        draw_grid=True
+    system: dict[str, ui.InputElem] = ui.app_cmd()
+    
+    system_string: dict[str, str] = {elem_name: elem_info.__str__() for elem_name, elem_info in system.items()}
+    print(f"! Using system={system_string}. Logging...")
+    modules.writter.board_settings(
+        system = modules.writter.system(system_string),
+        board_settings = f"edges={EDGE}, bounce={BOUNCE_FACTOR}, mass_softener={MASS_SOFTENER}, exponenent_softener={EXPONENENT_SOFTENER}, draw_velocity={DRAW_VELOCITY}, draw_force={DRAW_FORCE}, draw_text={DRAW_TEXT}, draw_grid={DRAW_GRID}, fusion={FUSION}"
     )
-    print(f"! Used SIM={SIM}")
-
+    
+    SIM: simulation.Board = simulation.Board(
+        system = system, 
+        width = BOARD_WIDTH, 
+        height = BOARD_HEIGHT, 
+        title = TITLE, 
+        fps = FPS,
+        gravitational_constant = G,
+        edges = EDGE, 
+        bounce_factor = BOUNCE_FACTOR,
+        mass_softener = MASS_SOFTENER, 
+        exponent_softener = EXPONENENT_SOFTENER,
+        draw_velocity = DRAW_VELOCITY, 
+        draw_force = DRAW_FORCE, 
+        draw_text = DRAW_TEXT,
+        draw_grid = DRAW_GRID
+    )
+    
+    
     print("---\nEnd")
 
 

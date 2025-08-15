@@ -7,6 +7,8 @@ import random
 
 from maths_local import *
 import main
+import modules.settings as settings
+
 
 # dict[str, tuple[int, tuple[int, int], str, int, tuple[float, float]]]
 class InputElem:
@@ -19,6 +21,15 @@ class InputElem:
         self.name: str = name
         self.size: int = size
         self.velocity: Vector2D = velocity
+
+    def __repr__(self) -> str:
+        return f"{self.__class__!s}({self.__dict__!r})"
+    
+    def __str__(self) -> str:
+        return f"Elem: {self.name}, position: x={self.position.x}, y={self.position.y}, size={self.size}, velocity: x={self.velocity.x}, y={self.velocity.y}"
+
+
+
 
 def listing_input(text: str, allowed: str = 'int') -> str:
     listening: list[str] = ['q', 'quit']
@@ -54,16 +65,21 @@ def app_cmd() -> dict[str, InputElem]:
     """
     print("# Three body problem simulations")
     ## Config
-    user_mode: str = input("Please select a mode {rand/conf/default}[default]: ")
+    user_mode_str: str = input(f"Please select a mode {"{rand/conf/default}"}[{main.DEFAULT_MODE}]: ")
     system_input: dict[str, InputElem] = {}
 
-
-    if user_mode not in ["", "rand", "conf", "default"]:
-        user_mode = "default"
+    if user_mode_str in ["r", "rand", "random"]:
+        user_mode: settings.SimMode = settings.SimMode.RANDOM
+    elif user_mode_str in ["d", "def", "default"]:
+        user_mode: settings.SimMode = settings.SimMode.DEFAULT
+    elif user_mode_str in ["c", "con", "conf", "config"]:
+        user_mode: settings.SimMode = settings.SimMode.CONFIG
+    else:
+        user_mode: settings.SimMode = main.DEFAULT_MODE
         print("(!) - Incorrect input; set to 'default'")
         
 
-    if user_mode == "rand":
+    if user_mode == settings.SimMode.RANDOM:
         print("# Mode selected: rand (random generation)")
         number_elements: int = random.randint(3, 5)
         border_coverage: float = 0.2
@@ -91,7 +107,7 @@ def app_cmd() -> dict[str, InputElem]:
             )
             i += 1
 
-    elif user_mode == "conf":
+    elif user_mode == settings.SimMode.CONFIG:
         user_exit: bool = False
         print("# Mode selected: conf (manual configuration);")
         while not user_exit:
@@ -121,7 +137,7 @@ def app_cmd() -> dict[str, InputElem]:
                 print(f"(?) - Something else went wrong ({str(e)}). Enter anew element.\n")
 
     else:
-        if not user_mode:
+        if not user_mode_str:
             print("# Mode selected: [default] (use default value)")
         else:
             print("# Mode selected: default (use default value)")

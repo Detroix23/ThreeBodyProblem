@@ -7,7 +7,7 @@ Run 3rd
 import pyxel
 from maths_local import *
 import ui
-
+import modules.settings
 
 # GUI
 class Board:
@@ -19,7 +19,7 @@ class Board:
         title: str, 
         fps: int, 
         gravitational_constant: float, 
-        edges: str, 
+        edges: modules.settings.Edge, 
         bounce_factor: float,  
         mass_softener: float, 
         exponent_softener: float, 
@@ -39,7 +39,7 @@ class Board:
         self.gravitational_constant: float = gravitational_constant
         ### Mass factor
         self.mass_softener: float = mass_softener      
-        self.edges: str = edges
+        self.edges: modules.settings.Edge = edges
         self.width: int = width
         self.height: int = height
         self.title: str = title
@@ -63,7 +63,7 @@ class Board:
         
         # Grid
         self.grid_frequency: int = 16
-        self.grid_force_weight: float = 0.1
+        self.grid_force_weight: float = 0.05
         # True to move the points, False to fix the point but show the vectors
         self.grid_move_point: bool = True
         self.grid_color_grid: int = 10

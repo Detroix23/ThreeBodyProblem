@@ -1,0 +1,10 @@
+
+Simulation: 2025-08-15 13:35:00.150886;
+System:
+	Elem: Plan1, position: x=525, y=561, size=5, velocity: x=0, y=0;
+	Elem: Plan2, position: x=790, y=726, size=31, velocity: x=0, y=0;
+	Elem: Plan3, position: x=205, y=410, size=79, velocity: x=0, y=0;
+	Elem: Plan4, position: x=592, y=661, size=84, velocity: x=0, y=0;
+	Elem: Plan5, position: x=224, y=213, size=65, velocity: x=0, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, fusion=False
+
