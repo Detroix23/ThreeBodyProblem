@@ -47,8 +47,7 @@ class Board:
         self.bounce_factor: float = bounce_factor
 
         # Controls
-        self.camera_x: int = 0
-        self.camera_y: int = 0
+        self.camera: Vector2D = Vector2D(0, 0)
         self.zoom: float = 1
         self.time_speed: float = 0
         self.time_speed_previous: float = 1
@@ -156,23 +155,24 @@ class Board:
             #self.width = int(self.width * self.zoom)
             #self.height = int(self.height * self.zoom)
         elif pyxel.btn(pyxel.KEY_PAGEDOWN) and self.zoom < 15.0:
-            self.zoom += 0.05
+            self.zoom += 0.05 / self.zoom
             #self.width = int(self.width * self.zoom)
             #self.height = int(self.height * self.zoom)
         elif pyxel.btn(pyxel.KEY_HOME):
             self.zoom = 1
-            self.camera_x = 0
-            self.camera_y = 0
+            self.camera.x = 0
+            self.camera.y = 0
+            pyxel.camera()
 
         # Camera position
         if pyxel.btn(pyxel.KEY_LEFT):
-            self.camera_x -= int(10 / self.zoom)
+            self.camera.x -= int(10 / self.zoom)
         elif pyxel.btn(pyxel.KEY_RIGHT):
-            self.camera_x += int(10 / self.zoom)
+            self.camera.x += int(10 / self.zoom)
         if pyxel.btn(pyxel.KEY_DOWN):
-            self.camera_y += int(10 / self.zoom)
+            self.camera.y += int(10 / self.zoom)
         elif pyxel.btn(pyxel.KEY_UP):
-            self.camera_y -= int(10 / self.zoom)
+            self.camera.y -= int(10 / self.zoom)
 
         # Grid
         if pyxel.btnr(pyxel.KEY_G):
@@ -182,7 +182,7 @@ class Board:
         x = y = 10
         self.texts_main = [
             f"# Three Body Problem - title={self.title}; edges={self.edges}, fps={str(self.fps)}, frames={str(pyxel.frame_count)}",
-            f"- Controls: zoom={str(self.zoom)}, camera: x={str(self.camera_x)}; y={str(self.camera_y)}",
+            f"- Controls: zoom={str(self.zoom)}, camera: x={str(self.camera.x)}; y={str(self.camera.y)}",
             f"- Time: speed={str(self.time_speed)}, fpf={self.frame_per_frame}",
             f"- Elements: total={str(len(self.system))}",
             "---"
@@ -229,6 +229,9 @@ class Board:
         """
         # Clear all
         pyxel.cls(0)
+        # Camera
+        pyxel.camera(self.camera.x, self.camera.y)
+        # Grid
         if self.draw_grid:
             self.grid_main.draw()
         # All elems
@@ -376,13 +379,17 @@ class Elem:
         """
         
         # Draw on computed values
-        size: int = int(self.size * self.BOARD.zoom)
-        position_x: int = int((self.position.x + self.BOARD.camera_x) * self.BOARD.zoom)
-        position_y: int = int((self.position.y + self.BOARD.camera_y) * self.BOARD.zoom)
-
-        pyxel.rect(position_x - size / 2, position_y - size / 2, size, size, col=self.color)
-        pyxel.rect(position_x, position_y, 1, 1, col=self.color + 1)
-
+        size: int = int(self.size)
+        position: Vector2D = Vector2D(
+            int(self.position.x),
+            int(self.position.y)
+        )
+        # Main rectangle
+        pyxel.rect(position.x - size / 2, position.y - size / 2, size, size, col=self.color)
+        # Center
+        draw_point(int(position.x), int(position.y), color=self.color + 1)
+        # Outline
+        pyxel.rectb(position.x - size / 2, position.y - size / 2, size, size, col=7)
 
 class Point:
     """
@@ -439,7 +446,7 @@ class Grid:
         self.board: Board = board
         self.force_weight: float = force_weight
         # Use lists index to find neighbours, Point cords to draw lines
-        self.points: list[list[Point]] = [[]]
+        self.points: list[list[Point]] = []
     
     def generate_points(self) -> None:
         self.points = [[]]
@@ -451,7 +458,12 @@ class Grid:
         for y in range(0, self.board.height + 2 * dy, dy):
             points_x: list[Point] = []
             for x in range(0, self.board.width + 2 * dx, dx):
-                point: Point = Point(x - dx, y - dy, self.force_weight, board=self.board)
+                point: Point = Point(
+                    x - dx,
+                    y - dy, 
+                    self.force_weight, 
+                    board=self.board
+                )
                 point.force = Vector2D(0, 0)
                 # Check G-Force for all bodies
                 for elemTarget in self.board.system.values():
@@ -488,7 +500,6 @@ class Grid:
 
                 j += 1
             i += 1
-
 
 
 def draw_point(x: int, y: int, color: int) -> None:
