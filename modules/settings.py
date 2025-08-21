@@ -14,6 +14,6 @@ class Edge(Enum):
     
 class SimMode(Enum):
     RANDOM = 1
-    CONFIG = 1
-    DEFAULT =1 
+    CONFIG = 2
+    DEFAULT = 3 
 

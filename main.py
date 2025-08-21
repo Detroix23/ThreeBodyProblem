@@ -27,7 +27,7 @@ DRAW_TEXT: bool = True
 DRAW_GRID: bool = True
 FUSION: bool = False
 
-DEFAULT_MODE: modules.settings.SimMode = modules.settings.SimMode.RANDOM 
+DEFAULT_MODE: modules.settings.SimMode = modules.settings.SimMode.DEFAULT 
 
 import ui
 import modules.writter

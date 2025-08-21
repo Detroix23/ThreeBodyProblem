@@ -76,7 +76,7 @@ def app_cmd() -> dict[str, InputElem]:
         user_mode: settings.SimMode = settings.SimMode.CONFIG
     else:
         user_mode: settings.SimMode = main.DEFAULT_MODE
-        print("(!) - Incorrect input; set to 'default'")
+        print(f"(!) - Incorrect input; set to '{main.DEFAULT_MODE}'")
         
 
     if user_mode == settings.SimMode.RANDOM:
@@ -146,10 +146,10 @@ def app_cmd() -> dict[str, InputElem]:
         else:
             print("# Mode selected: default (use default value)")
 
-        system_input["Plan1"] = InputElem(10500, Vector2D(445, 560), "Plan1", 15, Vector2D(0, 0))
-        system_input["Plan2"] = InputElem(400, Vector2D(580, 450), "Plan2", 4, Vector2D(0, 10))
-        system_input["Plan3"] = InputElem(300, Vector2D(400, 400), "Plan3", 3, Vector2D(0, 10))
-        system_input["Plan4"] = InputElem(300, Vector2D(300, 350), "Plan4", 3, Vector2D(0, 10))
+        system_input["Plan1"] = InputElem(10500, Vector2D(445, 560), "Plan1", int(10500 / 100), Vector2D(0, 0))
+        system_input["Plan2"] = InputElem(400, Vector2D(580, 450), "Plan2", int(400 / 100), Vector2D(0, 10))
+        system_input["Plan3"] = InputElem(300, Vector2D(400, 400), "Plan3", int(300 / 100), Vector2D(0, 10))
+        system_input["Plan4"] = InputElem(300, Vector2D(300, 350), "Plan4", int(300 / 100), Vector2D(0, 10))
 
     # Warnings (!)
     if not system_input:
@@ -157,9 +157,12 @@ def app_cmd() -> dict[str, InputElem]:
     elif len(system_input) == 1:
         print("# (!) - One element system.")
 
+    # Sorting the element by size. 
+    # system_input = {elems for elems in sorted(system_input.items(), key=lambda item: item[1].size)}
+    
     print("Starting...")
 
-    # Completion
+    # Completion.
     return system_input
 
 if __name__ == "__main__":

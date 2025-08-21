@@ -121,3 +121,47 @@ System:
 	Elem: Plan4, position: x=469, y=456, size=42, velocity: x=0.8625389610607996, y=0.7853878814745587;
 Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, fusion=False
 
+Simulation: 2025-08-15 18:00:16.059743;
+System:
+	Elem: Plan1, position: x=784, y=439, size=59, velocity: x=0.796457660938422, y=-0.11363305384371936;
+	Elem: Plan2, position: x=652, y=365, size=1, velocity: x=0.5367912526205538, y=0.5945144632924526;
+	Elem: Plan3, position: x=317, y=569, size=25, velocity: x=-1.1910973461574543, y=-0.3293279578465311;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, fusion=False
+
+Simulation: 2025-08-15 18:04:35.786828;
+System:
+	Elem: Plan1, position: x=445, y=560, size=15, velocity: x=0, y=0;
+	Elem: Plan2, position: x=580, y=450, size=4, velocity: x=0, y=10;
+	Elem: Plan3, position: x=400, y=400, size=3, velocity: x=0, y=10;
+	Elem: Plan4, position: x=300, y=350, size=3, velocity: x=0, y=10;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, fusion=False
+
+Simulation: 2025-08-15 18:05:20.403617;
+System:
+	Elem: Plan1, position: x=445, y=560, size=105, velocity: x=0, y=0;
+	Elem: Plan2, position: x=580, y=450, size=4, velocity: x=0, y=10;
+	Elem: Plan3, position: x=400, y=400, size=3, velocity: x=0, y=10;
+	Elem: Plan4, position: x=300, y=350, size=3, velocity: x=0, y=10;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, fusion=False
+
+Simulation: 2025-08-19 15:45:57.785010;
+System:
+	Elem: Plan1, position: x=445, y=560, size=105, velocity: x=0, y=0;
+	Elem: Plan2, position: x=580, y=450, size=4, velocity: x=0, y=10;
+	Elem: Plan3, position: x=400, y=400, size=3, velocity: x=0, y=10;
+	Elem: Plan4, position: x=300, y=350, size=3, velocity: x=0, y=10;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, fusion=False
+
+Simulation: 2025-08-19 15:46:57.560920;
+System:
+	Elem: Plan1, position: x=357, y=600, size=11, velocity: x=-0.9852349938953062, y=-0.9747526006347601;
+	Elem: Plan2, position: x=723, y=676, size=88, velocity: x=0.5989823863755763, y=0.5889714480615655;
+	Elem: Plan3, position: x=379, y=380, size=69, velocity: x=0.9820382411437221, y=1.4871104483322846;
+	Elem: Plan4, position: x=200, y=494, size=91, velocity: x=-0.271199221840388, y=0.6736954509717772;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, fusion=False
+
+Simulation: 2025-08-19 15:48:29.017316;
+System:
+	Elem: asd, position: x=23.0, y=23.0, size=1, velocity: x=0, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, fusion=False
+
