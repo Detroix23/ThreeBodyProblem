@@ -5,7 +5,7 @@ Maths functions.
 
 import math
 import pyxel
-
+from typing_extensions import Self
 
 class Vector2D:
     """
@@ -42,16 +42,26 @@ class Vector2D:
         if not (math.isclose(self.x, 0) and math.isclose(self.y, 0)): 
             pyxel.line(x, y, x + self.x * size, y + self.y * size, col=color)
 
-    def mult(self, factor: float) -> None:
+    def mult(self, factor: float) -> Self:
         """
         Multiply the values of the vector
         """
         self.x = self.x * factor
         self.y = self.y * factor
-        
-    def add(self, value: float) -> None:
+        return self
+
+    def add(self, value: float) -> Self:
         """
         Add values to the vector
         """
         self.x = self.x + value
         self.y = self.y + value
+        return self
+
+    def div(self, factor: float) -> Self:
+        """
+        Divide all value of the vector
+        """
+        self.x = self.x / factor
+        self.y = self.y / factor
+        return self

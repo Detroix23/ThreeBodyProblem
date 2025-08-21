@@ -5,9 +5,10 @@ Run 3rd
 """
 
 import pyxel
-from maths_local import *
+from modules.maths_local import *
 import ui
 import modules.settings
+from typing_extensions import Self
 
 # GUI
 class Board:
@@ -45,7 +46,7 @@ class Board:
         self.title: str = title
         self.fps: int = fps
         self.bounce_factor: float = bounce_factor
-
+        self.do_collisions: bool = True
         # Controls
         self.camera: Vector2D = Vector2D(0, 0)
         self.zoom: float = 1
@@ -104,14 +105,16 @@ class Board:
             self.elemsX.append(elem.position.x)
             self.elemsY.append(elem.position.y)
             # print("-", elem)
-
         # Grid
         self.grid_main: Grid = Grid(self.grid_frequency, False, self.grid_force_weight, self.grid_color_grid, self.grid_color_point, board = self) 
 
         # Init simulation screen
         pyxel.init(width=width, height=height, title=title, fps=fps)
-        print("- Pyxel board initialized")
-        
+        print("- Pyxel initialized")
+        # Ressource file
+        pyxel.load(modules.settings.RESSOURCE_FILE)
+
+
         # Run
         pyxel.run(self.update, self.draw)
         print("# Game ended")
@@ -206,16 +209,23 @@ class Board:
             # Grid
             if self.draw_grid:
                 self.grid_main.generate_points()
+            # Reset some values for each elems
+            for element in self.system.values():
+                element.collisions = [] # type: ignore
             # Interactions for each element, all elements.
             for elemMain in self.system.values():
                 elemMain.force_vector = Vector2D(0, 0)
                 # print(elemMain.name, ":", elemMain.forceVector[0], elemMain.forceVector[1], end=" - ")
                 for elemTarget in self.system.values():
                     if elemMain != elemTarget:
-                        target_force: Vector2D = elemMain.gravitational_force_from(elemTarget.position, elemTarget.size, elemTarget.mass)
-                        
-                        elemMain.force_vector.x += target_force.x
-                        elemMain.force_vector.y += target_force.y
+                        distance: float = elemMain.distance_to(elemTarget)
+                        if distance > (elemMain.size / 2 + elemTarget.size / 2):
+                            target_force: Vector2D = elemMain.gravitational_force_from(elemTarget)
+                            
+                            elemMain.force_vector.x += target_force.x
+                            elemMain.force_vector.y += target_force.y
+                        elif self.do_collisions:
+                            collision(elemMain, elemTarget)
             
             # print()
             # Move
@@ -244,14 +254,21 @@ class Board:
         # Text
         if self.draw_text:
             self.text_main()
+        
+        
             
 
 class Elem:
     """
     Define a stellar element
     """
-    CHECK_RADIUS = 100
-    
+    CHECK_RADIUS: int = 100
+    SPRITE_POSITION: Vector2D = Vector2D(16, 0)
+    SPRITE_SIZE: Vector2D = Vector2D(16, 16)
+    SPRITE_IMAGE: int = 0
+    SPRITE_COLKEY: int = 0
+    SPRITE_SIZE_FACTOR: float = 1/16
+
     def __init__(
         self, BOARD: Board, mass: int, position: Vector2D, velocity: Vector2D,
         color: int = 5, size: int = 2, name: str = "",
@@ -265,7 +282,10 @@ class Elem:
         
         self.velocity: Vector2D = velocity
         self.force_vector: Vector2D = Vector2D(x = 0, y = 0)
+        self.collisions: list[Self] = []
 
+        # Drawing sprite will use the pyxres template, else, a square will be drawn.
+        self.draw_sprite: bool = True
         self.size: int = size
         self.color: int = color
         self.name: str = name
@@ -276,29 +296,29 @@ class Elem:
     def __repr__(self) -> str:
         return f"Elem {self.name} - Position: x={self.position.x}; y={self.position.y}, Mass: m={self.mass}, Force: x={self.force_vector.x}; y={self.force_vector.y}."
     
-    def distance_to(self, target_position: Vector2D) -> float:
+    def distance_to(self, target: Self) -> float:
         """
         Compute distance between this elem and the target elem
         """
-        return math.sqrt((target_position.x - self.position.x) ** 2 + (target_position.y - self.position.y) ** 2)
+        return math.sqrt((target.position.x - self.position.x) ** 2 + (target.position.y - self.position.y) ** 2)
     
-    def gravitational_force_from(self, target_position: Vector2D, target_size: int, target_mass: float) -> Vector2D:
+    def gravitational_force_from(self, target: Self) -> Vector2D:
         """
         Find the gravitational force vector
         """
         direction: int = 1
         # Direction
-        vector_distance: Vector2D = Vector2D(x = target_position.x - self.position.x, y = target_position.y - self.position.y)
+        vector_distance: Vector2D = Vector2D(x = target.position.x - self.position.x, y = target.position.y - self.position.y)
         vector_distance.normalize()
         # Distance
-        distance: float = self.distance_to(target_position)
+        distance: float = self.distance_to(target)
         # Limit artifically distance and prevent division by 0
-        distance_min: float = ((self.size + 1) / 2 + (target_size + 1) / 2)
+        distance_min: float = ((self.size + 1) / 2 + (target.size + 1) / 2)
         if distance < distance_min:
             distance = distance_min
         
         # F force value
-        force: float = (self.BOARD.gravitational_constant * target_mass) / (distance ** (2 + self.BOARD.exponent_softener))
+        force: float = (self.BOARD.gravitational_constant * target.mass) / (distance ** (2 + self.BOARD.exponent_softener))
         # Force vector
         vector_force: Vector2D = Vector2D(x = force * vector_distance.x * direction, y = force * vector_distance.y * direction)
         # Watch for overshot of planets
@@ -315,8 +335,6 @@ class Elem:
         
         return vector_force
 
-    def does_collide_with(self, target_position: Vector2D) -> bool:
-        return False
 
     def move(self) -> None:
         """
@@ -384,12 +402,27 @@ class Elem:
             int(self.position.x),
             int(self.position.y)
         )
-        # Main rectangle
-        pyxel.rect(position.x - size / 2, position.y - size / 2, size, size, col=self.color)
-        # Center
-        draw_point(int(position.x), int(position.y), color=self.color + 1)
-        # Outline
-        pyxel.rectb(position.x - size / 2, position.y - size / 2, size, size, col=7)
+        if self.draw_sprite:
+            pyxel.blt(
+                x=self.position.x - size / 2, 
+                y=self.position.y - size / 2, 
+                img=self.SPRITE_IMAGE, 
+                u=self.SPRITE_POSITION.x,
+                v=self.SPRITE_POSITION.y,
+                w=self.SPRITE_SIZE.x,
+                h=self.SPRITE_SIZE.y,
+                colkey=self.SPRITE_COLKEY,
+                scale=self.size * self.SPRITE_SIZE_FACTOR
+            )
+        else:
+            # Main rectangle
+            pyxel.rect(position.x - size / 2, position.y - size / 2, size, size, col=self.color)
+            # Outline
+            pyxel.rectb(position.x - size / 2, position.y - size / 2, size, size, col=7)
+            # Center
+            draw_point(int(position.x), int(position.y), color=self.color + 1)
+    
+
 
 class Point:
     """
@@ -432,6 +465,7 @@ class Point:
         
         
         return vector_force
+
 
 
 class Grid:
@@ -506,3 +540,29 @@ def draw_point(x: int, y: int, color: int) -> None:
     radius: int = 3
     pyxel.rect(x - radius, y - radius, radius * 2, radius * 2, col=color)
 
+def collision(element_a: Elem, element_b: Elem) -> bool:
+    """
+    Collide two elements and change their velocity by inverting the direction and preserving the actual speed.
+    To avoid the effect to cancel itself, each Elem has a list of already collided elements.
+    Return True if collision actually happened, False otherwise
+    """
+    collision_state: bool = False
+    if element_a not in element_b.collisions or element_b not in element_a.collisions:
+        next_a_velocity: Vector2D = element_b.velocity
+        next_a_velocity.normalize()
+        next_a_velocity.mult(element_a.velocity.magnitude)
+        next_b_velocity: Vector2D = element_a.velocity
+        next_b_velocity.normalize()
+        next_b_velocity.mult(element_b.velocity.magnitude)
+
+        # print("Collision! {} {} {} {}", element_a.velocity, element_b.velocity, next_a_velocity, next_b_velocity)
+
+        element_a.collisions.append(element_b)
+        element_b.collisions.append(element_a)
+        element_a.velocity = next_a_velocity
+        element_b.velocity = next_b_velocity
+        
+        collision_state = True
+
+    return collision_state
+    

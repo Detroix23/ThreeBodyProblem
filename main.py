@@ -33,9 +33,7 @@ import ui
 import modules.writter
 
         
-        
 
-# Simulation
 
 
 # Run 1st.

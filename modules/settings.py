@@ -3,7 +3,7 @@ THREE BODY PROBLEM
 Settings and enumeration file
 """
 
-from maths_local import *
+from modules.maths_local import *
 from enum import Enum
 
 class Edge(Enum):
@@ -17,3 +17,5 @@ class SimMode(Enum):
     CONFIG = 2
     DEFAULT = 3 
 
+# Pyxel
+RESSOURCE_FILE: str = "./assets/gravity.pyxres"
