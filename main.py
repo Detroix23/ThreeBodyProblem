@@ -9,7 +9,7 @@ Run: 1st
 # Imports
 # Local
 import modules.settings
-import simulation
+import app
 
 TITLE: str = "Simulation"
 BOARD_WIDTH: int  = 1000
@@ -32,9 +32,6 @@ DEFAULT_MODE: modules.settings.SimMode = modules.settings.SimMode.DEFAULT
 import ui
 import modules.writter
 
-        
-
-
 
 # Run 1st.
 if __name__ == "__main__":
@@ -48,7 +45,7 @@ if __name__ == "__main__":
         board_settings = f"edges={EDGE}, bounce={BOUNCE_FACTOR}, mass_softener={MASS_SOFTENER}, exponenent_softener={EXPONENENT_SOFTENER}, draw_velocity={DRAW_VELOCITY}, draw_force={DRAW_FORCE}, draw_text={DRAW_TEXT}, draw_grid={DRAW_GRID}, fusion={FUSION}"
     )
     
-    SIM: simulation.Board = simulation.Board(
+    SIM: app.App = app.App(
         system = system, 
         width = BOARD_WIDTH, 
         height = BOARD_HEIGHT, 

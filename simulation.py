@@ -35,10 +35,8 @@ class Board:
             @edges (string): {none, hard, bounce, tor}
         """
         # Vars
-        ### Distance expoential softener
         self.exponent_softener: float = exponent_softener    
         self.gravitational_constant: float = gravitational_constant
-        ### Mass factor
         self.mass_softener: float = mass_softener      
         self.edges: modules.settings.Edge = edges
         self.width: int = width
@@ -75,10 +73,8 @@ class Board:
         # Debug
         self.first_update = True
 
-        # Init elements
-        ## Elements
+        # Elements
         self.system: dict[str, Elem] = {}
-        
         for element_name, element_stats in system.items():
             self.system[element_name] = Elem(
                 self, 
@@ -88,36 +84,13 @@ class Board:
                 size = element_stats.size,
                 velocity = element_stats.velocity
             )
-        
-        
         print("- Provided system: ")
         print(system)
         print("- Saved system: ")
         print(self.system)
-        
-        ## Representation
-        ### Positions
 
-        self.elemsX: list[float] = []
-        self.elemsY: list[float] = []
-        # print("## Initialization of the elements: ")
-        for _, elem in self.system.items():
-            self.elemsX.append(elem.position.x)
-            self.elemsY.append(elem.position.y)
-            # print("-", elem)
         # Grid
         self.grid_main: Grid = Grid(self.grid_frequency, False, self.grid_force_weight, self.grid_color_grid, self.grid_color_point, board = self) 
-
-        # Init simulation screen
-        pyxel.init(width=width, height=height, title=title, fps=fps)
-        print("- Pyxel initialized")
-        # Ressource file
-        pyxel.load(modules.settings.RESSOURCE_FILE)
-
-
-        # Run
-        pyxel.run(self.update, self.draw)
-        print("# Game ended")
 
     def user_inputs(self) -> None:
         """
@@ -551,6 +524,8 @@ def collision(element_a: Elem, element_b: Elem) -> bool:
         next_a_velocity: Vector2D = element_b.velocity
         next_a_velocity.normalize()
         next_a_velocity.mult(element_a.velocity.magnitude)
+
+        
         next_b_velocity: Vector2D = element_a.velocity
         next_b_velocity.normalize()
         next_b_velocity.mult(element_b.velocity.magnitude)
