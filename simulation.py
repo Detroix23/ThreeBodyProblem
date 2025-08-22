@@ -23,7 +23,8 @@ class Board:
         edges: modules.settings.Edge, 
         bounce_factor: float,  
         mass_softener: float, 
-        exponent_softener: float, 
+        exponent_softener: float,
+        collisions: modules.settings.CollisionsBehaviour, 
         draw_velocity: bool = True, 
         draw_force: bool = True, 
         draw_text: bool = True, 
@@ -44,7 +45,7 @@ class Board:
         self.title: str = title
         self.fps: int = fps
         self.bounce_factor: float = bounce_factor
-        self.do_collisions: bool = True
+        self.collisions = collisions
         # Controls
         self.camera: Vector2D = Vector2D(0, 0)
         self.zoom: float = 1
@@ -194,11 +195,9 @@ class Board:
                         distance: float = elemMain.distance_to(elemTarget)
                         if distance > (elemMain.size / 2 + elemTarget.size / 2):
                             target_force: Vector2D = elemMain.gravitational_force_from(elemTarget)
-                            
-                            elemMain.force_vector.x += target_force.x
-                            elemMain.force_vector.y += target_force.y
-                        elif self.do_collisions:
-                            collision(elemMain, elemTarget)
+                            elemMain.force_vector.add(target_force)
+                        elif self.collisions in [modules.settings.CollisionsBehaviour.COLLIDE, modules.settings.CollisionsBehaviour.COLLIDE_WITH_FUSION, modules.settings.CollisionsBehaviour.COLLIDE_WITH_BUMP]:
+                            collision(elemMain, elemTarget, behaviour=self.collisions)
             
             # print()
             # Move
@@ -513,31 +512,25 @@ def draw_point(x: int, y: int, color: int) -> None:
     radius: int = 3
     pyxel.rect(x - radius, y - radius, radius * 2, radius * 2, col=color)
 
-def collision(element_a: Elem, element_b: Elem) -> bool:
+def collision(a: Elem, b: Elem, behaviour: modules.settings.CollisionsBehaviour) -> bool:
     """
     Collide two elements and change their velocity by inverting the direction and preserving the actual speed.
     To avoid the effect to cancel itself, each Elem has a list of already collided elements.
     Return True if collision actually happened, False otherwise
     """
     collision_state: bool = False
-    if element_a not in element_b.collisions or element_b not in element_a.collisions:
-        next_a_velocity: Vector2D = element_b.velocity
-        next_a_velocity.normalize()
-        next_a_velocity.mult(element_a.velocity.magnitude)
-
+    if a not in b.collisions or b not in a.collisions:
         
-        next_b_velocity: Vector2D = element_a.velocity
-        next_b_velocity.normalize()
-        next_b_velocity.mult(element_b.velocity.magnitude)
-
-        # print("Collision! {} {} {} {}", element_a.velocity, element_b.velocity, next_a_velocity, next_b_velocity)
-
-        element_a.collisions.append(element_b)
-        element_b.collisions.append(element_a)
-        element_a.velocity = next_a_velocity
-        element_b.velocity = next_b_velocity
+        # Detroix23 collision simplification 4, using a medium vector n, affected by mass and direction, that reflect the velocity vectors.
+        n: Vector2D = a.velocity * a.mass + b.velocity * b.mass
         
+        
+
+        a.collisions.append(b)
+        b.collisions.append(a)
         collision_state = True
+
+        
 
     return collision_state
     

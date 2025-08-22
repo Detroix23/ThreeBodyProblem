@@ -25,7 +25,7 @@ DRAW_VELOCITY: bool = True
 DRAW_FORCE: bool = False
 DRAW_TEXT: bool = True
 DRAW_GRID: bool = True
-FUSION: bool = False
+COLLISIONS: modules.settings.CollisionsBehaviour = modules.settings.CollisionsBehaviour.COLLIDE_WITH_FUSION
 
 DEFAULT_MODE: modules.settings.SimMode = modules.settings.SimMode.DEFAULT 
 
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     print(f"! Using system={system_string}. Logging...")
     modules.writter.board_settings(
         system = modules.writter.system(system_string),
-        board_settings = f"edges={EDGE}, bounce={BOUNCE_FACTOR}, mass_softener={MASS_SOFTENER}, exponenent_softener={EXPONENENT_SOFTENER}, draw_velocity={DRAW_VELOCITY}, draw_force={DRAW_FORCE}, draw_text={DRAW_TEXT}, draw_grid={DRAW_GRID}, fusion={FUSION}"
+        board_settings = f"edges={EDGE}, bounce={BOUNCE_FACTOR}, mass_softener={MASS_SOFTENER}, exponenent_softener={EXPONENENT_SOFTENER}, draw_velocity={DRAW_VELOCITY}, draw_force={DRAW_FORCE}, draw_text={DRAW_TEXT}, draw_grid={DRAW_GRID}, collisions={COLLISIONS}"
     )
     
     SIM: app.App = app.App(
@@ -52,10 +52,11 @@ if __name__ == "__main__":
         title = TITLE, 
         fps = FPS,
         gravitational_constant = G,
-        edges = EDGE, 
+        edges = EDGE,
         bounce_factor = BOUNCE_FACTOR,
         mass_softener = MASS_SOFTENER, 
         exponent_softener = EXPONENENT_SOFTENER,
+        collisions=COLLISIONS,
         draw_velocity = DRAW_VELOCITY, 
         draw_force = DRAW_FORCE, 
         draw_text = DRAW_TEXT,

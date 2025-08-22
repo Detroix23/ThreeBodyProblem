@@ -50,12 +50,16 @@ class Vector2D:
         self.y = self.y * factor
         return self
 
-    def add(self, value: float) -> Self:
+    def add(self, value: float|int|Self) -> Self:
         """
         Add values to the vector
         """
-        self.x = self.x + value
-        self.y = self.y + value
+        if isinstance(value, Vector2D):
+            self.x = self.x + value.x
+            self.y = self.y + value.y
+        else:
+            self.x += float(value)
+            self.y += float(value)
         return self
 
     def div(self, factor: float) -> Self:
@@ -65,3 +69,57 @@ class Vector2D:
         self.x = self.x / factor
         self.y = self.y / factor
         return self
+    
+    def dot(self, other: Self) -> float:
+        """
+        Compute the dot-product using the analytic way: a.x * b.x + a.y * b.y
+        """
+        return self.x * other.x + self.y * other.y
+
+    def __mul__(self, factor: float) -> Self:
+        """
+        Multiply the values of the vector, emulating numeric objects.
+        """
+        self.x = self.x * factor
+        self.y = self.y * factor
+        return self
+
+    def __add__(self, value: float|int|Self) -> Self:
+        """
+        Add values to the vector, emulating numeric objects.
+        """
+        if isinstance(value, Vector2D):
+            self.x += value.x
+            self.y += value.y
+        else:
+            self.x += float(value)
+            self.y += float(value)
+        return self
+
+    def __sub__(self, value: float|int|Self) -> Self:
+        """
+        Add values to the vector, emulating numeric objects.
+        """
+        if isinstance(value, Vector2D):
+            self.x -= value.x
+            self.y -=value.y
+        else:
+            self.x += float(value)
+            self.y += float(value)
+        return self
+
+    def __truediv__(self, factor: float) -> Self:
+        """
+        Divide all value of the vector, emulating numeric objects.
+        """
+        self.x = self.x / factor
+        self.y = self.y / factor
+        return self
+
+
+
+def dot_product(a: Vector2D, b: Vector2D) -> float:
+    """
+    Given two vector, compute their dot product.
+    """
+    return a.dot(b)

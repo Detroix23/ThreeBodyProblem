@@ -17,5 +17,12 @@ class SimMode(Enum):
     CONFIG = 2
     DEFAULT = 3 
 
+class CollisionsBehaviour(Enum):
+    NONE = 1
+    COLLIDE = 2
+    COLLIDE_WITH_FUSION = 3
+    COLLIDE_WITH_BUMP = 4
+
 # Pyxel
 RESSOURCE_FILE: str = "./assets/gravity.pyxres"
+
