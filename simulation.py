@@ -9,6 +9,7 @@ from modules.maths_local import *
 import ui
 import modules.settings
 from typing_extensions import Self
+import copy
 
 # GUI
 class Board:
@@ -183,13 +184,9 @@ class Board:
             # Grid
             if self.draw_grid:
                 self.grid_main.generate_points()
-            # Reset some values for each elems
-            for element in self.system.values():
-                element.collisions = [] # type: ignore
             # Interactions for each element, all elements.
             for elemMain in self.system.values():
                 elemMain.force_vector = Vector2D(0, 0)
-                # print(elemMain.name, ":", elemMain.forceVector[0], elemMain.forceVector[1], end=" - ")
                 for elemTarget in self.system.values():
                     if elemMain != elemTarget:
                         distance: float = elemMain.distance_to(elemTarget)
@@ -199,10 +196,10 @@ class Board:
                         elif self.collisions in [modules.settings.CollisionsBehaviour.COLLIDE, modules.settings.CollisionsBehaviour.COLLIDE_WITH_FUSION, modules.settings.CollisionsBehaviour.COLLIDE_WITH_BUMP]:
                             collision(elemMain, elemTarget, behaviour=self.collisions)
             
-            # print()
             # Move
             for elem in self.system.values():
                 elem.move()
+                elem.collisions = [] # type: ignore
         
         
     def draw(self) -> None:
@@ -242,8 +239,14 @@ class Elem:
     SPRITE_SIZE_FACTOR: float = 1/16
 
     def __init__(
-        self, BOARD: Board, mass: int, position: Vector2D, velocity: Vector2D,
-        color: int = 5, size: int = 2, name: str = "",
+        self, 
+        BOARD: Board, 
+        mass: int, 
+        position: Vector2D, 
+        velocity: Vector2D,
+        color: int = 5, 
+        size: int = 2, 
+        name: str = "",
     ) -> None:
         """
         Creation of the elem, with "mass, vInit, xStart, yStart, color=5, size=2".
@@ -251,7 +254,8 @@ class Elem:
         self.BOARD: Board = BOARD
         self.mass: float = mass  
         self.position: Vector2D = position
-        
+
+        self.displacement: Vector2D = Vector2D(0, 0)        
         self.velocity: Vector2D = velocity
         self.force_vector: Vector2D = Vector2D(x = 0, y = 0)
         self.collisions: list[Self] = []
@@ -312,56 +316,22 @@ class Elem:
         """
         Move the elem, according to force vector at a scale (mass) and checking collision
         """
+        # Apply optional displacement
+        self.position.add(self.displacement)
         # Apply force
         self.velocity = Vector2D(
             x = self.velocity.x + self.force_vector.x / (self.mass * self.BOARD.mass_softener),
             y = self.velocity.y + self.force_vector.y / (self.mass * self.BOARD.mass_softener)
         )
-        
         # Apply velocity
         self.position = Vector2D(
             x = self.position.x + self.velocity.x,
             y = self.position.y + self.velocity.y
         )
-
         # Check edges
-        # Disabled for now
-        """
-        for axis1 in (0, 1):
-            axis2: int = abs(axis1 - 1)
-            force_vector_list: list[float] = self.force_vector.to_list()
-            position_list: list[float] = self.position.to_list()
-
-            if self.position[axis1] + self.size / 2 >= self.BOARD.width:
-                if self.BOARD.edges == "bounce":
-                    force_vector_list[axis1] = self.force_vector[axis1] * -self.BOARD.bounce_factor
-                    force_vector_list[axis2] = self.force_vector[axis2]
-                    ### Force it to be in the board and count reflexion
-                    position_list[axis1] = 2 * self.BOARD.width - self.size / 2 - self.position[axis1]
-
-                elif self.BOARD.edges == "hard":
-                    force_vector_list[axis1] = 0.0
-                    force_vector_list[axis2] = self.force_vector[axis2]
-                    ### Force it to be in the board
-                    position_list[axis1] = self.BOARD.width - self.size / 2
-                    
-            elif self.position[axis1] <= 0:
-                if self.BOARD.edges == "bounce":
-                    force_vector_list[axis1] = self.force_vector[axis1] * -self.BOARD.bounce_factor
-                    force_vector_list[axis2] = self.force_vector[axis2]
-                    ### Force it to be in the board and count reflexion
-                    position_list[axis1] = 0
-
-                elif self.BOARD.edges == "hard":
-                    force_vector_list[axis1] = 0.0
-                    force_vector_list[axis2] = self.force_vector[axis2]
-                    ### Force it to be in the board
-                    position_list[axis1] = 0
-
-
-            self.force_vector = (force_vector_list[0], force_vector_list[1])
-            self.position = (position_list[0], position_list[1])
-        """
+        """ Disabled for now """
+        # Reset values
+        self.displacement = Vector2D(0, 0)
 
     def draw(self) -> None:
         """
@@ -376,8 +346,8 @@ class Elem:
         )
         if self.draw_sprite:
             pyxel.blt(
-                x=self.position.x - size / 2, 
-                y=self.position.y - size / 2, 
+                x=self.position.x - (self.size / (2 * self.size * self.SPRITE_SIZE_FACTOR)), 
+                y=self.position.y - (self.size / (2 * self.size * self.SPRITE_SIZE_FACTOR)), 
                 img=self.SPRITE_IMAGE, 
                 u=self.SPRITE_POSITION.x,
                 v=self.SPRITE_POSITION.y,
@@ -386,13 +356,16 @@ class Elem:
                 colkey=self.SPRITE_COLKEY,
                 scale=self.size * self.SPRITE_SIZE_FACTOR
             )
+            # Main rectangle
+            pyxel.rect(position.x - 16 / 2, position.y - 16 / 2, 16, 16, col=7)
         else:
             # Main rectangle
             pyxel.rect(position.x - size / 2, position.y - size / 2, size, size, col=self.color)
             # Outline
             pyxel.rectb(position.x - size / 2, position.y - size / 2, size, size, col=7)
-            # Center
-            draw_point(int(position.x), int(position.y), color=self.color + 1)
+        
+        # Center
+        draw_point(int(position.x), int(position.y), 16)
     
 
 
@@ -518,19 +491,40 @@ def collision(a: Elem, b: Elem, behaviour: modules.settings.CollisionsBehaviour)
     To avoid the effect to cancel itself, each Elem has a list of already collided elements.
     Return True if collision actually happened, False otherwise
     """
+    # Lightest element
+    lightest: Elem
+    heaviest: Elem
+    if a.mass > b.mass:
+        lightest = b
+        heaviest = a
+    else:
+        lightest = a
+        heaviest = b
+    distance_min = heaviest.size + lightest.size
     collision_state: bool = False
+    
     if a not in b.collisions or b not in a.collisions:
         
         # Detroix23 collision simplification 4, using a medium vector n, affected by mass and direction, that reflect the velocity vectors.
         n: Vector2D = a.velocity * a.mass + b.velocity * b.mass
-        
-        
+        n.normalize()
+
+        a.velocity = ((n * 2) * (a.velocity.dot(n))) - a.velocity
+        b.velocity = ((n * 2) * (b.velocity.dot(n))) - b.velocity
 
         a.collisions.append(b)
         b.collisions.append(a)
         collision_state = True
+        # Try to unclip
+        if lightest.velocity.magnitude < distance_min:
+            # Collision unclip.
+            v: Vector2D = Vector2D(lightest.position.x - heaviest.position.x, lightest.position.y - heaviest.position.y)
+            d: float = v.magnitude
+            v.normalize()
+            lightest.displacement = v * (1 - d + lightest.size)
 
-        
+
+
 
     return collision_state
     

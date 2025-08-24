@@ -147,9 +147,9 @@ def app_cmd() -> dict[str, InputElem]:
             print("# Mode selected: default (use default value)")
 
         # system_input["Plan1"] = InputElem(10500, Vector2D(445, 560), "Plan1", 100, Vector2D(0, 0))
-        system_input["Plan2"] = InputElem(400, Vector2D(580, 450), "Plan2", 64, Vector2D(0, -3))
-        system_input["Plan3"] = InputElem(300, Vector2D(400, 400), "Plan3", 48, Vector2D(0, -5))
-        system_input["Plan4"] = InputElem(300, Vector2D(300, 350), "Plan4", 32, Vector2D(2, 0))
+        system_input["Plan2"] = InputElem(400, Vector2D(580, 450), "Plan2", 64, Vector2D(0, -1))
+        system_input["Plan3"] = InputElem(300, Vector2D(400, 400), "Plan3", 48, Vector2D(0, -3))
+        system_input["Plan4"] = InputElem(200, Vector2D(300, 350), "Plan4", 32, Vector2D(2, 0))
 
     # Warnings (!)
     if not system_input:
