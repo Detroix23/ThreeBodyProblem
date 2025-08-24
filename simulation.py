@@ -24,7 +24,8 @@ class Board:
         bounce_factor: float,  
         mass_softener: float, 
         exponent_softener: float,
-        collisions: modules.settings.CollisionsBehaviour, 
+        collisions: modules.settings.CollisionsBehaviour,
+        grid_draw_vector: bool,
         draw_velocity: bool = True, 
         draw_force: bool = True, 
         draw_text: bool = True, 
@@ -63,9 +64,9 @@ class Board:
         
         # Grid
         self.grid_frequency: int = 16
-        self.grid_force_weight: float = 0.05
+        self.grid_force_weight: float = 2.3
         # True to move the points, False to fix the point but show the vectors
-        self.grid_move_point: bool = True
+        self.grid_move_point: bool = not grid_draw_vector
         self.grid_color_grid: int = 10
         self.grid_color_point: int = 11
 
@@ -89,7 +90,14 @@ class Board:
         print(self.system)
 
         # Grid
-        self.grid_main: Grid = Grid(self.grid_frequency, False, self.grid_force_weight, self.grid_color_grid, self.grid_color_point, board = self) 
+        self.grid_main: Grid = Grid(
+            self.grid_frequency, 
+            False, 
+            self.grid_force_weight, 
+            self.grid_color_grid, 
+            self.grid_color_point, 
+            board = self
+        ) 
 
     def user_inputs(self) -> None:
         """
@@ -364,11 +372,10 @@ class Point:
     Point of the grid 
     """
     
-    def __init__(self, x: int, y: int, force_weight: float, board: Board) -> None:
+    def __init__(self, x: int, y: int, board: Board) -> None:
         self.x: int = x
         self.y: int = y
         self.BOARD: Board = board
-        self.force_weight: float = force_weight
         self.force: Vector2D = Vector2D(0, 0)
         
         
@@ -378,7 +385,7 @@ class Point:
         """
         return math.sqrt((target_position.x - self.x) ** 2 + (target_position.y - self.y) ** 2)
     
-    def gravitational_force_from(self, target_position: Vector2D, target_size: int, target_mass: float) -> Vector2D:
+    def gravitational_force_from(self, target_position: Vector2D, target_mass: float) -> Vector2D:
         """
         Find the gravitational force vector
         """
@@ -392,7 +399,7 @@ class Point:
             distance = 1
         
         # F force value
-        force: float = (self.BOARD.gravitational_constant * target_mass) / (distance ** (2 + self.BOARD.exponent_softener)) * self.force_weight
+        force: float = (self.BOARD.gravitational_constant * target_mass) / (distance ** (2 + self.BOARD.exponent_softener))
         if force > distance:
             force = distance
         # Force vector
@@ -414,6 +421,7 @@ class Grid:
         self.color_point: int = color_point
         self.board: Board = board
         self.force_weight: float = force_weight
+        self.force_exponent: float = 0.5
         # Use lists index to find neighbours, Point cords to draw lines
         self.points: list[list[Point]] = []
     
@@ -438,13 +446,16 @@ class Grid:
                 point: Point = Point(
                     x - dx,
                     y - dy, 
-                    self.force_weight, 
                     board=self.board
                 )
                 point.force = Vector2D(0, 0)
                 # Check G-Force for all bodies
                 for elemTarget in self.board.system.values():
-                    target_force: Vector2D = point.gravitational_force_from(elemTarget.position, elemTarget.size, elemTarget.mass)    
+                    target_force: Vector2D = point.gravitational_force_from(elemTarget.position, elemTarget.mass)
+                    # Tweak the display force.
+                    force_value: float = target_force.magnitude
+                    target_force.normalize()
+                    target_force.mult(pow(force_value, self.force_exponent) * self.force_weight)
                     point.force.x += target_force.x
                     point.force.y += target_force.y
                 
@@ -468,13 +479,12 @@ class Grid:
                 draw_point(point.x, point.y, color=self.color_point)
                 if not self.board.grid_move_point:
                     point.force.draw_on(point.x, point.y, 1, color=10)
-                
-                # Draw grid lines, if there are points (facing +y, then to +x)
-                if i + 1 < len(points_y):
-                    pyxel.line(point.x, point.y, points_y[i + 1][j].x, points_y[i + 1][j].y, col=self.color_grid)
-                if j + 1 < len(points_x):
-                    pyxel.line(point.x, point.y, points_x[j + 1].x, points_x[j + 1].y, col=self.color_grid)                
-
+                else:
+                    # Draw grid lines, if there are points (facing +y, then to +x)
+                    if i + 1 < len(points_y):
+                        pyxel.line(point.x, point.y, points_y[i + 1][j].x, points_y[i + 1][j].y, col=self.color_grid)
+                    if j + 1 < len(points_x):
+                        pyxel.line(point.x, point.y, points_x[j + 1].x, points_x[j + 1].y, col=self.color_grid)
                 j += 1
             i += 1
 

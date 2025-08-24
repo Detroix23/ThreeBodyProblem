@@ -26,7 +26,7 @@ DRAW_FORCE: bool = False
 DRAW_TEXT: bool = True
 DRAW_GRID: bool = True
 COLLISIONS: modules.settings.CollisionsBehaviour = modules.settings.CollisionsBehaviour.COLLIDE_WITH_FUSION
-
+GRID_DRAW_VECTORS: bool = False
 DEFAULT_MODE: modules.settings.SimMode = modules.settings.SimMode.DEFAULT 
 
 import ui
@@ -57,6 +57,7 @@ if __name__ == "__main__":
         mass_softener = MASS_SOFTENER, 
         exponent_softener = EXPONENENT_SOFTENER,
         collisions=COLLISIONS,
+        grid_draw_vector=GRID_DRAW_VECTORS,
         draw_velocity = DRAW_VELOCITY, 
         draw_force = DRAW_FORCE, 
         draw_text = DRAW_TEXT,
