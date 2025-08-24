@@ -777,3 +777,94 @@ System:
 	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
 Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
 
+Simulation: 2025-08-24 10:43:13.195489;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 11:53:28.031990;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 11:55:07.672362;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 11:55:54.039912;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 11:57:22.063986;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 11:58:00.360008;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 11:58:20.336081;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 12:00:31.975902;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 12:01:21.175577;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 12:03:37.343816;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 12:04:56.599840;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 12:07:37.807585;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
+Simulation: 2025-08-24 12:08:04.352473;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=32, velocity: x=2, y=0;
+Settings: edges=Edge.NONE, bounce=1.0, mass_softener=1.0, exponenent_softener=-0.0, draw_velocity=True, draw_force=False, draw_text=True, draw_grid=True, collisions=CollisionsBehaviour.COLLIDE_WITH_FUSION
+
