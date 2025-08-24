@@ -45,7 +45,7 @@ if __name__ == "__main__":
         board_settings = f"edges={EDGE}, bounce={BOUNCE_FACTOR}, mass_softener={MASS_SOFTENER}, exponenent_softener={EXPONENENT_SOFTENER}, draw_velocity={DRAW_VELOCITY}, draw_force={DRAW_FORCE}, draw_text={DRAW_TEXT}, draw_grid={DRAW_GRID}, collisions={COLLISIONS}"
     )
     
-    SIM: app.App = app.App(
+    APP: app.App = app.App(
         system = system, 
         width = BOARD_WIDTH, 
         height = BOARD_HEIGHT, 

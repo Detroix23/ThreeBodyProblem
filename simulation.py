@@ -219,9 +219,6 @@ class Board:
                 elem.force_vector.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=3) 
             if self.draw_velocity:
                 elem.velocity.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=5)
-        # Text
-        if self.draw_text:
-            self.text_main()
         
         
             
@@ -519,6 +516,6 @@ def collision(a: Elem, b: Elem, behaviour: modules.settings.CollisionsBehaviour)
 
             a.displacement = Vector2D(displacement.x, displacement.y) * n_a
             b.displacement = Vector2D(displacement.x, displacement.y) * n_b
-            print(f"! C - Fu: {a.displacement=} {n_a}, {b.displacement=} {n_b}; ")
+            # print(f"! C - Fu: {a.displacement=} {n_a}, {b.displacement=} {n_b}; ")
     return collision_state
     
