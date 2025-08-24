@@ -3,6 +3,7 @@ import modules.settings
 import ui
 import simulation
 import text
+import user_inputs
 import pyxel
 
 
@@ -50,15 +51,10 @@ class App:
         self.text: text.Text = text.Text(
             draw_main=True
         )
-        """
-        [
-            f"# Three Body Problem - title={title}; edges={edges}, fps={str(fps)}, frames={str(frame_count)}",
-            f"- Controls: zoom={str(zoom)}, camera: x={str(camera.x)}; y={str(camera.y)}",
-            f"- Time: speed={str(time_speed)}, fpf={frame_per_frame}",
-            f"- Elements: total={str(len(system))}",
-            "---"
-        ]
-        """
+        # User inputs
+        self.user_inputs: user_inputs.UserInputs = user_inputs.UserInputs(
+            
+        )
 
         # Simulation screen
         pyxel.init(width, height, title=title, fps=fps)
