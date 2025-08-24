@@ -55,6 +55,7 @@ class Board:
         self.frame_per_frame_previous: int = 1
 
         # UI
+        self.draw_elems: bool = True
         self.draw_velocity: bool = draw_velocity
         self.draw_force: bool = draw_force
         self.draw_text: bool = draw_text
@@ -148,10 +149,17 @@ class Board:
         elif pyxel.btn(pyxel.KEY_UP):
             self.camera.y -= int(10 / self.zoom)
 
-        # Grid
+        # Displays
         if pyxel.btnr(pyxel.KEY_G):
             self.draw_grid = not self.draw_grid
-        
+        elif pyxel.btnr(pyxel.KEY_E):
+            self.draw_elems = not self.draw_elems
+        elif pyxel.btnr(pyxel.KEY_R):
+            self.draw_force = not self.draw_force
+        elif pyxel.btnr(pyxel.KEY_T):
+            self.draw_text = not self.draw_text
+        elif pyxel.btnr(pyxel.KEY_F):
+            self.draw_velocity = not self.draw_velocity
 
     def update(self) -> None:
         """
@@ -163,11 +171,11 @@ class Board:
             self.first_update = not self.first_update
         # Inputs
         self.user_inputs()
+        # Grid
+        if self.draw_grid:
+            self.grid_main.generate_points()
         # Frame limiter for the game
         if pyxel.frame_count % self.frame_per_frame == 0:      
-            # Grid
-            if self.draw_grid:
-                self.grid_main.generate_points()
             # Interactions for each element, all elements.
             for elemMain in self.system.values():
                 elemMain.force_vector = Vector2D(0, 0)
@@ -199,7 +207,8 @@ class Board:
             self.grid_main.draw()
         # All elems
         for _, elem in self.system.items():
-            elem.draw()
+            if self.draw_elems:
+                elem.draw()
             if self.draw_force:
                 elem.force_vector.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=3) 
             if self.draw_velocity:
@@ -415,9 +424,17 @@ class Grid:
         dy: int = int(float(self.board.height) / self.frequency)
         
         
-        for y in range(0, self.board.height + 2 * dy, dy):
+        for y in range(
+            int(self.board.camera.y), 
+            self.board.height + 2 * dy + int(self.board.camera.y),
+            dy
+        ):
             points_x: list[Point] = []
-            for x in range(0, self.board.width + 2 * dx, dx):
+            for x in range(
+                int(self.board.camera.x), 
+                self.board.width + 2 * dx + int(self.board.camera.x), 
+                dx
+            ):
                 point: Point = Point(
                     x - dx,
                     y - dy, 

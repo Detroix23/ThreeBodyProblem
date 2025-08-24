@@ -48,6 +48,7 @@ class App:
         )
         # Text
         self.text: text.Text = text.Text(
+            app=self,
             draw_main=True
         )
         """
