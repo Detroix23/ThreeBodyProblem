@@ -67,9 +67,6 @@ class Board:
         self.grid_move_point: bool = True
         self.grid_color_grid: int = 10
         self.grid_color_point: int = 11
-        
-        # Text
-        self.texts_main: list[str] = []
 
         # Debug
         self.first_update = True
@@ -155,18 +152,6 @@ class Board:
         if pyxel.btnr(pyxel.KEY_G):
             self.draw_grid = not self.draw_grid
         
-    def text_main(self, text_color: int = 8) -> None:
-        x = y = 10
-        self.texts_main = [
-            f"# Three Body Problem - title={self.title}; edges={self.edges}, fps={str(self.fps)}, frames={str(pyxel.frame_count)}",
-            f"- Controls: zoom={str(self.zoom)}, camera: x={str(self.camera.x)}; y={str(self.camera.y)}",
-            f"- Time: speed={str(self.time_speed)}, fpf={self.frame_per_frame}",
-            f"- Elements: total={str(len(self.system))}",
-            "---"
-        ]
-        for txt in self.texts_main:
-            pyxel.text(x, y, txt, text_color)
-            y += 6
 
     def update(self) -> None:
         """
