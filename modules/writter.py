@@ -15,7 +15,7 @@ def board_settings(system: str, board_settings: str) -> None:
     """
     Take the board settings, preformatted as a string, and write the logs. 
     """
-    logs_path: str = ".\\logs\\main.log"
+    logs_path: str = "..\\logs\\main.log"
     with open(logs_path, "a") as logs:
         logs.write(f"Simulation: {datetime.datetime.now()};\n")
         logs.write(f"System:\n{system}")
