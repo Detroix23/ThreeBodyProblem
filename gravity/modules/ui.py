@@ -5,8 +5,8 @@ Run: 2nd
 """
 import random
 
-from modules.maths_local import *
 import main
+from modules.maths_local import *
 import modules.settings as settings
 
 

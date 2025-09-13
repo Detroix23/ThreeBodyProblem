@@ -5,10 +5,12 @@ Run 3rd
 """
 
 import pyxel
-from modules.maths_local import *
-import ui
-import modules.settings
 from typing_extensions import Self
+
+
+from modules.maths_local import *
+import modules.ui as ui
+import modules.settings as settings
 
 # GUI
 class Board:
@@ -20,11 +22,11 @@ class Board:
         title: str, 
         fps: int, 
         gravitational_constant: float, 
-        edges: modules.settings.Edge, 
+        edges: settings.Edge, 
         bounce_factor: float,  
         mass_softener: float, 
         exponent_softener: float,
-        collisions: modules.settings.CollisionsBehaviour,
+        collisions: settings.CollisionsBehaviour,
         grid_draw_vector: bool,
         draw_velocity: bool = True, 
         draw_force: bool = True, 
@@ -40,7 +42,7 @@ class Board:
         self.exponent_softener: float = exponent_softener    
         self.gravitational_constant: float = gravitational_constant
         self.mass_softener: float = mass_softener      
-        self.edges: modules.settings.Edge = edges
+        self.edges: settings.Edge = edges
         self.width: int = width
         self.height: int = height
         self.title: str = title
@@ -193,7 +195,7 @@ class Board:
                         if distance > (elemMain.size / 2 + elemTarget.size / 2):
                             target_force: Vector2D = elemMain.gravitational_force_from(elemTarget)
                             elemMain.force_vector.add(target_force)
-                        elif self.collisions in [modules.settings.CollisionsBehaviour.COLLIDE, modules.settings.CollisionsBehaviour.COLLIDE_WITH_FUSION, modules.settings.CollisionsBehaviour.COLLIDE_WITH_BUMP]:
+                        elif self.collisions in [settings.CollisionsBehaviour.COLLIDE, settings.CollisionsBehaviour.COLLIDE_WITH_FUSION, settings.CollisionsBehaviour.COLLIDE_WITH_BUMP]:
                             collision(elemMain, elemTarget, behaviour=self.collisions)
             
             # Move
@@ -493,7 +495,7 @@ def draw_point(x: int, y: int, color: int) -> None:
     radius: int = 3
     pyxel.rect(x - radius, y - radius, radius * 2, radius * 2, col=color)
 
-def collision(a: Elem, b: Elem, behaviour: modules.settings.CollisionsBehaviour) -> bool:
+def collision(a: Elem, b: Elem, behaviour: settings.CollisionsBehaviour) -> bool:
     """
     Collide two elements and change their velocity by inverting the direction and preserving the actual speed.
     To avoid the effect to cancel itself, each Elem has a list of already collided elements.

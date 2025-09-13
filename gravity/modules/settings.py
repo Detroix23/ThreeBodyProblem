@@ -2,10 +2,12 @@
 THREE BODY PROBLEM
 Settings and enumeration file
 """
+from enum import Enum
+from pathlib import Path
 
 from modules.maths_local import *
-from enum import Enum
 
+# Gravity
 class Edge(Enum):
     NONE = 1
     HARD = 2
@@ -23,6 +25,7 @@ class CollisionsBehaviour(Enum):
     COLLIDE_WITH_FUSION = 3
     COLLIDE_WITH_BUMP = 4
 
-# Pyxel
-RESSOURCE_FILE: str = "./assets/gravity.pyxres"
+# Pyxel.
+# Relative path from `modules`.
+RESSOURCE_FILE: Path = Path("../../assets/gravity.pyxres")
 

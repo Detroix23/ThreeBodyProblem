@@ -1,9 +1,9 @@
-
-import modules.settings
-import ui
-import simulation
-import text
 import pyxel
+
+import modules.settings as settings
+import modules.ui as ui
+import modules.simulation as simulation
+import modules.text as text
 
 
 class App:
@@ -18,11 +18,11 @@ class App:
         title: str, 
         fps: int, 
         gravitational_constant: float, 
-        edges: modules.settings.Edge, 
+        edges: settings.Edge, 
         bounce_factor: float,  
         mass_softener: float, 
         exponent_softener: float,
-        collisions: modules.settings.CollisionsBehaviour, 
+        collisions: settings.CollisionsBehaviour, 
         grid_draw_vector: bool,
         draw_velocity: bool = True, 
         draw_force: bool = True, 
@@ -67,7 +67,11 @@ class App:
         pyxel.init(width, height, title=title, fps=fps)
         print("- Pyxel initialized")
         # Ressource file
-        pyxel.load(modules.settings.RESSOURCE_FILE)
+        try:
+            pyxel.load(str(settings.RESSOURCE_FILE))
+        except Exception as exception:
+            raise Exception(f"(X) - Couldn't open ressource file in {settings.RESSOURCE_FILE}. {type(exception).__name__}: `{exception.args}`.")
+
         # Run
         pyxel.run(self.update, self.draw)
 

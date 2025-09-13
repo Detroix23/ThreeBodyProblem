@@ -1,4 +1,13 @@
+# Logs.
+/logs/*
 
-./.venv
-./__pycache__
-./vscode
+# Virtual environement.
+/.venv/
+/venv/
+
+# Python.
+**/__pycache__/
+*.pyc
+
+# Documentation.
+!README.md
