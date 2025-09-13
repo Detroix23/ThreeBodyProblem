@@ -29,7 +29,7 @@ class App:
         draw_text: bool = True, 
         draw_grid: bool = True,
     ) -> None:
-        # Simulation
+        # Simulation.
         self.simulation: simulation.Board = simulation.Board(
             system,
             width,
@@ -48,35 +48,28 @@ class App:
             draw_text,
             draw_grid
         )
-        # Text
+        # Text.
         self.text: text.Text = text.Text(
             app=self,
             draw_main=True
         )
-        """
-        [
-            f"# Three Body Problem - title={title}; edges={edges}, fps={str(fps)}, frames={str(frame_count)}",
-            f"- Controls: zoom={str(zoom)}, camera: x={str(camera.x)}; y={str(camera.y)}",
-            f"- Time: speed={str(time_speed)}, fpf={frame_per_frame}",
-            f"- Elements: total={str(len(system))}",
-            "---"
-        ]
-        """
 
-        # Simulation screen
+        # Simulation screen.
         pyxel.init(width, height, title=title, fps=fps)
         print("- Pyxel initialized")
-        # Ressource file
+        # Ressource file.
         try:
             pyxel.load(str(settings.RESSOURCE_FILE))
         except Exception as exception:
             raise Exception(f"(X) - Couldn't open ressource file in {settings.RESSOURCE_FILE}. {type(exception).__name__}: `{exception.args}`.")
 
-        # Run
+        # Run.
         pyxel.run(self.update, self.draw)
 
     def update(self) -> None:
+        # Gravity.
         self.simulation.update()
+        # Text.
         self.text.update(
             text_main=[
                 f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, fps={str(self.simulation.fps)}, frames={str(pyxel.frame_count)}",
