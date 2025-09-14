@@ -1,6 +1,7 @@
 import pyxel
 
 import modules.settings as settings
+import modules.paths as paths
 import modules.ui as ui
 import modules.simulation as simulation
 import modules.text as text
@@ -59,9 +60,9 @@ class App:
         print("- Pyxel initialized")
         # Ressource file.
         try:
-            pyxel.load(str(settings.RESSOURCE_FILE))
+            pyxel.load(str(paths.RESSOURCE_FILE))
         except Exception as exception:
-            raise Exception(f"(X) - Couldn't open ressource file in {settings.RESSOURCE_FILE}. {type(exception).__name__}: `{exception.args}`.")
+            raise Exception(f"(X) - Couldn't open ressource file in {paths.RESSOURCE_FILE}. {type(exception).__name__}: `{exception.args}`.")
 
         # Run.
         pyxel.run(self.update, self.draw)

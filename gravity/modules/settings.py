@@ -25,7 +25,4 @@ class CollisionsBehaviour(Enum):
     COLLIDE_WITH_FUSION = 3
     COLLIDE_WITH_BUMP = 4
 
-# Pyxel.
-# Relative path from `modules`.
-RESSOURCE_FILE: Path = Path("../../assets/gravity.pyxres")
 
