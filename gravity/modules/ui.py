@@ -38,14 +38,14 @@ class Layers:
         
 
 
-def app_cmd() -> list[settings.InputElem]:
+def app_cmd() -> dict[str, settings.InputElem]:
     """
     Basic starting sequence for the user, in CMD.
     """
     print("# Three body problem simulations")
     ## Config
     user_mode_str: str = input(f"Please select a mode {"{rand/conf/default}"}[{main.DEFAULT_MODE}]: ")
-    system_input: list[settings.InputElem] = []
+    system_input: dict[str, settings.InputElem] = {}
 
     if user_mode_str in ["r", "rand", "random"]:
         user_mode: settings.SimMode = settings.SimMode.RANDOM
@@ -81,23 +81,22 @@ def app_cmd() -> list[settings.InputElem]:
             mass_random: int = random.randint(weight_min, weight_max)
             position_x_random = random.randint(borders["West"], borders["East"])
             position_y_random = random.randint(borders["North"], borders["South"])
-            system_input.append(settings.InputElem(
+            system_input[name_random] = settings.InputElem(
                 mass_random, 
                 Vector2D(position_x_random, position_y_random), 
                 name_random, 
                 int(mass_random / 100), 
                 Vector2D(random.uniform(velocity_x_min, velocity_x_max), random.uniform(velocity_y_min, velocity_y_max))
-            ))
+            )
             i += 1
 
     elif user_mode == settings.SimMode.CONFIG:
         user_exit: bool = False
         print("# Mode selected: conf (manual configuration);")
         while not user_exit:
-            if system_input: 
-                print("Currently loaded: ")
+            if system_input: print("Currently loaded: ")
             for element in system_input:
-                print("- " + element.name)
+                print("- " + element)
 
             print("New element: respect type, 'q' to validate to launch")
             manual: dict[str, str] = {}
@@ -107,9 +106,9 @@ def app_cmd() -> list[settings.InputElem]:
                 manual['position_x'] = listing_input("- Starting position (x): ")
                 manual['position_y'] = listing_input("- Starting position (y): ")
 
-                system_input.append(settings.InputElem(
+                system_input[manual['name']] = settings.InputElem(
                     int(manual['mass']), Vector2D(float(manual['position_x']), float(manual['position_y'])), manual['name'], int(int(manual['mass']) / 100), Vector2D(0, 0)
-                ))
+                )
             except ValueError as e:
                 if e.__str__() == 'Exit':
                     user_exit = True
