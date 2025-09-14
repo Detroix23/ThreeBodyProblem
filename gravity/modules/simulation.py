@@ -210,8 +210,6 @@ class Board():
                 elem.move()
                 elem.collisions = [] # type: ignore
 
-            # Camera follow TEST.
-            self.camera.follow_element(self.system[0])
 
         
     def draw(self) -> None:
