@@ -13,7 +13,7 @@ class App:
     """
     def __init__(
         self, 
-        system: dict[str, ui.InputElem], 
+        system: dict[str, settings.InputElem], 
         width: int, 
         height: int, 
         title: str, 
@@ -80,7 +80,7 @@ class App:
                 "---"
             ]
         )
-
+    
     def draw(self) -> None:
         self.simulation.draw()
         self.text.draw()

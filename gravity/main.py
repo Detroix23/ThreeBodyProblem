@@ -31,13 +31,8 @@ COLLISIONS: settings.CollisionsBehaviour = settings.CollisionsBehaviour.COLLIDE_
 GRID_DRAW_VECTORS: bool = False
 DEFAULT_MODE: settings.SimMode = settings.SimMode.DEFAULT 
 
-
-
-# Run 1st.
-if __name__ == "__main__":
-    
-    system: dict[str, ui.InputElem] = ui.app_cmd()
-    
+def main() -> None:
+    system: dict[str, settings.InputElem] = ui.app_cmd()
     system_string: dict[str, str] = {elem_name: elem_info.__str__() for elem_name, elem_info in system.items()}
     print(f"! Using system={system_string}. Logging...")
     writter.board_settings(
@@ -63,10 +58,10 @@ if __name__ == "__main__":
         draw_text = DRAW_TEXT,
         draw_grid = DRAW_GRID
     )
-    
-    
+
     print("---\nEnd")
 
 
-
+if __name__ == "__main__":
+    main()
 

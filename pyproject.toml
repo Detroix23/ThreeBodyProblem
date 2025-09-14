@@ -8,6 +8,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.12"
 classifiers = [
+    "Typing :: Typed",
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
     "Natural Language :: English",
@@ -20,6 +21,9 @@ license = "CC-BY-4.0"
 license-files = [
     "LICENSE.md"
 ]
+
+[project.scripts]
+gravity = "./gravity/main.py:main"
 
 [project.urls]
 Repository = "https://github.com/Detroix23/ThreeBodyProblem"

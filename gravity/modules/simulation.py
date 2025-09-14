@@ -19,7 +19,7 @@ import modules.drawing as drawing
 class Board():
     def __init__(
         self, 
-        system: dict[str, ui.InputElem], 
+        system: dict[str, settings.InputElem], 
         width: int, 
         height: int, 
         title: str, 
