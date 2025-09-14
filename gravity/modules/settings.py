@@ -50,11 +50,11 @@ class InputElem:
 
 
 # Defaults.
-DEFAULT_SYSTEM: dict[str, InputElem] = {
+DEFAULT_SYSTEM: list[InputElem] = [
     # Mass, position, name, size, velocity.
     # system_input["Plan1"] = InputElem(10500, Vector2D(445, 560), "Plan1", 100, Vector2D(0, 0)),
-    "Plan2": InputElem(2000, Vector2D(580, 450), "Plan2", 64, Vector2D(0, -1)),
-    "Plan3": InputElem(1000, Vector2D(400, 400), "Plan3", 48, Vector2D(0, -3)),
-    "Plan4": InputElem(200, Vector2D(300, 350), "Plan4", 8, Vector2D(2, 0)),
-}
+    InputElem(2000, Vector2D(580, 450), "Plan2", 64, Vector2D(0, -1)),
+    InputElem(1000, Vector2D(400, 400), "Plan3", 48, Vector2D(0, -3)),
+    InputElem(200, Vector2D(300, 350), "Plan4", 8, Vector2D(2, 0)),
+]
 

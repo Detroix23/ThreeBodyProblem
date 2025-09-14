@@ -75,14 +75,14 @@ class Grid:
         
         
         for y in range(
-            int(self.board.camera.y), 
-            self.board.height + 2 * dy + int(self.board.camera.y),
+            int(self.board.camera.position.y), 
+            self.board.height + 2 * dy + int(self.board.camera.position.y),
             dy
         ):
             points_x: list[Point] = []
             for x in range(
-                int(self.board.camera.x), 
-                self.board.width + 2 * dx + int(self.board.camera.x), 
+                int(self.board.camera.position.x), 
+                self.board.width + 2 * dx + int(self.board.camera.position.x), 
                 dx
             ):
                 point: Point = Point(
@@ -92,7 +92,7 @@ class Grid:
                 )
                 point.force = Vector2D(0, 0)
                 # Check G-Force for all bodies
-                for elemTarget in self.board.system.values():
+                for elemTarget in self.board.system:
                     target_force: Vector2D = point.gravitational_force_from(elemTarget.position, elemTarget.mass)
                     # Tweak the display force.
                     force_value: float = target_force.magnitude
