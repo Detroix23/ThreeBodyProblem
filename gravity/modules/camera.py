@@ -18,5 +18,11 @@ class Camera:
         self.zoom: float = 1.0
 
     def follow_element(self, elem: element.Element) -> None:
-        self.position.x = elem.position.x - self.simulation.width / 2
-        self.position.y = elem.position.y - self.simulation.height / 2
+        objective: Vector2D = Vector2D(
+            elem.position.x - self.simulation.width / 2,
+            elem.position.y - self.simulation.height / 2
+        )
+        objective.div(1.1)
+
+        self.position.x = objective.x
+        self.position.y = objective.y
