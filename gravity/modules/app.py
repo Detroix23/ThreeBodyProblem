@@ -13,7 +13,7 @@ class App:
     """
     def __init__(
         self, 
-        system: dict[str, settings.InputElem], 
+        system: list[settings.InputElem], 
         width: int, 
         height: int, 
         title: str, 
@@ -74,13 +74,13 @@ class App:
         self.text.update(
             text_main=[
                 f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, fps={str(self.simulation.fps)}, frames={str(pyxel.frame_count)}",
-                f"- Controls: zoom={str(self.simulation.zoom)}, camera: x={str(self.simulation.camera.x)}; y={str(self.simulation.camera.y)}",
+                f"- Controls: zoom={str(self.simulation.camera.zoom)}, camera: x={str(self.simulation.camera.position.x)}; y={str(self.simulation.camera.position.y)}",
                 f"- Time: speed={str(self.simulation.time_speed)}, fpf={self.simulation.frame_per_frame}",
                 f"- Elements: total={str(len(self.simulation.system))}",
                 "---"
             ]
         )
-    
+
     def draw(self) -> None:
         self.simulation.draw()
         self.text.draw()

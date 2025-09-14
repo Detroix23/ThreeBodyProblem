@@ -13,13 +13,14 @@ import modules.settings as settings
 import modules.grid as grid
 import modules.element as element
 import modules.collisions as collisions
+import modules.camera as camera
 import modules.drawing as drawing
 
 # GUI
 class Board():
     def __init__(
         self, 
-        system: dict[str, settings.InputElem], 
+        system: list[settings.InputElem], 
         width: int, 
         height: int, 
         title: str, 
@@ -51,8 +52,6 @@ class Board():
         self.bounce_factor: float = bounce_factor
         self.collisions = collisions
         # Controls
-        self.camera: Vector2D = Vector2D(0, 0)
-        self.zoom: float = 1
         self.time_speed: float = 0
         self.time_speed_previous: float = 1
         self.frame_per_frame: int = 9999999
@@ -74,19 +73,22 @@ class Board():
         self.grid_color_point: int = 11
 
         # Debug
-        self.first_update = True
+        self.first_update: bool = True
+
+        # Camera
+        self.camera: camera.Camera = camera.Camera(self)
 
         # Elements
-        self.system: dict[str, element.Element] = {}
-        for element_name, element_stats in system.items():
-            self.system[element_name] = element.Element(
+        self.system: list[element.Element] = []
+        for elem in system:
+            self.system.append(element.Element(
                 self, 
-                mass = element_stats.mass,
-                position = element_stats.position,
-                name = element_stats.name,
-                size = element_stats.size,
-                velocity = element_stats.velocity
-            )
+                mass = elem.mass,
+                position = elem.position,
+                name = elem.name,
+                size = elem.size,
+                velocity = elem.velocity
+            ))
         print("- Provided system: ")
         print(system)
         print("- Saved system: ")
@@ -136,29 +138,29 @@ class Board():
             self.frame_per_frame = self.fps
 
         # Zoom
-        if pyxel.btn(pyxel.KEY_PAGEUP) and self.zoom > 0.0:
-            self.zoom -= 0.05 * self.zoom
+        if pyxel.btn(pyxel.KEY_PAGEUP) and self.camera.zoom > 0.0:
+            self.camera.zoom -= 0.05 * self.camera.zoom
             #self.width = int(self.width * self.zoom)
             #self.height = int(self.height * self.zoom)
-        elif pyxel.btn(pyxel.KEY_PAGEDOWN) and self.zoom < 15.0:
-            self.zoom += 0.05 / self.zoom
+        elif pyxel.btn(pyxel.KEY_PAGEDOWN) and self.camera.zoom < 15.0:
+            self.camera.zoom += 0.05 / self.camera.zoom
             #self.width = int(self.width * self.zoom)
             #self.height = int(self.height * self.zoom)
         elif pyxel.btn(pyxel.KEY_HOME):
-            self.zoom = 1
-            self.camera.x = 0
-            self.camera.y = 0
+            self.camera.zoom = 1
+            self.camera.position.x = 0
+            self.camera.position.y = 0
             pyxel.camera()
 
         # Camera position
         if pyxel.btn(pyxel.KEY_LEFT):
-            self.camera.x -= int(10 / self.zoom)
+            self.camera.position.x -= int(10 / self.camera.zoom)
         elif pyxel.btn(pyxel.KEY_RIGHT):
-            self.camera.x += int(10 / self.zoom)
+            self.camera.position.x += int(10 / self.camera.zoom)
         if pyxel.btn(pyxel.KEY_DOWN):
-            self.camera.y += int(10 / self.zoom)
+            self.camera.position.y += int(10 / self.camera.zoom)
         elif pyxel.btn(pyxel.KEY_UP):
-            self.camera.y -= int(10 / self.zoom)
+            self.camera.position.y -= int(10 / self.camera.zoom)
 
         # Displays
         if pyxel.btnr(pyxel.KEY_G):
@@ -188,9 +190,9 @@ class Board():
         # Frame limiter for the game
         if pyxel.frame_count % self.frame_per_frame == 0:      
             # Interactions for each element, all elements.
-            for elemMain in self.system.values():
+            for elemMain in self.system:
                 elemMain.force_vector = Vector2D(0, 0)
-                for elemTarget in self.system.values():
+                for elemTarget in self.system:
                     if elemMain != elemTarget:
                         distance: float = elemMain.distance_to(elemTarget)
                         if distance > (elemMain.size / 2 + elemTarget.size / 2):
@@ -204,10 +206,13 @@ class Board():
                             collisions.collision(elemMain, elemTarget, behaviour=self.collisions)
             
             # Move
-            for elem in self.system.values():
+            for elem in self.system:
                 elem.move()
                 elem.collisions = [] # type: ignore
-        
+
+            # Camera follow TEST.
+            self.camera.follow_element(self.system[0])
+
         
     def draw(self) -> None:
         """
@@ -216,12 +221,12 @@ class Board():
         # Clear all
         pyxel.cls(0)
         # Camera
-        pyxel.camera(self.camera.x, self.camera.y)
+        pyxel.camera(self.camera.position.x, self.camera.position.y)
         # Grid
         if self.draw_grid:
             self.grid_main.draw()
         # All elems
-        for elem in self.system.values():
+        for elem in self.system:
             if self.draw_elems:
                 elem.draw()
             if self.draw_force:

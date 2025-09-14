@@ -32,8 +32,8 @@ GRID_DRAW_VECTORS: bool = False
 DEFAULT_MODE: settings.SimMode = settings.SimMode.DEFAULT 
 
 def main() -> None:
-    system: dict[str, settings.InputElem] = ui.app_cmd()
-    system_string: dict[str, str] = {elem_name: elem_info.__str__() for elem_name, elem_info in system.items()}
+    system: list[settings.InputElem] = ui.app_cmd()
+    system_string: dict[str, str] = {str(index): elem.__str__() for index, elem in enumerate(system)}
     print(f"! Using system={system_string}. Logging...")
     writter.board_settings(
         system = writter.system(system_string),
