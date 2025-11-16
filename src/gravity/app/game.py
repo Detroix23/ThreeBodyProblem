@@ -1,16 +1,28 @@
+"""
+# Gravity.
+src/gravity/app/game.py  
+Load and generate a `pyxel` game.
+"""
+
 import pyxel
 
-import modules.settings as settings
-import modules.paths as paths
-import modules.ui as ui
-import modules.simulation as simulation
-import modules.text as text
+from gravity.modules import (
+	settings, 
+	paths, 
+	text
+)
+from gravity.app import simulation
+
 
 
 class App:
     """
-    Contains all the pyxel runtime.
+    # App.
+    Contains and intialize the pyxel runtime.
     """
+    simulation: simulation.Board
+    text: text.Text
+
     def __init__(
         self, 
         system: dict[str, settings.InputElem], 

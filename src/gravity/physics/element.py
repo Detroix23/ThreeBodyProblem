@@ -3,13 +3,12 @@ THREE BODY PROBLEM.
 element.py
 """
 
-from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import modules.simulation as simulation
-from modules.maths_local import *
-import modules.drawing as drawing
+    import gravity.app.simulation as simulation
+from gravity.physics.maths import *
+from gravity.app import drawing
 
 class Element:
     """
@@ -33,7 +32,7 @@ class Element:
         name: str = "",
     ) -> None:
         """
-        Creation of the elem, with "mass, vInit, xStart, yStart, color=5, size=2".
+        Create an `Element`.
         """
         self.BOARD: simulation.Board = BOARD
         self.mass: float = mass  
@@ -42,7 +41,7 @@ class Element:
         self.displacement: Vector2D = Vector2D(0, 0)        
         self.velocity: Vector2D = velocity
         self.force_vector: Vector2D = Vector2D(x = 0, y = 0)
-        self.collisions: list[Self] = []
+        self.collisions: list[Element] = []
 
         # Drawing sprite will use the pyxres template, else, a square will be drawn.
         self.draw_sprite: bool = True
@@ -51,20 +50,22 @@ class Element:
         self.name: str = name
 
     def __str__(self) -> str:
-        return f"Elem {self.name} - Position: x={self.position.x}; y={self.position.y}, Mass: m={self.mass}, Force: x={self.force_vector.x}; y={self.force_vector.y}."
+        return f"Elem {self.name} - Position: x={self.position.x}; y={self.position.y}, Mass: m={self.mass}, \
+            Force: x={self.force_vector.x}; y={self.force_vector.y}."
     
     def __repr__(self) -> str:
-        return f"Elem {self.name} - Position: x={self.position.x}; y={self.position.y}, Mass: m={self.mass}, Force: x={self.force_vector.x}; y={self.force_vector.y}."
+        return f"Element(name={self.name}, position={self.position}, mass={self.mass}, velocity={self.force_vector}, \
+            color={self.color}, size={self.size})"
     
-    def distance_to(self, target: Self) -> float:
+    def distance_to(self, target: 'Element') -> float:
         """
-        Compute distance between this elem and the target elem
+        Compute distance between `self and the `target` element.
         """
         return math.sqrt((target.position.x - self.position.x) ** 2 + (target.position.y - self.position.y) ** 2)
     
-    def gravitational_force_from(self, target: Self) -> Vector2D:
+    def gravitational_force_from(self, target: 'Element') -> Vector2D:
         """
-        Find the gravitational force vector
+        Find the gravitational force vector between `self` and `target`.
         """
         direction: int = 1
         # Direction

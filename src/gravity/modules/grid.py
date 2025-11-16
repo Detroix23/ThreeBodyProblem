@@ -2,23 +2,22 @@
 THREE BODY PROBLEM.
 Grid.
 """
-from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import modules.simulation as simulation
-from modules.maths_local import *
-import modules.drawing as drawing
+    from gravity.app import simulation
+from gravity.physics.maths import *
+from gravity.app import drawing
 
 class Point:
     """
     Point of the grid 
     """
     
-    def __init__(self, x: int, y: int, board: simulation.Board) -> None:
+    def __init__(self, x: int, y: int, board: 'simulation.Board') -> None:
         self.x: int = x
         self.y: int = y
-        self.BOARD: simulation.Board = board
+        self.BOARD: 'simulation.Board' = board
         self.force: Vector2D = Vector2D(0, 0)
         
         
@@ -56,12 +55,20 @@ class Grid:
     """
     Represent the space-time grid
     """
-    def __init__(self, frequency: float, zoom_dependance: bool, force_weight: float, color_grid: int, color_point: int, board: simulation.Board) -> None:
+    def __init__(
+        self, 
+        frequency: float, 
+        zoom_dependance: bool, 
+        force_weight: float, 
+        color_grid: int, 
+        color_point: int, 
+        board: 'simulation.Board',
+    ) -> None:
         self.frequency: float = frequency
         self.zoom_dependance: bool = zoom_dependance
         self.color_grid: int = color_grid
         self.color_point: int = color_point
-        self.board: simulation.Board = board
+        self.board: 'simulation.Board' = board
         self.force_weight: float = force_weight
         self.force_exponent: float = 0.5
         # Use lists index to find neighbours, Point cords to draw lines

@@ -1,29 +1,24 @@
 """
-THREE BODY PROBLEM
+# THREE BODY PROBLEM
 Settings and enumeration file
 """
-from __future__ import annotations
-from typing import TYPE_CHECKING
-from enum import Enum
-from pathlib import Path
+import enum
 
-if TYPE_CHECKING:
-    import modules.ui as ui
-from modules.maths_local import *
+from gravity.physics.maths import *
 
 # Gravity.
-class Edge(Enum):
+class Edge(enum.Enum):
     NONE = 1
     HARD = 2
     BOUNCE = 3
     TOR = 4
     
-class SimMode(Enum):
+class SimMode(enum.Enum):
     RANDOM = 1
     CONFIG = 2
     DEFAULT = 3 
 
-class CollisionsBehaviour(Enum):
+class CollisionsBehaviour(enum.Enum):
     NONE = 1
     COLLIDE = 2
     COLLIDE_WITH_FUSION = 3

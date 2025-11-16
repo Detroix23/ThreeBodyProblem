@@ -3,9 +3,8 @@ THREE BODY PROBLEM.
 Logging and writting.
 """
 import datetime
-from pathlib import Path
 
-import modules.paths as paths
+from gravity.modules import paths
 
 def system(system: dict[str, str]) -> str:
     string: str = ""

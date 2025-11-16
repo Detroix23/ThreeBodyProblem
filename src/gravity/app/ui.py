@@ -5,10 +5,11 @@ Run: 2nd
 """
 import random
 
-import main
-from modules.maths_local import *
-import modules.settings as settings
-
+from gravity.physics.maths import *
+from gravity.modules import (
+    defaults,
+    settings,
+)
 
 def listing_input(text: str, allowed: str = 'int') -> str:
     listening: list[str] = ['q', 'quit']
@@ -44,7 +45,7 @@ def app_cmd() -> dict[str, settings.InputElem]:
     """
     print("# Three body problem simulations")
     ## Config
-    user_mode_str: str = input(f"Please select a mode {"{rand/conf/default}"}[{main.DEFAULT_MODE}]: ")
+    user_mode_str: str = input(f"Please select a mode {"{rand/conf/default}"}[{defaults.DEFAULT_MODE}]: ")
     system_input: dict[str, settings.InputElem] = {}
 
     if user_mode_str in ["r", "rand", "random"]:
@@ -54,8 +55,8 @@ def app_cmd() -> dict[str, settings.InputElem]:
     elif user_mode_str in ["c", "con", "conf", "config"]:
         user_mode: settings.SimMode = settings.SimMode.CONFIG
     else:
-        user_mode: settings.SimMode = main.DEFAULT_MODE
-        print(f"(!) - Incorrect input; set to '{main.DEFAULT_MODE}'")
+        user_mode: settings.SimMode = defaults.DEFAULT_MODE
+        print(f"(!) - Incorrect input; set to '{defaults.DEFAULT_MODE}'")
         
 
     if user_mode == settings.SimMode.RANDOM:
@@ -63,10 +64,10 @@ def app_cmd() -> dict[str, settings.InputElem]:
         number_elements: int = random.randint(3, 5)
         border_coverage: float = 0.2
         borders: dict[str, int] = {
-            "West": int(main.BOARD_WIDTH * border_coverage),
-            "East": int(main.BOARD_WIDTH * (1 - border_coverage)),
-            "North": int(main.BOARD_HEIGHT * border_coverage),
-            "South": int(main.BOARD_HEIGHT * (1 - border_coverage))
+            "West": int(defaults.BOARD_WIDTH * border_coverage),
+            "East": int(defaults.BOARD_WIDTH * (1 - border_coverage)),
+            "North": int(defaults.BOARD_HEIGHT * border_coverage),
+            "South": int(defaults.BOARD_HEIGHT * (1 - border_coverage))
         }
         weight_min: int = 100
         weight_max: int = 10000

@@ -1,22 +1,25 @@
 """
-THREE BODY PROBLEM
-GUI
-Run 3rd
+# Gravity.
+src/gravity/app/simulation.py  
 """
 
 import pyxel
-from typing_extensions import Self
 
-from modules.maths_local import *
-import modules.ui as ui
-import modules.settings as settings
-import modules.grid as grid
-import modules.element as element
-import modules.collisions as collisions
-import modules.drawing as drawing
+from gravity.physics.maths import *
+from gravity.modules import (
+	settings,
+    grid
+)
+from gravity.physics import (
+	collisions, 
+	element,
+)
 
-# GUI
-class Board():
+class Board:
+    """
+    # Board.
+    Runs the game, display elements, listen to player inputs.
+    """
     def __init__(
         self, 
         system: dict[str, settings.InputElem], 

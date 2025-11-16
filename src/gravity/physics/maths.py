@@ -5,7 +5,7 @@ Maths functions.
 
 import math
 import pyxel
-from typing_extensions import Self
+from typing import Self, Union
 
 class Vector2D:
     """
@@ -46,7 +46,7 @@ class Vector2D:
         if not (math.isclose(self.x, 0) and math.isclose(self.y, 0)): 
             pyxel.line(x, y, x + self.x * size, y + self.y * size, col=color)
 
-    def add(self, value: float|int|Self) -> Self:
+    def add(self, value: Union[float, int, 'Vector2D']) -> Self:
         """
         Add values to the vector.
         Do update the value of the vector.
@@ -59,7 +59,7 @@ class Vector2D:
             self.y += float(value)
         return self
     
-    def sub(self, value: float|int|Self) -> Self:
+    def sub(self, value: Union[float, int, 'Vector2D']) -> Self:
         """
         Add values to the vector.
         Do update the value of the vector.
@@ -90,47 +90,47 @@ class Vector2D:
         self.y = self.y / factor
         return self
     
-    def dot(self, other: Self) -> float:
+    def dot(self, other: 'Vector2D') -> float:
         """
         Compute the dot-product using the analytic way: a.x * b.x + a.y * b.y.
         Do not update the content of the vector
         """
         return self.x * other.x + self.y * other.y
 
-    def __add__(self, value: float|int|Self) -> Self:
+    def __add__(self, value: Union[float, int, 'Vector2D']) -> 'Vector2D':
         """
         Add values to the vector, emulating numeric objects.
         Do not update the content of the vector
         """
         if isinstance(value, Vector2D):
-            return Vector2D(self.x + value.x, self.y + value.y) # type: ignore
+            return Vector2D(self.x + value.x, self.y + value.y)
         else:
-            return Vector2D(self.x + float(value), self.y + float(value)) # type: ignore
+            return Vector2D(self.x + float(value), self.y + float(value))
 
-    def __sub__(self, value: float|int|Self) -> Self:
+    def __sub__(self, value: Union[float, int, 'Vector2D']) -> 'Vector2D':
         """
         Add values to the vector, emulating numeric objects.
         Do not update the content of the vector
         """
         if isinstance(value, Vector2D):
-            return Vector2D(self.x - value.x, self.y - value.y) # type: ignore
+            return Vector2D(self.x - value.x, self.y - value.y)
         else:
-            return Vector2D(self.x - float(value), self.y - float(value)) # type: ignore
+            return Vector2D(self.x - float(value), self.y - float(value))
     
-    def __mul__(self, factor: float) -> Self:
+    def __mul__(self, factor: float) -> 'Vector2D':
         """
         Multiply the values of the vector, emulating numeric objects.
         Do not update the content of the vector
         """
-        return Vector2D(self.x * factor, self.y * factor) # type: ignore
+        return Vector2D(self.x * factor, self.y * factor)
 
 
-    def __truediv__(self, factor: float) -> Self:
+    def __truediv__(self, factor: float) -> 'Vector2D':
         """
         Divide all value of the vector, emulating numeric objects.
         Do not update the content of the vector
         """
-        return Vector2D(self.x / factor, self.y / factor) # type: ignore
+        return Vector2D(self.x / factor, self.y / factor)
 
 
 
