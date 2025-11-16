@@ -8,10 +8,9 @@ import pyxel
 
 from gravity.modules import (
 	settings, 
-	paths, 
-	text
+	paths
 )
-from gravity.app import simulation
+from gravity.app import simulation, text
 
 
 

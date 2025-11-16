@@ -8,11 +8,12 @@ import pyxel
 from gravity.physics.maths import *
 from gravity.modules import (
 	settings,
-    grid
+    console,
 )
 from gravity.physics import (
 	collisions, 
 	element,
+	grid,
 )
 
 class Board:
@@ -52,7 +53,7 @@ class Board:
         self.title: str = title
         self.fps: int = fps
         self.bounce_factor: float = bounce_factor
-        self.collisions = collisions
+        self.collisions: settings.CollisionsBehaviour = collisions
         # Controls
         self.camera: Vector2D = Vector2D(0, 0)
         self.zoom: float = 1
@@ -67,7 +68,8 @@ class Board:
         self.draw_force: bool = draw_force
         self.draw_text: bool = draw_text
         self.draw_grid: bool = draw_grid
-        
+        self.draw_trails: bool = True
+
         # Grid
         self.grid_frequency: int = 16
         self.grid_force_weight: float = 2.3
@@ -77,7 +79,7 @@ class Board:
         self.grid_color_point: int = 11
 
         # Debug
-        self.first_update = True
+        self.first_update: bool = True
 
         # Elements
         self.system: dict[str, element.Element] = {}
@@ -91,9 +93,9 @@ class Board:
                 velocity = element_stats.velocity
             )
         print("- Provided system: ")
-        print(system)
+        print(console.pretty(system))
         print("- Saved system: ")
-        print(self.system)
+        print(console.pretty(self.system))
 
         # Grid
         self.grid_main: grid.Grid = grid.Grid(
@@ -174,6 +176,8 @@ class Board:
             self.draw_text = not self.draw_text
         elif pyxel.btnr(pyxel.KEY_F):
             self.draw_velocity = not self.draw_velocity
+        elif pyxel.btnr(pyxel.KEY_Y):
+            self.draw_trails = not self.draw_trails
 
     def update(self) -> None:
         """
@@ -223,7 +227,11 @@ class Board:
         # Grid
         if self.draw_grid:
             self.grid_main.draw()
-        # All elems
+        # All elemements, layer 1.
+        for elem in self.system.values():
+            if self.draw_trails:
+                elem.trail.draw()
+        # All elemements, layer 2.
         for elem in self.system.values():
             if self.draw_elems:
                 elem.draw()
@@ -231,4 +239,5 @@ class Board:
                 elem.force_vector.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=3) 
             if self.draw_velocity:
                 elem.velocity.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=5)
+            
 

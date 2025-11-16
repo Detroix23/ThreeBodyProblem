@@ -2,31 +2,40 @@
 THREE BODY PROBLEM.
 element.py
 """
-
+import math
+import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import gravity.app.simulation as simulation
-from gravity.physics.maths import *
-from gravity.app import drawing
+from gravity.physics import (
+    maths,
+    trails,
+)
+from gravity.app import (
+    drawing,
+    support,
+)
 
 class Element:
     """
     Define a stellar element
     """
     CHECK_RADIUS: int = 100
-    SPRITE_POSITION: Vector2D = Vector2D(16, 0)
-    SPRITE_SIZE: Vector2D = Vector2D(16, 16)
+    SPRITE_POSITION: maths.Vector2D = maths.Vector2D(16, 0)
+    SPRITE_SIZE: maths.Vector2D = maths.Vector2D(16, 16)
     SPRITE_IMAGE: int = 0
     SPRITE_COLKEY: int = 0
     SPRITE_SIZE_FACTOR: float = 1/16
+
+    trail: trails.Trail
 
     def __init__(
         self, 
         BOARD: simulation.Board, 
         mass: int, 
-        position: Vector2D, 
-        velocity: Vector2D,
+        position: maths.Vector2D, 
+        velocity: maths.Vector2D,
         color: int = 5, 
         size: int = 2, 
         name: str = "",
@@ -36,11 +45,11 @@ class Element:
         """
         self.BOARD: simulation.Board = BOARD
         self.mass: float = mass  
-        self.position: Vector2D = position
+        self.position: maths.Vector2D = position
+        self.trail = trails.Trail(1000, support.Color.WHITE)
 
-        self.displacement: Vector2D = Vector2D(0, 0)        
-        self.velocity: Vector2D = velocity
-        self.force_vector: Vector2D = Vector2D(x = 0, y = 0)
+        self.velocity: maths.Vector2D = velocity
+        self.force_vector: maths.Vector2D = maths.Vector2D(0, 0)
         self.collisions: list[Element] = []
 
         # Drawing sprite will use the pyxres template, else, a square will be drawn.
@@ -51,11 +60,11 @@ class Element:
 
     def __str__(self) -> str:
         return f"Elem {self.name} - Position: x={self.position.x}; y={self.position.y}, Mass: m={self.mass}, \
-            Force: x={self.force_vector.x}; y={self.force_vector.y}."
+Force: x={self.force_vector.x}; y={self.force_vector.y}."
     
     def __repr__(self) -> str:
         return f"Element(name={self.name}, position={self.position}, mass={self.mass}, velocity={self.force_vector}, \
-            color={self.color}, size={self.size})"
+color={self.color}, size={self.size})"
     
     def distance_to(self, target: 'Element') -> float:
         """
@@ -63,13 +72,13 @@ class Element:
         """
         return math.sqrt((target.position.x - self.position.x) ** 2 + (target.position.y - self.position.y) ** 2)
     
-    def gravitational_force_from(self, target: 'Element') -> Vector2D:
+    def gravitational_force_from(self, target: 'Element') -> maths.Vector2D:
         """
         Find the gravitational force vector between `self` and `target`.
         """
         direction: int = 1
         # Direction
-        vector_distance: Vector2D = Vector2D(x = target.position.x - self.position.x, y = target.position.y - self.position.y)
+        vector_distance: maths.Vector2D = maths.Vector2D(x = target.position.x - self.position.x, y = target.position.y - self.position.y)
         vector_distance.normalize()
         # Distance
         distance: float = self.distance_to(target)
@@ -81,9 +90,9 @@ class Element:
         # F force value
         force: float = (self.BOARD.gravitational_constant * target.mass) / (distance ** (2 + self.BOARD.exponent_softener))
         # Force vector
-        vector_force: Vector2D = Vector2D(x = force * vector_distance.x * direction, y = force * vector_distance.y * direction)
+        vector_force: maths.Vector2D = maths.Vector2D(x = force * vector_distance.x * direction, y = force * vector_distance.y * direction)
         # Watch for overshot of planets
-        velocity_next: Vector2D = Vector2D(
+        velocity_next: maths.Vector2D = maths.Vector2D(
             x = self.velocity.x + self.force_vector.x / (self.mass * self.BOARD.mass_softener),
             y = self.velocity.y + self.force_vector.y / (self.mass * self.BOARD.mass_softener)
         )
@@ -102,21 +111,19 @@ class Element:
         Move the elem, according to force vector at a scale (mass) and checking collision
         """ 
         # Apply force
-        self.velocity = Vector2D(
+        self.velocity = maths.Vector2D(
             x = self.velocity.x + self.force_vector.x / (self.mass * self.BOARD.mass_softener),
             y = self.velocity.y + self.force_vector.y / (self.mass * self.BOARD.mass_softener)
         )
         # Apply velocity
-        self.position = Vector2D(
+        self.position = maths.Vector2D(
             x = self.position.x + self.velocity.x,
             y = self.position.y + self.velocity.y
         )
-         # Apply optional displacement
-        self.position.add(self.displacement)
-        # Check edges
-        """ Disabled for now """
-        # Reset values
-        self.displacement = Vector2D(0, 0)
+
+        # Update trail
+        if self.trail:
+            self.trail.push(self.position)
 
     def draw(self) -> None:
         """
@@ -125,7 +132,7 @@ class Element:
         
         # Draw on computed values
         size: int = int(self.size)
-        position: Vector2D = Vector2D(
+        position: maths.Vector2D = maths.Vector2D(
             int(self.position.x),
             int(self.position.y)
         )
@@ -141,14 +148,12 @@ class Element:
                 colkey=self.SPRITE_COLKEY,
                 scale=self.size * self.SPRITE_SIZE_FACTOR
             )
-            # Main rectangle
-            pyxel.rect(position.x - 16 / 2, position.y - 16 / 2, 16, 16, col=7)
         else:
             # Main rectangle
             pyxel.rect(position.x - size / 2, position.y - size / 2, size, size, col=self.color)
             # Outline
             pyxel.rectb(position.x - size / 2, position.y - size / 2, size, size, col=7)
         
-        # Center
-        drawing.draw_point(int(position.x), int(position.y), 16)
+            # Center
+            drawing.draw_point(int(position.x), int(position.y), 16)
     

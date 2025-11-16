@@ -11,23 +11,6 @@ from gravity.modules import (
     settings,
 )
 
-def listing_input(text: str, allowed: str = 'int') -> str:
-    listening: list[str] = ['q', 'quit']
-    input_result = input(text)
-    for i in range(1, len(listening)):
-        if input_result.strip().lower() == listening[i]:
-            raise ValueError('Exit')
-    try:
-        if allowed == 'str':
-            str(input_result)
-        elif allowed == 'int':
-            int(input_result)
-    except Exception:
-        raise
-
-    return input_result
-
-
 class Layers:
     """
     Define what things and layers to show. 
@@ -38,14 +21,27 @@ class Layers:
         self.hud: bool = hud
         
 
+def listing_input(text: str, allowed: str = 'int') -> str:
+    listening: list[str] = ['q', 'quit']
+    input_result = input(text)
+    for i in range(1, len(listening)):
+        if input_result.strip().lower() == listening[i]:
+            raise ValueError('Exit')
+
+    if allowed == 'str':
+        str(input_result)
+    elif allowed == 'int':
+        int(input_result)
+
+    return input_result
+
 
 def app_cmd() -> dict[str, settings.InputElem]:
     """
     Basic starting sequence for the user, in CMD.
     """
-    print("# Three body problem simulations")
     ## Config
-    user_mode_str: str = input(f"Please select a mode {"{rand/conf/default}"}[{defaults.DEFAULT_MODE}]: ")
+    user_mode_str: str = input(f"Please select a mode {"{rand/conf/default}"}[{defaults.APP.DEFAULT_MODE}]: ")
     system_input: dict[str, settings.InputElem] = {}
 
     if user_mode_str in ["r", "rand", "random"]:
@@ -55,8 +51,8 @@ def app_cmd() -> dict[str, settings.InputElem]:
     elif user_mode_str in ["c", "con", "conf", "config"]:
         user_mode: settings.SimMode = settings.SimMode.CONFIG
     else:
-        user_mode: settings.SimMode = defaults.DEFAULT_MODE
-        print(f"(!) - Incorrect input; set to '{defaults.DEFAULT_MODE}'")
+        user_mode: settings.SimMode = defaults.APP.DEFAULT_MODE
+        print(f"(!) - Incorrect input; set to '{defaults.APP.DEFAULT_MODE}'")
         
 
     if user_mode == settings.SimMode.RANDOM:
@@ -64,10 +60,10 @@ def app_cmd() -> dict[str, settings.InputElem]:
         number_elements: int = random.randint(3, 5)
         border_coverage: float = 0.2
         borders: dict[str, int] = {
-            "West": int(defaults.BOARD_WIDTH * border_coverage),
-            "East": int(defaults.BOARD_WIDTH * (1 - border_coverage)),
-            "North": int(defaults.BOARD_HEIGHT * border_coverage),
-            "South": int(defaults.BOARD_HEIGHT * (1 - border_coverage))
+            "West": int(defaults.APP.BOARD_WIDTH * border_coverage),
+            "East": int(defaults.APP.BOARD_WIDTH * (1 - border_coverage)),
+            "North": int(defaults.APP.BOARD_HEIGHT * border_coverage),
+            "South": int(defaults.APP.BOARD_HEIGHT * (1 - border_coverage))
         }
         weight_min: int = 100
         weight_max: int = 10000
