@@ -1,35 +1,47 @@
+"""
+# Gravity.
+src/gravity/app/game.py  
+Load and generate a `pyxel` game.
+"""
 
-import modules.settings
-import ui
-import simulation
-import text
 import pyxel
+
+from gravity_detroix23.modules import (
+	settings, 
+	paths
+)
+from gravity_detroix23.app import simulation, text
+
 
 
 class App:
     """
-    Contains all the pyxel runtime.
+    # App.
+    Contains and intialize the pyxel runtime.
     """
+    simulation: simulation.Board
+    text: text.Text
+
     def __init__(
         self, 
-        system: dict[str, ui.InputElem], 
+        system: dict[str, settings.InputElem], 
         width: int, 
         height: int, 
         title: str, 
         fps: int, 
         gravitational_constant: float, 
-        edges: modules.settings.Edge, 
+        edges: settings.Edge, 
         bounce_factor: float,  
         mass_softener: float, 
         exponent_softener: float,
-        collisions: modules.settings.CollisionsBehaviour, 
+        collisions: settings.CollisionsBehaviour, 
         grid_draw_vector: bool,
         draw_velocity: bool = True, 
         draw_force: bool = True, 
         draw_text: bool = True, 
         draw_grid: bool = True,
     ) -> None:
-        # Simulation
+        # Simulation.
         self.simulation: simulation.Board = simulation.Board(
             system,
             width,
@@ -48,31 +60,28 @@ class App:
             draw_text,
             draw_grid
         )
-        # Text
+        # Text.
         self.text: text.Text = text.Text(
             app=self,
             draw_main=True
         )
-        """
-        [
-            f"# Three Body Problem - title={title}; edges={edges}, fps={str(fps)}, frames={str(frame_count)}",
-            f"- Controls: zoom={str(zoom)}, camera: x={str(camera.x)}; y={str(camera.y)}",
-            f"- Time: speed={str(time_speed)}, fpf={frame_per_frame}",
-            f"- Elements: total={str(len(system))}",
-            "---"
-        ]
-        """
 
-        # Simulation screen
+        # Simulation screen.
         pyxel.init(width, height, title=title, fps=fps)
         print("- Pyxel initialized")
-        # Ressource file
-        pyxel.load(modules.settings.RESSOURCE_FILE)
-        # Run
+        # Ressource file.
+        try:
+            pyxel.load(str(paths.RESSOURCE_FILE))
+        except Exception as exception:
+            raise Exception(f"(X) - Couldn't open ressource file in {paths.RESSOURCE_FILE}. {type(exception).__name__}: `{exception.args}`.")
+
+        # Run.
         pyxel.run(self.update, self.draw)
 
     def update(self) -> None:
+        # Gravity.
         self.simulation.update()
+        # Text.
         self.text.update(
             text_main=[
                 f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, fps={str(self.simulation.fps)}, frames={str(pyxel.frame_count)}",
@@ -82,7 +91,7 @@ class App:
                 "---"
             ]
         )
-
+    
     def draw(self) -> None:
         self.simulation.draw()
         self.text.draw()
