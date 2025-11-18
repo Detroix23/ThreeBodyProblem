@@ -29,6 +29,7 @@ class Element:
     SPRITE_SIZE_FACTOR: float = 1/16
 
     trail: trails.Trail
+    displacement: maths.Vector2D
 
     def __init__(
         self, 
@@ -46,11 +47,12 @@ class Element:
         self.BOARD: simulation.Board = BOARD
         self.mass: float = mass  
         self.position: maths.Vector2D = position
-        self.trail = trails.Trail(1000, support.Color.WHITE)
+        self.trail = trails.Trail(5000, support.Color.WHITE)
 
         self.velocity: maths.Vector2D = velocity
         self.force_vector: maths.Vector2D = maths.Vector2D(0, 0)
         self.collisions: list[Element] = []
+        self.displacement = maths.Vector2D(0, 0)
 
         # Drawing sprite will use the pyxres template, else, a square will be drawn.
         self.draw_sprite: bool = True
@@ -108,28 +110,27 @@ color={self.color}, size={self.size})"
 
     def move(self) -> None:
         """
-        Move the elem, according to force vector at a scale (mass) and checking collision
+        Move the elem, according to force vector at a scale (mass) and checking collision.
         """ 
-        # Apply force
-        self.velocity = maths.Vector2D(
-            x = self.velocity.x + self.force_vector.x / (self.mass * self.BOARD.mass_softener),
-            y = self.velocity.y + self.force_vector.y / (self.mass * self.BOARD.mass_softener)
-        )
-        # Apply velocity
-        self.position = maths.Vector2D(
-            x = self.position.x + self.velocity.x,
-            y = self.position.y + self.velocity.y
-        )
+        # Apply force.
+        self.velocity.add(self.force_vector / (self.mass * self.BOARD.mass_softener))
 
-        # Update trail
-        if self.trail:
-            self.trail.push(self.position)
+        # Apply velocity.
+        self.position.add(self.velocity)
+
+        # Displacement.
+        self.position.add(self.displacement) 
+        self.displacement.zero()
+
+        # Update trail.
+        if self.trail and not self.position.is_close(self.trail.first, 1):
+            self.trail.push(self.position.copy())
+
 
     def draw(self) -> None:
         """
         Draw itself on the board
         """
-        
         # Draw on computed values
         size: int = int(self.size)
         position: maths.Vector2D = maths.Vector2D(

@@ -187,6 +187,7 @@ class Board:
         if self.first_update:
             print("- Game running")
             self.first_update = not self.first_update
+        
         # Inputs
         self.user_inputs()
         # Grid
@@ -195,25 +196,25 @@ class Board:
         # Frame limiter for the game
         if pyxel.frame_count % self.frame_per_frame == 0:      
             # Interactions for each element, all elements.
-            for elemMain in self.system.values():
-                elemMain.force_vector = Vector2D(0, 0)
-                for elemTarget in self.system.values():
-                    if elemMain != elemTarget:
-                        distance: float = elemMain.distance_to(elemTarget)
-                        if distance > (elemMain.size / 2 + elemTarget.size / 2):
-                            target_force: Vector2D = elemMain.gravitational_force_from(elemTarget)
-                            elemMain.force_vector.add(target_force)
+            for element_main in self.system.values():
+                element_main.force_vector = Vector2D(0, 0)
+                for element_target in self.system.values():
+                    if element_main != element_target:
+                        distance: float = element_main.distance_to(element_target)
+                        if distance > (element_main.size / 2 + element_target.size / 2):
+                            target_force: Vector2D = element_main.gravitational_force_from(element_target)
+                            element_main.force_vector.add(target_force)
                         elif self.collisions in [
                             settings.CollisionsBehaviour.COLLIDE, 
                             settings.CollisionsBehaviour.COLLIDE_WITH_FUSION, 
                             settings.CollisionsBehaviour.COLLIDE_WITH_BUMP
                         ]:
-                            collisions.collision(elemMain, elemTarget, behaviour=self.collisions)
+                            collisions.collision(element_main, element_target, behaviour=self.collisions)
             
             # Move
-            for elem in self.system.values():
-                elem.move()
-                elem.collisions = [] # type: ignore
+            for element in self.system.values():
+                element.move()
+                element.collisions = []
         
         
     def draw(self) -> None:
@@ -222,22 +223,26 @@ class Board:
         """
         # Clear all
         pyxel.cls(0)
+
         # Camera
         pyxel.camera(self.camera.x, self.camera.y)
+       
         # Grid
         if self.draw_grid:
             self.grid_main.draw()
-        # All elemements, layer 1.
-        for elem in self.system.values():
-            if self.draw_trails:
-                elem.trail.draw()
-        # All elemements, layer 2.
-        for elem in self.system.values():
+        
+        # Trails.
+        if self.draw_trails:
+            for element in self.system.values():
+                element.trail.draw()
+
+        # All elementements, layer 2.
+        for element in self.system.values():
             if self.draw_elems:
-                elem.draw()
+                element.draw()
             if self.draw_force:
-                elem.force_vector.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=3) 
+                element.force_vector.draw_on(x = element.position.x, y = element.position.y, size=1, color=3) 
             if self.draw_velocity:
-                elem.velocity.draw_on(x = elem.position.x, y = elem.position.y, size=1, color=5)
+                element.velocity.draw_on(x = element.position.x, y = element.position.y, size=1, color=5)
             
 

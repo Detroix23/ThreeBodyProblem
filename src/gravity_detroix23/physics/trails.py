@@ -4,8 +4,10 @@ src/gravity/physics/trails.py
 """
 
 import pyxel
+from typing import Optional
 
 from gravity_detroix23.physics import maths 
+from gravity_detroix23.modules import console
 
 class Trail:
 	"""
@@ -15,19 +17,45 @@ class Trail:
 	length: int
 	color: int
 
-	def __init__(self, length: int, color: int) -> None:
-		self.positions = []
+	def __init__(
+		self, 
+		length: int,
+		color: int,
+		*,
+		positions: Optional[list[maths.Vector2D]] = None,
+	) -> None:
+		"""
+		Construct a trail.  
+		Use the `position` if you want to manually create a path.
+		"""
+		self.positions = positions if positions else []
 		self.length = length
 		self.color = color
+
+	def __repr__(self) -> str:
+		return f"Trail(length={self.length}, color={self.color}, positions={console.pretty(self.positions, end=" ")})"
+
+	@property
+	def first(self) -> maths.Vector2D:
+		"""
+		Return the first position.  
+		If no positions have been tracked, return a (0, 0) vector.   
+		"""
+		if self.positions:
+			return self.positions[0]
+		else:
+			return maths.Vector2D(0, 0)
 
 	def push(self, position: maths.Vector2D) -> None:
 		"""
 		Add a new point to the beggining of `positions`.  
 		Remove if exceeding the `length`.  
 		"""
-		self.positions.insert(0, position)
+		self.positions.insert(0, position)	
+		
 		if len(self.positions) >= self.length:
 			self.positions.pop()
+
 		
 	def draw(self) -> None:
 		index: int = 0
