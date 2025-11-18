@@ -5,9 +5,8 @@ Use of gravitational formula: F = (m1*m2) / d**2
 We consider that all elements are spherical
 Run: 1st
 """
+import sys
 
-# Imports
-# Local
 from gravity_detroix23.modules import settings
 from gravity_detroix23.app import (
 	game,
@@ -15,12 +14,18 @@ from gravity_detroix23.app import (
 )
 from gravity_detroix23.modules import (
     writter,
-    defaults
+    defaults,
+    console,
 )
 
 
-def main() -> None:
+def main(args: list[str]) -> None:
     print("# Gravity.")
+
+    if "--help" in args:
+        print(console.HELP_STRING)
+        return
+
     print("*Starting...*\n")
 
     system: dict[str, settings.InputElem] = ui.app_cmd()
@@ -52,4 +57,4 @@ def main() -> None:
 
     print("---\nEnd")
 
-main()
+main(sys.argv)

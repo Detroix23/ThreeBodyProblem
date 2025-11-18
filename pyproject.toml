@@ -1,6 +1,6 @@
 [project]
 name = "tree_body_problem_detroix23"
-version = "1.3.0"
+version = "1.4.0"
 description = "Retro gravity simulator."
 authors = [
     { name="Detroix23", email="detroix23@gmail.com" }

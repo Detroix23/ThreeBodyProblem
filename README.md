@@ -1,0 +1,64 @@
+# Gravity.
+A minimalist gravity simulator built with `Pyxel`.
+
+## Usage.
+Choose where the elements start:
+- random,
+- manual configuration,
+- default. 
+
+Controls:
+- Console.  
+ _no arguments_: Launch the app.  
+ `--help`: Show this message.   
+
+- GUI, key press.  
+ {`1, 2, 3, 4, 5, 6`}: Set time speed (1 normal, 6 slowest).  
+ `Space`: Pause/ Unpause time.    
+ `Arrows`: Move camera.  
+ `Page Up`: Zoom in (W.I.P.).  
+ `Page Down`: Zoom out (W.I.P.).  
+ `Home`: Reset camera.  
+ `G`: Enable/ Disable grid.  
+ `E`: Enable/ Disable drawing elements.  
+ `R`: Enable/ Disable drawing force vectors.  
+ `F`: Enable/ Disable drawing velocity vectors.  
+ `T`: Enable/ Disable all text.  
+ `Y`: Enable/ Disable drawing trails.  
+
+## Setup.
+- Python 3.9 or higher.
+- Clone the repo.
+```shell
+git clone https://github.com/Detroix23/ThreeBodyProblem
+cd ThreeBodyProblem
+```
+
+- Setup a virtual environment (optional).
+```shell
+python -m venv .venv
+```
+_Windows_
+```shell
+./.venv/Scripts/activate
+```
+_Linux_
+```shell
+source ./.venv/bin/activate
+```
+
+- Install `pyxel`.
+```shell
+python -m pip install pyxel
+```
+
+- Install the `gravity` package.
+```shell
+python -m pip install --editable .
+```
+
+- Ready for use.
+```shell
+python ./src/gravity_detroix23/
+```
+
