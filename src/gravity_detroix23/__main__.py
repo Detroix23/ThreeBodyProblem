@@ -8,12 +8,12 @@ Run: 1st
 
 # Imports
 # Local
-from gravity.modules import settings
-from gravity.app import (
+from gravity_detroix23.modules import settings
+from gravity_detroix23.app import (
 	game,
 	ui,
 )
-from gravity.modules import (
+from gravity_detroix23.modules import (
     writter,
     defaults
 )

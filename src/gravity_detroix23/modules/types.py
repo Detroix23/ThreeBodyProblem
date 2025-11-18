@@ -5,7 +5,7 @@ gravity/src/modules/types.py
 
 import typing
 
-import modules.settings as settings
+import gravity_detroix23.modules.settings as settings
 
 pretty_supported = typing.Union[dict[typing.Any, typing.Any], list[typing.Any]] 
 setting = typing.Union[str, int, float, bool, settings.Edge, settings.CollisionsBehaviour, settings.SimMode]

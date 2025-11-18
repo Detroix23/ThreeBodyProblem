@@ -2,7 +2,7 @@
 # Gravity.
 src/gravity/modules/console.py  
 """
-from gravity.modules import types
+from gravity_detroix23.modules import types
 
 def pretty(
     element: types.pretty_supported, 

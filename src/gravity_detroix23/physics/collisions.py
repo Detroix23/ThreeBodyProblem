@@ -3,9 +3,9 @@ THREE BODY PROBLEM
 collisions.py
 """
 
-from gravity.physics.maths import *
-from gravity.physics import element
-from gravity.modules import settings
+from gravity_detroix23.physics.maths import *
+from gravity_detroix23.physics import element
+from gravity_detroix23.modules import settings
 
 
 def collision(a: element.Element, b: element.Element, behaviour: settings.CollisionsBehaviour) -> bool:

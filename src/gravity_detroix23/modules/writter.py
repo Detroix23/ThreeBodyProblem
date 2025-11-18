@@ -4,7 +4,7 @@ Logging and writting.
 """
 import datetime
 
-from gravity.modules import paths
+from gravity_detroix23.modules import paths
 
 def system(system: dict[str, str]) -> str:
     string: str = ""

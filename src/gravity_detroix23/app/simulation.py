@@ -5,12 +5,12 @@ src/gravity/app/simulation.py
 
 import pyxel
 
-from gravity.physics.maths import *
-from gravity.modules import (
+from gravity_detroix23.physics.maths import *
+from gravity_detroix23.modules import (
 	settings,
     console,
 )
-from gravity.physics import (
+from gravity_detroix23.physics import (
 	collisions, 
 	element,
 	grid,

@@ -5,7 +5,7 @@ src/gravity/physics/trails.py
 
 import pyxel
 
-from gravity.physics import maths 
+from gravity_detroix23.physics import maths 
 
 class Trail:
 	"""

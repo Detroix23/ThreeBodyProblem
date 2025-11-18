@@ -5,9 +5,9 @@ Grid.
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from gravity.app import simulation
-from gravity.physics.maths import *
-from gravity.app import drawing
+    from gravity_detroix23.app import simulation
+from gravity_detroix23.physics.maths import *
+from gravity_detroix23.app import drawing
 
 class Point:
     """

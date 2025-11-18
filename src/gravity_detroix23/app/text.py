@@ -2,7 +2,7 @@ import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from gravity.app import game
+    from gravity_detroix23.app import game
 
 
 class Text:

@@ -2,7 +2,7 @@
 # Gravity.
 /gravity/src/modules/default.py  
 """
-from gravity.modules import (
+from gravity_detroix23.modules import (
 	settings,
 	types
 )

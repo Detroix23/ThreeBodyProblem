@@ -4,7 +4,7 @@ Settings and enumeration file
 """
 import enum
 
-from gravity.physics.maths import *
+from gravity_detroix23.physics.maths import *
 
 # Gravity.
 class Edge(enum.Enum):

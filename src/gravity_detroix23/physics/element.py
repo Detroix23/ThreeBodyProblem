@@ -7,12 +7,12 @@ import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import gravity.app.simulation as simulation
-from gravity.physics import (
+    import gravity_detroix23.app.simulation as simulation
+from gravity_detroix23.physics import (
     maths,
     trails,
 )
-from gravity.app import (
+from gravity_detroix23.app import (
     drawing,
     support,
 )

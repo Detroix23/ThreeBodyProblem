@@ -6,11 +6,11 @@ Load and generate a `pyxel` game.
 
 import pyxel
 
-from gravity.modules import (
+from gravity_detroix23.modules import (
 	settings, 
 	paths
 )
-from gravity.app import simulation, text
+from gravity_detroix23.app import simulation, text
 
 
 
