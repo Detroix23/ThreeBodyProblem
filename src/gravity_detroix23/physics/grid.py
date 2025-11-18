@@ -21,22 +21,22 @@ class Point:
         self.force: Vector2D = Vector2D(0, 0)
         
         
-    def distance_to(self, target_position: Vector2D) -> float:
+    def distance_to(self, target: Vector2D) -> float:
         """
-        Compute distance between this elem and the target elem
+        Compute distance between `self` point and the `target` point.
         """
-        return math.sqrt((target_position.x - self.x) ** 2 + (target_position.y - self.y) ** 2)
+        return math.sqrt((target.x - self.x) * (target.x - self.x) + (target.y - self.y) * (target.y - self.y))
     
-    def gravitational_force_from(self, target_position: Vector2D, target_mass: float) -> Vector2D:
+    def gravitational_force_from(self, target: Vector2D, target_mass: float) -> Vector2D:
         """
-        Find the gravitational force vector
+        Find the gravitational force vector between `self` point and `target` point.
         """
         direction: int = 1
         # Direction
-        vector_distance: Vector2D = Vector2D(x = target_position.x - self.x, y = target_position.y - self.y)
+        vector_distance: Vector2D = Vector2D(x = target.x - self.x, y = target.y - self.y)
         vector_distance.normalize()
         # Distance
-        distance: float = self.distance_to(target_position)
+        distance: float = self.distance_to(target)
         if distance < 1:
             distance = 1
         
@@ -80,16 +80,15 @@ class Grid:
         dx: int = int(float(self.board.width)  / self.frequency)
         dy: int = int(float(self.board.height) / self.frequency)
         
-        
         for y in range(
-            int(self.board.camera.y), 
-            self.board.height + 2 * dy + int(self.board.camera.y),
+            int(self.board.camera.position.y), 
+            self.board.height + 2 * dy + int(self.board.camera.position.y),
             dy
         ):
             points_x: list[Point] = []
             for x in range(
-                int(self.board.camera.x), 
-                self.board.width + 2 * dx + int(self.board.camera.x), 
+                int(self.board.camera.position.x), 
+                self.board.width + 2 * dx + int(self.board.camera.position.x), 
                 dx
             ):
                 point: Point = Point(
@@ -117,7 +116,11 @@ class Grid:
 
 
     def draw(self) -> None:
+        """
+        Draw the whole grid.
+        """
         points_y: list[list[Point]] = self.points
+
         i: int = 0
         while i < len(points_y):
             j: int = 0
@@ -134,5 +137,7 @@ class Grid:
                         pyxel.line(point.x, point.y, points_y[i + 1][j].x, points_y[i + 1][j].y, col=self.color_grid)
                     if j + 1 < len(points_x):
                         pyxel.line(point.x, point.y, points_x[j + 1].x, points_x[j + 1].y, col=self.color_grid)
+                
                 j += 1
+            
             i += 1

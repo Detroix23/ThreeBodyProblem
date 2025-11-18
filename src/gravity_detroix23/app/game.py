@@ -79,19 +79,24 @@ class App:
         pyxel.run(self.update, self.draw)
 
     def update(self) -> None:
+        """
+        Update everything.
+        """
         # Gravity.
         self.simulation.update()
         # Text.
-        self.text.update(
-            text_main=[
-                f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, fps={str(self.simulation.fps)}, frames={str(pyxel.frame_count)}",
-                f"- Controls: zoom={str(self.simulation.zoom)}, camera: x={str(self.simulation.camera.x)}; y={str(self.simulation.camera.y)}",
-                f"- Time: speed={str(self.simulation.time_speed)}, fpf={self.simulation.frame_per_frame}",
-                f"- Elements: total={str(len(self.simulation.system))}",
-                "---"
-            ]
-        )
+        self.text.update([
+            f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, fps={str(self.simulation.fps)}, frames={str(pyxel.frame_count)}",
+            f"- Controls: zoom={str(self.simulation.camera.zoom)}, camera: x={str(self.simulation.camera.position.x)}; y={str(self.simulation.camera.position.y)}",
+            f"- Time: speed={str(self.simulation.times.speed)}, fpf={self.simulation.times.frame_per_frame}",
+            f"- Elements: total={str(len(self.simulation.system))}",
+            "---"
+        ])
     
     def draw(self) -> None:
+        """
+        Draw everything.
+        """
         self.simulation.draw()
         self.text.draw()
+        

@@ -15,12 +15,22 @@ from gravity_detroix23.physics import (
 	element,
 	grid,
 )
+from gravity_detroix23.app import (
+    support,
+    inputs,
+    controls,
+)
 
 class Board:
     """
     # Board.
     Runs the game, display elements, listen to player inputs.
     """
+    frames: int
+    buttons: inputs.Buttons
+    camera: controls.Camera
+    times: controls.Time
+
     def __init__(
         self, 
         system: dict[str, settings.InputElem], 
@@ -43,24 +53,22 @@ class Board:
         """
         Initialize the game.
         """
-        # Vars
+        self.frames = 0
         self.exponent_softener: float = exponent_softener    
         self.gravitational_constant: float = gravitational_constant
         self.mass_softener: float = mass_softener      
-        self.edges: settings.Edge = edges
         self.width: int = width
         self.height: int = height
         self.title: str = title
         self.fps: int = fps
         self.bounce_factor: float = bounce_factor
+        self.edges: settings.Edge = edges
         self.collisions: settings.CollisionsBehaviour = collisions
-        # Controls
-        self.camera: Vector2D = Vector2D(0, 0)
-        self.zoom: float = 1
-        self.time_speed: float = 0
-        self.time_speed_previous: float = 1
-        self.frame_per_frame: int = 9999999
-        self.frame_per_frame_previous: int = 1
+
+        # Workers
+        self.buttons = inputs.Buttons(self)
+        self.camera = controls.Camera(self)
+        self.times = controls.Time(self)
 
         # UI
         self.draw_elems: bool = True
@@ -70,13 +78,8 @@ class Board:
         self.draw_grid: bool = draw_grid
         self.draw_trails: bool = True
 
-        # Grid
-        self.grid_frequency: int = 16
-        self.grid_force_weight: float = 2.3
         # True to move the points, False to fix the point but show the vectors
         self.grid_move_point: bool = not grid_draw_vector
-        self.grid_color_grid: int = 10
-        self.grid_color_point: int = 11
 
         # Debug
         self.first_update: bool = True
@@ -99,85 +102,13 @@ class Board:
 
         # Grid
         self.grid_main: grid.Grid = grid.Grid(
-            self.grid_frequency, 
-            False, 
-            self.grid_force_weight, 
-            self.grid_color_grid, 
-            self.grid_color_point, 
+            frequency=16, 
+            zoom_dependance=False, 
+            force_weight=2.3, 
+            color_grid=support.Color.YELLOW, 
+            color_point=support.Color.GREEN, 
             board = self
         )
-
-    def user_inputs(self) -> None:
-        """
-        Listen to user inputs
-        """
-        # Time controls
-        if pyxel.btnr(pyxel.KEY_SPACE) and self.time_speed != 0:
-            self.time_speed_previous = self.time_speed
-            self.frame_per_frame_previous = self.frame_per_frame
-            self.time_speed = 0
-            self.frame_per_frame = 9999999
-        elif pyxel.btnr(pyxel.KEY_SPACE):
-            self.time_speed = self.time_speed_previous
-            self.frame_per_frame = self.frame_per_frame_previous
-
-        elif pyxel.btn(pyxel.KEY_1):
-            self.time_speed = 0.1
-            self.frame_per_frame = 1
-        elif pyxel.btn(pyxel.KEY_2):
-            self.time_speed = 0.5
-            self.frame_per_frame = 2
-        elif pyxel.btn(pyxel.KEY_3):
-            self.time_speed = 1
-            self.frame_per_frame = 5
-        elif pyxel.btn(pyxel.KEY_4):
-            self.time_speed = 2
-            self.frame_per_frame = 10
-        elif pyxel.btn(pyxel.KEY_5):
-            self.time_speed = 4
-            self.frame_per_frame = 20
-        elif pyxel.btn(pyxel.KEY_6):
-            self.time_speed = 10
-            self.frame_per_frame = self.fps
-
-        # Zoom
-        if pyxel.btn(pyxel.KEY_PAGEUP) and self.zoom > 0.0:
-            self.zoom -= 0.05 * self.zoom
-            #self.width = int(self.width * self.zoom)
-            #self.height = int(self.height * self.zoom)
-        elif pyxel.btn(pyxel.KEY_PAGEDOWN) and self.zoom < 15.0:
-            self.zoom += 0.05 / self.zoom
-            #self.width = int(self.width * self.zoom)
-            #self.height = int(self.height * self.zoom)
-        elif pyxel.btn(pyxel.KEY_HOME):
-            self.zoom = 1
-            self.camera.x = 0
-            self.camera.y = 0
-            pyxel.camera()
-
-        # Camera position
-        if pyxel.btn(pyxel.KEY_LEFT):
-            self.camera.x -= int(10 / self.zoom)
-        elif pyxel.btn(pyxel.KEY_RIGHT):
-            self.camera.x += int(10 / self.zoom)
-        if pyxel.btn(pyxel.KEY_DOWN):
-            self.camera.y += int(10 / self.zoom)
-        elif pyxel.btn(pyxel.KEY_UP):
-            self.camera.y -= int(10 / self.zoom)
-
-        # Displays
-        if pyxel.btnr(pyxel.KEY_G):
-            self.draw_grid = not self.draw_grid
-        elif pyxel.btnr(pyxel.KEY_E):
-            self.draw_elems = not self.draw_elems
-        elif pyxel.btnr(pyxel.KEY_R):
-            self.draw_force = not self.draw_force
-        elif pyxel.btnr(pyxel.KEY_T):
-            self.draw_text = not self.draw_text
-        elif pyxel.btnr(pyxel.KEY_F):
-            self.draw_velocity = not self.draw_velocity
-        elif pyxel.btnr(pyxel.KEY_Y):
-            self.draw_trails = not self.draw_trails
 
     def update(self) -> None:
         """
@@ -188,13 +119,17 @@ class Board:
             print("- Game running")
             self.first_update = not self.first_update
         
+        self.frames += 1
+
         # Inputs
-        self.user_inputs()
+        self.buttons.listen()
+
         # Grid
         if self.draw_grid:
             self.grid_main.generate_points()
+
         # Frame limiter for the game
-        if pyxel.frame_count % self.frame_per_frame == 0:      
+        if not self.times.frame_skip():      
             # Interactions for each element, all elements.
             for element_main in self.system.values():
                 element_main.force_vector = Vector2D(0, 0)
@@ -225,7 +160,7 @@ class Board:
         pyxel.cls(0)
 
         # Camera
-        pyxel.camera(self.camera.x, self.camera.y)
+        self.camera.update()
        
         # Grid
         if self.draw_grid:
@@ -241,8 +176,8 @@ class Board:
             if self.draw_elems:
                 element.draw()
             if self.draw_force:
-                element.force_vector.draw_on(x = element.position.x, y = element.position.y, size=1, color=3) 
+                element.force_vector.draw_on(element.position.x, element.position.y, size=1, color=3) 
             if self.draw_velocity:
-                element.velocity.draw_on(x = element.position.x, y = element.position.y, size=1, color=5)
+                element.velocity.draw_on(element.position.x, element.position.y, size=1, color=5)
             
 
