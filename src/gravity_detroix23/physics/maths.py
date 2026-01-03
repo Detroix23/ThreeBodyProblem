@@ -132,7 +132,7 @@ class Vector2D:
 
         return self
 
-    def mult(self, factor: float) -> Self:
+    def multiply(self, factor: float) -> Self:
         """
         Multiply the values of the vector.
         Do update the value of the vector.

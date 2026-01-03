@@ -24,9 +24,33 @@ class Camera:
 
 	def update(self) -> None:
 		"""
-		Move the pyxel camera.
+		Update the camera.
+		- Move using the `pyxel.camera`.
+		- Check bounds.
 		"""
-		pyxel.camera(self.position.x, self.position.y)
+		# pyxel.camera(self.position.x, self.position.y)
+		if self.zoom < 0.0:
+			self.zoom = 0.01
+
+
+	def reset(self) -> None:
+		"""
+		Reset the camera to its default settings.
+		"""
+		self.zoom = 1
+		self.position.x = 0
+		self.position.y = 0
+		# pyxel.camera()
+
+	def transform(self, other: maths.Vector2D, inverted: bool = False) -> maths.Vector2D:
+		"""
+		Apply camera shift and zoom, creating a new `Vector2D` from an `other` `Vector2D`.
+		"""
+		if inverted:
+			return (other / self.zoom) - self.position	
+		else:
+			return (other + self.position) * self.zoom
+
 
 
 class Time:

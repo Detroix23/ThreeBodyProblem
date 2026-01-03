@@ -53,19 +53,16 @@ class Buttons:
 			self.board.times.frame_per_frame = self.board.fps
 
 		# Zoom
-		if pyxel.btn(pyxel.KEY_PAGEUP) and self.board.camera.zoom > 0.0:
+		if pyxel.btn(pyxel.KEY_PAGEUP):
 			self.board.camera.zoom -= 0.05 * self.board.camera.zoom
-			#self.board.width = int(self.board.width * self.board.camera.zoom)
-			#self.board.height = int(self.board.height * self.board.camera.zoom)
-		elif pyxel.btn(pyxel.KEY_PAGEDOWN) and self.board.camera.zoom < 15.0:
-			self.board.camera.zoom += 0.05 / self.board.camera.zoom
-			#self.board.width = int(self.board.width * self.board.camera.zoom)
-			#self.board.height = int(self.board.height * self.board.camera.zoom)
+			self.board.camera.update()
+
+		elif pyxel.btn(pyxel.KEY_PAGEDOWN):
+			self.board.camera.zoom += 0.05 * self.board.camera.zoom
+			self.board.camera.update()
+
 		elif pyxel.btn(pyxel.KEY_HOME):
-			self.board.camera.zoom = 1
-			self.board.camera.position.x = 0
-			self.board.camera.position.y = 0
-			pyxel.camera()
+			self.board.camera.reset()
 
 		# Camera position
 		if pyxel.btn(pyxel.KEY_LEFT):
@@ -81,7 +78,7 @@ class Buttons:
 		if pyxel.btnr(pyxel.KEY_G):
 			self.board.draw_grid = not self.board.draw_grid
 		elif pyxel.btnr(pyxel.KEY_E):
-			self.board.draw_elems = not self.board.draw_elems
+			self.board.draw_elements = not self.board.draw_elements
 		elif pyxel.btnr(pyxel.KEY_R):
 			self.board.draw_force = not self.board.draw_force
 		elif pyxel.btnr(pyxel.KEY_T):

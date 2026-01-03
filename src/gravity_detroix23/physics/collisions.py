@@ -26,7 +26,7 @@ def collision(a: element.Element, b: element.Element, behavior: settings.Collisi
         a.collisions.append(b)
         b.collisions.append(a)
         collision_state = True
-        # Check where the elems are going to land.
+        # Check where the elements are going to land.
         distance_min = a.size / 2 + b.size / 2
         future_position_a: Vector2D = a.position + a.velocity
         future_position_b: Vector2D = b.position + b.velocity

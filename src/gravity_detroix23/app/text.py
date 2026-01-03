@@ -24,10 +24,11 @@ class Text:
 
     def text_main(self, text_color: int = 8) -> None:
         """
-        Draw main text.
+        Draw main text.  
+        Is on top of the camera, fixed.
         """
-        x: int = int(self.app.simulation.camera.position.x) + 10
-        y: int = int(self.app.simulation.camera.position.y) + 10
+        x: int = 10
+        y: int = 10
         for txt in self.texts_main:
             pyxel.text(x, y, txt, text_color)
             y += 6

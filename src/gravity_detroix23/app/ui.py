@@ -15,8 +15,8 @@ class Layers:
     """
     Define what things and layers to show. 
     """
-    def __init__(self, elems: bool, grid: bool, hud: bool) -> None:
-        self.elems: bool = elems
+    def __init__(self, elements: bool, grid: bool, hud: bool) -> None:
+        self.elements: bool = elements
         self.grid: bool = grid
         self.hud: bool = hud
         
@@ -131,7 +131,7 @@ def app_cmd() -> dict[str, settings.InputElem]:
         print("# (!) - One element system.")
 
     # Sorting the element by size. 
-    # system_input = {elems for elems in sorted(system_input.items(), key=lambda item: item[1].size)}
+    # system_input = {elements for elements in sorted(system_input.items(), key=lambda item: item[1].size)}
     
     print("Starting...")
 

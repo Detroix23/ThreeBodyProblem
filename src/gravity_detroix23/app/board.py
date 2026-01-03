@@ -4,7 +4,10 @@ src/gravity/app/simulation.py
 """
 
 import pyxel
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from gravity_detroix23.app import app
 from gravity_detroix23.inputs import keyboard
 from gravity_detroix23.physics.maths import *
 from gravity_detroix23.modules import (
@@ -26,13 +29,16 @@ class Board:
     # Board.
     Runs the game, display elements, listen to player inputs.
     """
-    frames: int
+    app: 'app.App'
     buttons: keyboard.Buttons
     camera: controls.Camera
     times: controls.Time
 
+    frames: int
+
     def __init__(
         self, 
+        app: 'app.App',
         system: dict[str, settings.InputElem], 
         width: int, 
         height: int, 
@@ -53,6 +59,7 @@ class Board:
         """
         Initialize the game.
         """
+        self.app = app
         self.frames = 0
         self.exponent_softener: float = exponent_softener    
         self.gravitational_constant: float = gravitational_constant
@@ -71,7 +78,7 @@ class Board:
         self.times = controls.Time(self)
 
         # UI
-        self.draw_elems: bool = True
+        self.draw_elements: bool = True
         self.draw_velocity: bool = draw_velocity
         self.draw_force: bool = draw_force
         self.draw_text: bool = draw_text
@@ -103,7 +110,7 @@ class Board:
         # Grid
         self.grid_main: grid.Grid = grid.Grid(
             frequency=16, 
-            zoom_dependance=False, 
+            zoom_dependence=False, 
             force_weight=2.3, 
             color_grid=support.Color.YELLOW, 
             color_point=support.Color.GREEN, 
@@ -163,11 +170,13 @@ class Board:
 
         # All elements, layer 2.
         for element in self.system.values():
-            if self.draw_elems:
+            if self.draw_elements:
                 element.draw()
             if self.draw_force:
-                element.force_vector.draw_on(element.position.x, element.position.y, size=1, color=3) 
+                position = self.app.simulation.camera.transform(Vector2D(element.position.x, element.position.y))
+                element.force_vector.draw_on(position.x, position.y, size=1, color=3) 
             if self.draw_velocity:
-                element.velocity.draw_on(element.position.x, element.position.y, size=1, color=5)
+                position = self.app.simulation.camera.transform(Vector2D(element.position.x, element.position.y))
+                element.velocity.draw_on(position.x, position.y, size=1, color=5)
             
 

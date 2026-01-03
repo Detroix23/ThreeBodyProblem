@@ -4,7 +4,9 @@ src/gravity/app/drawing.py
 """
 import pyxel
 
-def draw_point(x: int, y: int, color: int, radius: int = 3) -> None:
+from gravity_detroix23.modules.types import Number
+
+def draw_point(x: Number, y: Number, color: int, radius: int = 3) -> None:
     """
     Draw a small square as a point.
     """

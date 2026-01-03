@@ -37,6 +37,9 @@ class Mouse:
 		self.show = show
 
 	def draw(self) -> None:
+		"""
+		Draw the mouse cursor, on top of the camera.
+		"""
 		pyxel.blt(
 			x=pyxel.mouse_x,
 			y=pyxel.mouse_y,

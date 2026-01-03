@@ -37,7 +37,7 @@ class Element:
 
     def __init__(
         self, 
-        BOARD: board.Board, 
+        board: board.Board, 
         mass: int, 
         position: maths.Vector2D, 
         velocity: maths.Vector2D,
@@ -48,10 +48,10 @@ class Element:
         """
         Create an `Element`.
         """
-        self.BOARD: board.Board = BOARD
+        self.board: board.Board = board
         self.mass: float = mass  
         self.position: maths.Vector2D = position
-        self.trail = trails.Trail(5000, support.Color.WHITE)
+        self.trail = trails.Trail(self.board.app, 5000, support.Color.WHITE)
 
         self.velocity: maths.Vector2D = velocity
         self.force_vector: maths.Vector2D = maths.Vector2D(0, 0)
@@ -94,19 +94,19 @@ color={self.color}, size={self.size})"
             distance = distance_min
         
         # F force value
-        force: float = (self.BOARD.gravitational_constant * target.mass) / (distance ** (2 + self.BOARD.exponent_softener))
+        force: float = (self.board.gravitational_constant * target.mass) / (distance ** (2 + self.board.exponent_softener))
         # Force vector
         vector_force: maths.Vector2D = maths.Vector2D(x = force * vector_distance.x * direction, y = force * vector_distance.y * direction)
         # Watch for overshot of planets
         velocity_next: maths.Vector2D = maths.Vector2D(
-            x = self.velocity.x + self.force_vector.x / (self.mass * self.BOARD.mass_softener),
-            y = self.velocity.y + self.force_vector.y / (self.mass * self.BOARD.mass_softener)
+            x = self.velocity.x + self.force_vector.x / (self.mass * self.board.mass_softener),
+            y = self.velocity.y + self.force_vector.y / (self.mass * self.board.mass_softener)
         )
         if velocity_next.magnitude >= distance:
             direction = -1
             velocity_next_magnitude: float = velocity_next.magnitude
             velocity_next.normalize()
-            velocity_next.mult((velocity_next_magnitude - distance) * direction)
+            velocity_next.multiply((velocity_next_magnitude - distance) * direction)
         
         
         return vector_force
@@ -117,7 +117,7 @@ color={self.color}, size={self.size})"
         Move the elem, according to force vector at a scale (mass) and checking collision.
         """ 
         # Apply force.
-        self.velocity.add(self.force_vector / (self.mass * self.BOARD.mass_softener))
+        self.velocity.add(self.force_vector / (self.mass * self.board.mass_softener))
 
         # Apply velocity.
         self.position.add(self.velocity)
@@ -130,6 +130,13 @@ color={self.color}, size={self.size})"
         if self.trail and not self.position.is_close(self.trail.first, 1):
             self.trail.push(self.position.copy())
 
+    def compute_position(self) -> maths.Vector2D:
+        initial: maths.Vector2D = maths.Vector2D(
+            self.position.x - (self.size / (2 * self.size * self.SPRITE_SIZE_FACTOR)),
+            self.position.y - (self.size / (2 * self.size * self.SPRITE_SIZE_FACTOR)),
+        )
+        
+        return self.board.camera.transform(initial)
 
     def draw(self) -> None:
         """
@@ -142,16 +149,17 @@ color={self.color}, size={self.size})"
             int(self.position.y)
         )
         if self.draw_sprite:
+            position: maths.Vector2D = self.compute_position()
             pyxel.blt(
-                x=self.position.x - (self.size / (2 * self.size * self.SPRITE_SIZE_FACTOR)), 
-                y=self.position.y - (self.size / (2 * self.size * self.SPRITE_SIZE_FACTOR)), 
+                x=position.x, 
+                y=position.y, 
                 img=self.SPRITE_IMAGE, 
                 u=self.SPRITE_POSITION.x,
                 v=self.SPRITE_POSITION.y,
                 w=self.SPRITE_SIZE.x,
                 h=self.SPRITE_SIZE.y,
                 colkey=self.SPRITE_COLKEY,
-                scale=self.size * self.SPRITE_SIZE_FACTOR
+                scale=self.size * self.SPRITE_SIZE_FACTOR * self.board.camera.zoom
             )
         else:
             # Main rectangle
