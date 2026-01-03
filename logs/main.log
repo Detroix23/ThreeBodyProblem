@@ -1883,3 +1883,73 @@ System:
 	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
 Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
 
+Simulation: 2026-01-03 15:19:23.497980;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
+Simulation: 2026-01-03 15:20:45.162882;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
+Simulation: 2026-01-03 15:22:43.193929;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
+Simulation: 2026-01-03 15:24:34.359469;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
+Simulation: 2026-01-03 15:26:51.982923;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
+Simulation: 2026-01-03 15:27:19.222151;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
+Simulation: 2026-01-03 15:29:09.478829;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
+Simulation: 2026-01-03 15:31:32.108828;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
+Simulation: 2026-01-03 15:31:43.141395;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
+Simulation: 2026-01-03 15:31:58.420410;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+

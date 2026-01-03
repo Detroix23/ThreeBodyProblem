@@ -44,6 +44,7 @@ class Element:
         color: int = 5, 
         size: int = 2, 
         name: str = "",
+        trail_size: int = 5000
     ) -> None:
         """
         Create an `Element`.
@@ -51,7 +52,7 @@ class Element:
         self.board: board.Board = board
         self.mass: float = mass  
         self.position: maths.Vector2D = position
-        self.trail = trails.Trail(self.board.app, 5000, support.Color.WHITE)
+        self.trail = trails.Trail(self.board.app, trail_size, support.Color.WHITE)
 
         self.velocity: maths.Vector2D = velocity
         self.force_vector: maths.Vector2D = maths.Vector2D(0, 0)
@@ -132,8 +133,12 @@ color={self.color}, size={self.size})"
 
     def compute_position(self) -> maths.Vector2D:
         initial: maths.Vector2D = maths.Vector2D(
-            self.position.x - (self.size / (2 * self.size * self.SPRITE_SIZE_FACTOR)),
-            self.position.y - (self.size / (2 * self.size * self.SPRITE_SIZE_FACTOR)),
+            self.position.x - (self.size / (2 * self.size * self.SPRITE_SIZE_FACTOR)) 
+                if self.size != 0
+                else self.position.x,
+            self.position.y - (self.size / (2 * self.size * self.SPRITE_SIZE_FACTOR))
+                if self.size != 0
+                else self.position.y,
         )
         
         return self.board.camera.transform(initial)

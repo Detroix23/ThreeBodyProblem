@@ -94,8 +94,9 @@ class App:
         Update everything.
         """
         self._time_update = time.perf_counter() - self._time_update
-        # Gravity.
+
         self.simulation.update()
+        self.mouse.listen()
         # Text.
         self.text.update([
             f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, fps={str(self.simulation.fps)}, frames={str(pyxel.frame_count)}",

@@ -96,11 +96,11 @@ class Board:
         for element_name, element_stats in system.items():
             self.system[element_name] = element.Element(
                 self, 
-                mass = element_stats.mass,
-                position = element_stats.position,
-                name = element_stats.name,
-                size = element_stats.size,
-                velocity = element_stats.velocity
+                mass=element_stats.mass,
+                position=element_stats.position,
+                name=element_stats.name,
+                size=element_stats.size,
+                velocity=element_stats.velocity,
             )
         print("- Provided system: ")
         print(console.pretty(system))
