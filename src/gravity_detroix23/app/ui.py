@@ -106,8 +106,8 @@ def app_cmd() -> dict[str, settings.InputElem]:
                 system_input[manual['name']] = settings.InputElem(
                     int(manual['mass']), Vector2D(float(manual['position_x']), float(manual['position_y'])), manual['name'], int(int(manual['mass']) / 100), Vector2D(0, 0)
                 )
-            except ValueError as e:
-                if e.__str__() == 'Exit':
+            except ValueError as exception:
+                if exception.__str__() == 'Exit':
                     user_exit = True
                     print("Choice validated.")
                 else:

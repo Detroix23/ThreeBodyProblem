@@ -7,8 +7,8 @@ import typing
 
 import gravity_detroix23.modules.settings as settings
 
-pretty_supported = typing.Union[dict[typing.Any, typing.Any], list[typing.Any]] 
-setting = typing.Union[str, int, float, bool, settings.Edge, settings.CollisionsBehaviour, settings.SimMode]
+type pretty_supported = typing.Union[dict[typing.Any, typing.Any], list[typing.Any]] 
+type setting = typing.Union[str, int, float, bool, settings.Edge, settings.CollisionsBehavior, settings.SimMode]
 
 def is_pretty_supported(argument: typing.Any) -> bool:
 	"""

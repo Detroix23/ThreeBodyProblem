@@ -5,6 +5,7 @@ src/gravity/app/simulation.py
 
 import pyxel
 
+from gravity_detroix23.inputs import keyboard
 from gravity_detroix23.physics.maths import *
 from gravity_detroix23.modules import (
 	settings,
@@ -17,7 +18,6 @@ from gravity_detroix23.physics import (
 )
 from gravity_detroix23.app import (
     support,
-    inputs,
     controls,
 )
 
@@ -27,7 +27,7 @@ class Board:
     Runs the game, display elements, listen to player inputs.
     """
     frames: int
-    buttons: inputs.Buttons
+    buttons: keyboard.Buttons
     camera: controls.Camera
     times: controls.Time
 
@@ -43,7 +43,7 @@ class Board:
         bounce_factor: float,  
         mass_softener: float, 
         exponent_softener: float,
-        collisions: settings.CollisionsBehaviour,
+        collisions: settings.CollisionsBehavior,
         grid_draw_vector: bool,
         draw_velocity: bool = True, 
         draw_force: bool = True, 
@@ -63,10 +63,10 @@ class Board:
         self.fps: int = fps
         self.bounce_factor: float = bounce_factor
         self.edges: settings.Edge = edges
-        self.collisions: settings.CollisionsBehaviour = collisions
+        self.collisions: settings.CollisionsBehavior = collisions
 
         # Workers
-        self.buttons = inputs.Buttons(self)
+        self.buttons = keyboard.Buttons(self)
         self.camera = controls.Camera(self)
         self.times = controls.Time(self)
 
@@ -134,18 +134,8 @@ class Board:
             for element_main in self.system.values():
                 element_main.force_vector = Vector2D(0, 0)
                 for element_target in self.system.values():
-                    if element_main != element_target:
-                        distance: float = element_main.distance_to(element_target)
-                        if distance > (element_main.size / 2 + element_target.size / 2):
-                            target_force: Vector2D = element_main.gravitational_force_from(element_target)
-                            element_main.force_vector.add(target_force)
-                        elif self.collisions in [
-                            settings.CollisionsBehaviour.COLLIDE, 
-                            settings.CollisionsBehaviour.COLLIDE_WITH_FUSION, 
-                            settings.CollisionsBehaviour.COLLIDE_WITH_BUMP
-                        ]:
-                            collisions.collision(element_main, element_target, behaviour=self.collisions)
-            
+                    collisions.interaction(element_main, element_target, self.collisions)
+                
             # Move
             for element in self.system.values():
                 element.move()
@@ -162,16 +152,16 @@ class Board:
         # Camera
         self.camera.update()
        
-        # Grid
-        if self.draw_grid:
-            self.grid_main.draw()
-        
         # Trails.
         if self.draw_trails:
             for element in self.system.values():
                 element.trail.draw()
 
-        # All elementements, layer 2.
+        # Grid
+        if self.draw_grid:
+            self.grid_main.draw()
+
+        # All elements, layer 2.
         for element in self.system.values():
             if self.draw_elems:
                 element.draw()

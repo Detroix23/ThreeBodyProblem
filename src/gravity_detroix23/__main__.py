@@ -1,15 +1,15 @@
 """
-THREE BODY PROBLEM
-Simulation of planet movement
+# Three Body Problem
+src/gravity_detroix23/__main__.py  
+Simulation of planet movement. 
 Use of gravitational formula: F = (m1*m2) / d**2
 We consider that all elements are spherical
-Run: 1st
 """
 import sys
 
 from gravity_detroix23.modules import settings
 from gravity_detroix23.app import (
-	game,
+	app,
 	ui,
 )
 from gravity_detroix23.modules import (
@@ -36,7 +36,7 @@ def main(args: list[str]) -> None:
         board_settings = ",".join([f"{name}={value}" for name, value in defaults.app_dict().items()])
     )
     
-    game.App(
+    app.App(
         system=system, 
         width=defaults.APP.BOARD_WIDTH,      
         height=defaults.APP.BOARD_HEIGHT, 
@@ -46,7 +46,7 @@ def main(args: list[str]) -> None:
         edges=defaults.APP.EDGE,
         bounce_factor=defaults.APP.BOUNCE_FACTOR,
         mass_softener=defaults.APP.MASS_SOFTENER, 
-        exponent_softener=defaults.APP.EXPONENENT_SOFTENER,
+        exponent_softener=defaults.APP.EXPONENT_SOFTENER,
         collisions=defaults.APP.COLLISIONS,
         grid_draw_vector=defaults.APP.GRID_DRAW_VECTORS,
         draw_velocity=defaults.APP.DRAW_VELOCITY, 

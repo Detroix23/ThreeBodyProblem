@@ -1,21 +1,22 @@
 """
 # Gravity.  
-src/gravity_detroix23/app/inputs.py  
+src/gravity_detroix23/inputs/keyboard.py  
 """
+
 import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-	from gravity_detroix23.app import simulation
+	from gravity_detroix23.app import board
 
 class Buttons:
 	"""
 	Manage user presses.  
 	Uses mainly `pyxel.btn` method.   
 	"""
-	board: 'simulation.Board'
+	board: 'board.Board'
 
-	def __init__(self, board: 'simulation.Board') -> None:
+	def __init__(self, board: 'board.Board') -> None:
 		self.board = board
 
 	def listen(self) -> None:

@@ -1,7 +1,7 @@
 """
 # Gravity.
 src/gravity/app/support.py  
-Pyxels general tools.
+Pyxel general tools.
 """
 
 class Color:

@@ -8,7 +8,7 @@ from gravity_detroix23.physics import element
 from gravity_detroix23.modules import settings
 
 
-def collision(a: element.Element, b: element.Element, behaviour: settings.CollisionsBehaviour) -> bool:
+def collision(a: element.Element, b: element.Element, behavior: settings.CollisionsBehavior) -> bool:
     """
     Collide two elements and change their velocity by inverting the direction and preserving the actual speed.
     To avoid the effect to cancel itself, each Elem has a list of already collided elements.
@@ -46,3 +46,20 @@ def collision(a: element.Element, b: element.Element, behaviour: settings.Collis
             # print(f"! C - Fu: {a.displacement=} {n_a}, {b.displacement=} {n_b}; ")
     return collision_state
     
+def interaction(main: element.Element, target: element.Element, collision_behavior: settings.CollisionsBehavior) -> None:
+    """
+    Compute the gravitational force exerted by `target` onto `main`.  
+    Update by reference `main`'s force vector.
+    """
+    if main != target:
+        distance: float = main.distance_to(target)
+        if distance > (main.size / 2 + target.size / 2):
+            target_force: Vector2D = main.gravitational_force_from(target)
+            main.force_vector.add(target_force)
+        
+        elif collision_behavior in {
+            settings.CollisionsBehavior.COLLIDE, 
+            settings.CollisionsBehavior.COLLIDE_WITH_FUSION, 
+            settings.CollisionsBehavior.COLLIDE_WITH_BUMP
+        }:
+            collision(main, target, behavior=collision_behavior)

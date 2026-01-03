@@ -7,7 +7,11 @@ import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import gravity_detroix23.app.simulation as simulation
+    import gravity_detroix23.app.board as board
+
+from gravity_detroix23.modules import (
+    defaults,
+)
 from gravity_detroix23.physics import (
     maths,
     trails,
@@ -25,7 +29,7 @@ class Element:
     SPRITE_POSITION: maths.Vector2D = maths.Vector2D(16, 0)
     SPRITE_SIZE: maths.Vector2D = maths.Vector2D(16, 16)
     SPRITE_IMAGE: int = 0
-    SPRITE_COLKEY: int = 0
+    SPRITE_COLKEY: int = defaults.SPRITE_COLKEY
     SPRITE_SIZE_FACTOR: float = 1/16
 
     trail: trails.Trail
@@ -33,7 +37,7 @@ class Element:
 
     def __init__(
         self, 
-        BOARD: simulation.Board, 
+        BOARD: board.Board, 
         mass: int, 
         position: maths.Vector2D, 
         velocity: maths.Vector2D,
@@ -44,7 +48,7 @@ class Element:
         """
         Create an `Element`.
         """
-        self.BOARD: simulation.Board = BOARD
+        self.BOARD: board.Board = BOARD
         self.mass: float = mass  
         self.position: maths.Vector2D = position
         self.trail = trails.Trail(5000, support.Color.WHITE)
@@ -84,7 +88,7 @@ color={self.color}, size={self.size})"
         vector_distance.normalize()
         # Distance
         distance: float = self.distance_to(target)
-        # Limit artifically distance and prevent division by 0
+        # Limit artificially distance and prevent division by 0
         distance_min: float = ((self.size + 1) / 2 + (target.size + 1) / 2)
         if distance < distance_min:
             distance = distance_min

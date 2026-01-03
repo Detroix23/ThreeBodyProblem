@@ -175,6 +175,18 @@ class Vector2D:
         return abs(self.x - other.x) < offset and abs(self.y - other.y) < offset
 
 
+class Size:
+    """
+    # Size.
+    Define an (int; int) couple.
+    """
+    x: int
+    y: int
+
+    def __init__(self, x: int, y: int) -> None:
+        self.x = x
+        self.y = y
+
 
 def dot_product(a: Vector2D, b: Vector2D) -> float:
     """

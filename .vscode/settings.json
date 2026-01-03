@@ -2,5 +2,13 @@
     "python.analysis.typeCheckingMode": "strict",
     "python.analysis.inlayHints.variableTypes": true,
     "python.analysis.inlayHints.functionReturnTypes": true,
-    "python.analysis.generateWithTypeAnnotation": true
+    "python.analysis.generateWithTypeAnnotation": true,
+    "cSpell.words": [
+        "btnr",
+        "COLKEY",
+        "detroix",
+        "pyxel",
+        "pyxres",
+        "rectb"
+    ]
 }

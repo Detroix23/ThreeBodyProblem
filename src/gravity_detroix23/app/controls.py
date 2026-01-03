@@ -6,18 +6,18 @@ import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-	from gravity_detroix23.app import simulation
+	from gravity_detroix23.app import board
 from gravity_detroix23.physics import maths
 
 class Camera:
 	"""
 	Controls the app's camera.
 	"""
-	board: 'simulation.Board'
+	board: 'board.Board'
 	position: maths.Vector2D
 	zoom: float
 
-	def __init__(self, board: 'simulation.Board') -> None:
+	def __init__(self, board: 'board.Board') -> None:
 		self.board = board
 		self.position = maths.Vector2D(0, 0)
 		self.zoom = 1
@@ -33,13 +33,13 @@ class Time:
 	"""
 	Control time and execution speed.
 	"""
-	board: 'simulation.Board'
+	board: 'board.Board'
 	time_speed: float
 	time_speed_previous: float
 	frame_per_frame: int
 	frame_per_frame_previous: int
 
-	def __init__(self, board: 'simulation.Board') -> None:
+	def __init__(self, board: 'board.Board') -> None:
 		self.board = board
 		self.speed = 0.0
 		self.speed_previous = 1.0

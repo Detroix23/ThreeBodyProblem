@@ -18,7 +18,7 @@ class SimMode(enum.Enum):
     CONFIG = 2
     DEFAULT = 3 
 
-class CollisionsBehaviour(enum.Enum):
+class CollisionsBehavior(enum.Enum):
     NONE = 1
     COLLIDE = 2
     COLLIDE_WITH_FUSION = 3

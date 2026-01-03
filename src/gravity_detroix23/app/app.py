@@ -10,17 +10,22 @@ from gravity_detroix23.modules import (
 	settings, 
 	paths
 )
-from gravity_detroix23.app import simulation, text
+from gravity_detroix23.app import (
+	board, 
+	text,
+)
+from gravity_detroix23.inputs import mouse
 
 
 
 class App:
     """
     # App.
-    Contains and intialize the pyxel runtime.
+    Contains all the simulation, parallel workers, and initialize the pyxel runtime.
     """
-    simulation: simulation.Board
+    simulation: board.Board
     text: text.Text
+    mouse: mouse.Mouse
 
     def __init__(
         self, 
@@ -34,15 +39,15 @@ class App:
         bounce_factor: float,  
         mass_softener: float, 
         exponent_softener: float,
-        collisions: settings.CollisionsBehaviour, 
+        collisions: settings.CollisionsBehavior, 
         grid_draw_vector: bool,
         draw_velocity: bool = True, 
         draw_force: bool = True, 
         draw_text: bool = True, 
         draw_grid: bool = True,
     ) -> None:
-        # Simulation.
-        self.simulation: simulation.Board = simulation.Board(
+        # Workers
+        self.simulation: board.Board = board.Board(
             system,
             width,
             height,
@@ -60,20 +65,19 @@ class App:
             draw_text,
             draw_grid
         )
-        # Text.
-        self.text: text.Text = text.Text(
-            app=self,
-            draw_main=True
-        )
+        
+        self.text: text.Text = text.Text(self, draw_main=True)
+        self.mouse: mouse.Mouse = mouse.Mouse(self, 2)
+
 
         # Simulation screen.
         pyxel.init(width, height, title=title, fps=fps)
         print("- Pyxel initialized")
-        # Ressource file.
+        # Resource file.
         try:
-            pyxel.load(str(paths.RESSOURCE_FILE))
+            pyxel.load(str(paths.RESOURCE_FILE))
         except Exception as exception:
-            raise Exception(f"(X) - Couldn't open ressource file in {paths.RESSOURCE_FILE}. {type(exception).__name__}: `{exception.args}`.")
+            raise Exception(f"(X) - Couldn't open resource file in {paths.RESOURCE_FILE}. {type(exception).__name__}: `{exception.args}`.")
 
         # Run.
         pyxel.run(self.update, self.draw)
@@ -99,4 +103,4 @@ class App:
         """
         self.simulation.draw()
         self.text.draw()
-        
+        self.mouse.draw()

@@ -6,18 +6,18 @@ import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from gravity_detroix23.app import game
+    from gravity_detroix23.app import app
 
 
 class Text:
     """
     Text in app.
     """
-    app: 'game.App'
+    app: 'app.App'
     draw_main: bool
     texts_main: list[str]
 
-    def __init__(self, app: 'game.App', draw_main: bool) -> None:
+    def __init__(self, app: 'app.App', draw_main: bool) -> None:
         self.app = app
         self.draw_main = draw_main
         self.texts_main = []
