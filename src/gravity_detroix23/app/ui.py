@@ -41,7 +41,7 @@ def app_cmd() -> dict[str, settings.InputElem]:
     Basic starting sequence for the user, in CMD.
     """
     ## Config
-    user_mode_str: str = input(f"Please select a mode {"{rand/conf/default}"}[{defaults.APP.DEFAULT_MODE}]: ")
+    user_mode_str: str = input(f"Please select a mode (rand|conf|default)[{defaults.APP.DEFAULT_MODE}]: ")
     system_input: dict[str, settings.InputElem] = {}
 
     if user_mode_str in ["r", "rand", "random"]:

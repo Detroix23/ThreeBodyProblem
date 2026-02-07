@@ -1953,3 +1953,10 @@ System:
 	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
 Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
 
+Simulation: 2026-02-07 11:36:25.901312;
+System:
+	Elem: Plan2, position: x=580, y=450, size=64, velocity: x=0, y=-1;
+	Elem: Plan3, position: x=400, y=400, size=48, velocity: x=0, y=-3;
+	Elem: Plan4, position: x=300, y=350, size=8, velocity: x=2, y=0;
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
