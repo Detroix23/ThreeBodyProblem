@@ -22,7 +22,7 @@ class Trail:
 
 	def __init__(
 		self, 
-		app: app.App,
+		app: 'app.App',
 		length: int,
 		color: int,
 		*,
@@ -38,7 +38,7 @@ class Trail:
 		self.color = color
 
 	def __repr__(self) -> str:
-		return f"Trail(length={self.length}, color={self.color}, positions={console.pretty(self.positions, end=" ")})"
+		return f"Trail(length={self.length}, color={self.color}, positions={console.pretty(self.positions, end=' ')})"
 
 	@property
 	def first(self) -> maths.Vector2D:

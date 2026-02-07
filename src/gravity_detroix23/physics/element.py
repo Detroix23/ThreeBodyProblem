@@ -32,12 +32,23 @@ class Element:
     SPRITE_COLKEY: int = defaults.SPRITE_COLKEY
     SPRITE_SIZE_FACTOR: float = 1/16
 
+    board: 'board.Board'
+    mass: float
+    position: maths.Vector2D
     trail: trails.Trail
+    velocity: maths.Vector2D
+    force_vector: maths.Vector2D
+    collisions: list['Element']
     displacement: maths.Vector2D
+
+    draw_sprite: bool
+    size: int
+    color: int
+    name: str
 
     def __init__(
         self, 
-        board: board.Board, 
+        board: 'board.Board', 
         mass: int, 
         position: maths.Vector2D, 
         velocity: maths.Vector2D,
@@ -49,21 +60,21 @@ class Element:
         """
         Create an `Element`.
         """
-        self.board: board.Board = board
-        self.mass: float = mass  
-        self.position: maths.Vector2D = position
+        self.board = board
+        self.mass = mass  
+        self.position = position
         self.trail = trails.Trail(self.board.app, trail_size, support.Color.WHITE)
 
-        self.velocity: maths.Vector2D = velocity
-        self.force_vector: maths.Vector2D = maths.Vector2D(0, 0)
-        self.collisions: list[Element] = []
+        self.velocity = velocity
+        self.force_vector = maths.Vector2D(0, 0)
+        self.collisions = []
         self.displacement = maths.Vector2D(0, 0)
 
         # Drawing sprite will use the pyxres template, else, a square will be drawn.
-        self.draw_sprite: bool = True
-        self.size: int = size
-        self.color: int = color
-        self.name: str = name
+        self.draw_sprite = True
+        self.size = size
+        self.color = color
+        self.name = name
 
     def __str__(self) -> str:
         return f"Elem {self.name} - Position: x={self.position.x}; y={self.position.y}, Mass: m={self.mass}, \

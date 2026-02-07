@@ -1,12 +1,12 @@
 [project]
 name = "tree_body_problem_detroix23"
-version = "1.4.0"
+version = "1.4.1"
 description = "Retro gravity simulator."
 authors = [
     { name="Detroix23", email="detroix23@gmail.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 classifiers = [
     "Typing :: Typed",
     "Programming Language :: Python :: 3",
@@ -17,9 +17,7 @@ dependencies = [
     "pyxel>=2.5.4",
 ]
 license = "CC-BY-4.0"
-license-files = [
-    "LICENSE.md"
-]
+license-files = ["LICENSE.md"]
 
 [project.urls]
 Repository = "https://github.com/Detroix23/ThreeBodyProblem"
