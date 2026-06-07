@@ -2,27 +2,27 @@
 THREE BODY PROBLEM.
 Grid.
 """
+import math
 from typing import TYPE_CHECKING
 
-from gravity_detroix23.physics.maths import Vector2D
+import pyxel
 
 if TYPE_CHECKING:
-    from gravity_detroix23.app import board
-from gravity_detroix23.physics.maths import *
+    from gravity_detroix23.app.board import Board
+from gravity_detroix23.physics.maths import Vector2D
 from gravity_detroix23.app import drawing
 
 class Point:
     """
     Point of the grid 
     """
-    board: 'board.Board'
+    board: 'Board'
     position: Vector2D
     
-    def __init__(self, position: Vector2D, board: 'board.Board') -> None:
+    def __init__(self, position: Vector2D, board: 'Board') -> None:
         self.position = position
-        self.board: 'board.Board' = board
+        self.board: 'Board' = board
         self.force: Vector2D = Vector2D(0, 0)
-        
         
     def distance_to(self, target: Vector2D) -> float:
         """
@@ -69,23 +69,23 @@ class Grid:
         force_weight: float, 
         color_grid: int, 
         color_point: int, 
-        board: 'board.Board',
+        board: 'Board',
     ) -> None:
         self.frequency: float = frequency
         self.zoom_dependence: bool = zoom_dependence
         self.color_grid: int = color_grid
         self.color_point: int = color_point
-        self.board: 'board.Board' = board
+        self.board: 'Board' = board
         self.force_weight: float = force_weight
         self.force_exponent: float = 0.5
-        # Use lists index to find neighbours, Point cords to draw lines
+        # Use lists index to find neighbors, Point cords to draw lines
         self.points: list[list[Point]] = []
     
     def generate_points(self) -> None:
         """
         Fill the `self.points` `list[list[Point]]` by computing each point. 
         """
-        self.points = [[]]
+        self.points = []
         
         dx: int = int(float(self.board.width)  / self.frequency)
         dy: int = int(float(self.board.height) / self.frequency)

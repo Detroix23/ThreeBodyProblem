@@ -1,6 +1,6 @@
 """
 THREE BODY PROBLEM.
-Logging and writting.
+Logging and writing.
 """
 import datetime
 

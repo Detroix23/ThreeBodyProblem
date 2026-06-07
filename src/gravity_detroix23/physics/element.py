@@ -7,19 +7,11 @@ import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import gravity_detroix23.app.board as board
+    from gravity_detroix23.app.board import Board 
 
-from gravity_detroix23.modules import (
-    defaults,
-)
-from gravity_detroix23.physics import (
-    maths,
-    trails,
-)
-from gravity_detroix23.app import (
-    drawing,
-    support,
-)
+from gravity_detroix23.modules import defaults
+from gravity_detroix23.physics import maths, trails
+from gravity_detroix23.app import drawing
 
 class Element:
     """
@@ -32,7 +24,7 @@ class Element:
     SPRITE_COLKEY: int = defaults.SPRITE_COLKEY
     SPRITE_SIZE_FACTOR: float = 1/16
 
-    board: 'board.Board'
+    board: 'Board'
     mass: float
     position: maths.Vector2D
     trail: trails.Trail
@@ -48,7 +40,7 @@ class Element:
 
     def __init__(
         self, 
-        board: 'board.Board', 
+        board: 'Board', 
         mass: int, 
         position: maths.Vector2D, 
         velocity: maths.Vector2D,
@@ -63,7 +55,7 @@ class Element:
         self.board = board
         self.mass = mass  
         self.position = position
-        self.trail = trails.Trail(self.board.app, trail_size, support.Color.WHITE)
+        self.trail = trails.Trail(self.board.app, trail_size, pyxel.COLOR_WHITE)
 
         self.velocity = velocity
         self.force_vector = maths.Vector2D(0, 0)
@@ -77,12 +69,16 @@ class Element:
         self.name = name
 
     def __str__(self) -> str:
-        return f"Elem {self.name} - Position: x={self.position.x}; y={self.position.y}, Mass: m={self.mass}, \
-Force: x={self.force_vector.x}; y={self.force_vector.y}."
-    
+        return (
+            f"Element({self.name}, position={self.position}, "
+            f"mass: m={self.mass}, force={self.force_vector})"
+        )
+
     def __repr__(self) -> str:
-        return f"Element(name={self.name}, position={self.position}, mass={self.mass}, velocity={self.force_vector}, \
-color={self.color}, size={self.size})"
+        return (
+            f"Element(name={self.name}, position={self.position}, mass={self.mass}, "
+            f"velocity={self.force_vector}, color={self.color}, size={self.size})"
+        )
     
     def distance_to(self, target: 'Element') -> float:
         """
@@ -158,14 +154,14 @@ color={self.color}, size={self.size})"
         """
         Draw itself on the board
         """
-        # Draw on computed values
+        # Draw on computed values.
         size: int = int(self.size)
         position: maths.Vector2D = maths.Vector2D(
             int(self.position.x),
             int(self.position.y)
         )
         if self.draw_sprite:
-            position: maths.Vector2D = self.compute_position()
+            position = self.compute_position()
             pyxel.blt(
                 x=position.x, 
                 y=position.y, 

@@ -1,15 +1,12 @@
 """
-THREE BODY PROBLEM
-User configs
-Run: 2nd
+# Three body problem.
+src/gravity_detroix23/app/ui.py
 """
+
 import random
 
-from gravity_detroix23.physics.maths import *
-from gravity_detroix23.modules import (
-    defaults,
-    settings,
-)
+from gravity_detroix23.physics.maths import Vector2D
+from gravity_detroix23.modules import defaults, settings
 
 class Layers:
     """
@@ -23,7 +20,7 @@ class Layers:
 
 def listing_input(text: str, allowed: str = 'int') -> str:
     listening: list[str] = ['q', 'quit']
-    input_result = input(text)
+    input_result: str = input(text)
     for i in range(1, len(listening)):
         if input_result.strip().lower() == listening[i]:
             raise ValueError('Exit')
@@ -35,28 +32,26 @@ def listing_input(text: str, allowed: str = 'int') -> str:
 
     return input_result
 
-
-def app_cmd() -> dict[str, settings.InputElem]:
+def app_cmd() -> dict[str, settings.InputElement]:
     """
     Basic starting sequence for the user, in CMD.
     """
     ## Config
     user_mode_str: str = input(f"Please select a mode (rand|conf|default)[{defaults.APP.DEFAULT_MODE}]: ")
-    system_input: dict[str, settings.InputElem] = {}
+    user_mode: settings.SimMode
+    system_input: dict[str, settings.InputElement] = {}
 
-    if user_mode_str in ["r", "rand", "random"]:
-        user_mode: settings.SimMode = settings.SimMode.RANDOM
-    elif user_mode_str in ["d", "def", "default"]:
-        user_mode: settings.SimMode = settings.SimMode.DEFAULT
-    elif user_mode_str in ["c", "con", "conf", "config"]:
-        user_mode: settings.SimMode = settings.SimMode.CONFIG
+    if user_mode_str in {"r", "rand", "random"}:
+        user_mode = settings.SimMode.RANDOM
+    elif user_mode_str in {"d", "def", "default"}:
+        user_mode = settings.SimMode.DEFAULT
+    elif user_mode_str in {"c", "con", "conf", "config"}:
+        user_mode = settings.SimMode.CONFIG
     else:
-        user_mode: settings.SimMode = defaults.APP.DEFAULT_MODE
-        print(f"(!) - Incorrect input; set to '{defaults.APP.DEFAULT_MODE}'")
+        user_mode = defaults.APP.DEFAULT_MODE
         
-
     if user_mode == settings.SimMode.RANDOM:
-        print("# Mode selected: rand (random generation)")
+        print("-> `rand` (random generation).")
         number_elements: int = random.randint(3, 5)
         border_coverage: float = 0.2
         borders: dict[str, int] = {
@@ -76,9 +71,9 @@ def app_cmd() -> dict[str, settings.InputElem]:
         while i <= number_elements:
             name_random: str = "Plan" + str(i)
             mass_random: int = random.randint(weight_min, weight_max)
-            position_x_random = random.randint(borders["West"], borders["East"])
-            position_y_random = random.randint(borders["North"], borders["South"])
-            system_input[name_random] = settings.InputElem(
+            position_x_random: int = random.randint(borders["West"], borders["East"])
+            position_y_random: int = random.randint(borders["North"], borders["South"])
+            system_input[name_random] = settings.InputElement(
                 mass_random, 
                 Vector2D(position_x_random, position_y_random), 
                 name_random, 
@@ -89,7 +84,7 @@ def app_cmd() -> dict[str, settings.InputElem]:
 
     elif user_mode == settings.SimMode.CONFIG:
         user_exit: bool = False
-        print("# Mode selected: conf (manual configuration);")
+        print("-> `conf` (manual configuration).")
         while not user_exit:
             if system_input: print("Currently loaded: ")
             for element in system_input:
@@ -103,41 +98,42 @@ def app_cmd() -> dict[str, settings.InputElem]:
                 manual['position_x'] = listing_input("- Starting position (x): ")
                 manual['position_y'] = listing_input("- Starting position (y): ")
 
-                system_input[manual['name']] = settings.InputElem(
-                    int(manual['mass']), Vector2D(float(manual['position_x']), float(manual['position_y'])), manual['name'], int(int(manual['mass']) / 100), Vector2D(0, 0)
+                system_input[manual['name']] = settings.InputElement(
+                    int(manual['mass']), 
+                    Vector2D(float(manual['position_x']), float(manual['position_y'])), 
+                    manual['name'], 
+                    int(int(manual['mass']) / 100), 
+                    Vector2D(0, 0),
                 )
             except ValueError as exception:
                 if exception.__str__() == 'Exit':
                     user_exit = True
                     print("Choice validated.")
                 else:
-                    print("(!) - Value error; input anew.\n")
+                    print("(!) app.ui.app_cmd() Value error; input anew.\n")
 
             except Exception as e:
-                print(f"(?) - Something else went wrong ({str(e)}). Enter anew element.\n")
+                print(f"(?) app.ui.app_cmd() Something else went wrong ({str(e)}). Retry.\n")
 
     else:
         if not user_mode_str:
-            print("# Mode selected: [default] (use default value)")
+            print("-> [`default`] (use default value).")
         else:
-            print("# Mode selected: default (use default value)")
+            print("-> `default` (use default value).")
 
         system_input = settings.DEFAULT_SYSTEM
 
-    # Warnings (!)
+    # Warnings.
     if not system_input:
-        print("# (!) - Empty system.")
+        print("# (!) app.ui.app_cmd() Empty system.")
     elif len(system_input) == 1:
-        print("# (!) - One element system.")
+        print("# (!) app.ui.app_cmd() One element system.")
 
     # Sorting the element by size. 
-    # system_input = {elements for elements in sorted(system_input.items(), key=lambda item: item[1].size)}
-    
-    print("Starting...")
+    system_input = {
+        element[0]: element[1]
+        for element in sorted(system_input.items(), key=lambda item: item[1].size)
+    }
 
     # Completion.
     return system_input
-
-if __name__ == "__main__":
-    print("THREE BODY PROBLEM - Libraries.")
-    print("UI.")

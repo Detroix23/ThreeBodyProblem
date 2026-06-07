@@ -7,16 +7,16 @@ import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-	from gravity_detroix23.app import board
+	from gravity_detroix23.app.board import Board
 
 class Buttons:
 	"""
 	Manage user presses.  
 	Uses mainly `pyxel.btn` method.   
 	"""
-	board: 'board.Board'
+	board: 'Board'
 
-	def __init__(self, board: 'board.Board') -> None:
+	def __init__(self, board: 'Board') -> None:
 		self.board = board
 
 	def listen(self) -> None:
@@ -65,13 +65,13 @@ class Buttons:
 			self.board.camera.reset()
 
 		# Camera position
-		if pyxel.btn(pyxel.KEY_LEFT):
+		if pyxel.btn(pyxel.KEY_RIGHT):
 			self.board.camera.position.x -= int(10 / self.board.camera.zoom)
-		elif pyxel.btn(pyxel.KEY_RIGHT):
+		elif pyxel.btn(pyxel.KEY_LEFT):
 			self.board.camera.position.x += int(10 / self.board.camera.zoom)
-		if pyxel.btn(pyxel.KEY_DOWN):
+		if pyxel.btn(pyxel.KEY_UP):
 			self.board.camera.position.y += int(10 / self.board.camera.zoom)
-		elif pyxel.btn(pyxel.KEY_UP):
+		elif pyxel.btn(pyxel.KEY_DOWN):
 			self.board.camera.position.y -= int(10 / self.board.camera.zoom)
 
 		# Displays

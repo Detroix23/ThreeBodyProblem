@@ -7,16 +7,9 @@ Load and generate a `pyxel` game.
 import time
 import pyxel
 
-from gravity_detroix23.modules import (
-	settings, 
-	paths
-)
-from gravity_detroix23.app import (
-	board, 
-	text,
-)
+from gravity_detroix23.modules import settings, paths
+from gravity_detroix23.app import board, text
 from gravity_detroix23.inputs import mouse
-
 
 
 class App:
@@ -25,15 +18,15 @@ class App:
     Contains all the simulation, parallel workers, and initialize the pyxel runtime.
     """
     simulation: board.Board
-    text: text.Text
-    mouse: mouse.Mouse
+    text: 'text.Text'
+    mouse: 'mouse.Mouse'
 
     _time_update: float
     _time_draw: float
 
     def __init__(
         self, 
-        system: dict[str, settings.InputElem], 
+        system: dict[str, settings.InputElement], 
         width: int, 
         height: int, 
         title: str, 
@@ -50,6 +43,12 @@ class App:
         draw_text: bool = True, 
         draw_grid: bool = True,
     ) -> None:
+        """
+        Initialize the `App`, setting the attributes and the workers.
+
+        Start the game with `self.run`.
+        """
+
         # Workers
         self.simulation: board.Board = board.Board(
             self,
@@ -72,22 +71,34 @@ class App:
         )
         
         self.text: text.Text = text.Text(self, draw_main=True)
-        self.mouse: mouse.Mouse = mouse.Mouse(self, 2)
+        self.mouse: mouse.Mouse = mouse.Mouse(self, size=2, show=True)
 
         self._time_draw = 0.0
         self._time_update = 0.0
 
         # Simulation screen.
         pyxel.init(width, height, title=title, fps=fps)
-        print("- Pyxel initialized")
+        print("(?) Pyxel initialized.")
+        
         # Resource file.
         try:
             pyxel.load(str(paths.RESOURCE_FILE))
         except Exception as exception:
-            raise Exception(f"(X) - Couldn't open resource file in {paths.RESOURCE_FILE}. {type(exception).__name__}: `{exception.args}`.")
+            raise FileNotFoundError(
+                f"(X) app.app.App() Couldn't open resource file in {paths.RESOURCE_FILE}."
+                f"{type(exception).__name__}: `{exception.args}`."
+            )
+        
+        return
 
-        # Run.
+    def run(self) -> None:
+        """
+        Start the `App` and the gravity simulation.
+        """
+        print("\n## `App` started from `app.app.App.run()`.")
         pyxel.run(self.update, self.draw)
+
+        return
 
     def update(self) -> None:
         """
@@ -99,15 +110,18 @@ class App:
         self.mouse.listen()
         # Text.
         self.text.update([
-            f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, fps={str(self.simulation.fps)}, frames={str(pyxel.frame_count)}",
-            f"= Frames: draw={self._time_draw}s, update={self._time_update}s",
-            f"- Controls: zoom={str(self.simulation.camera.zoom)}, camera: x={str(self.simulation.camera.position.x)}; y={str(self.simulation.camera.position.y)}",
+            f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, \
+fps={self.simulation.fps}, frames={pyxel.frame_count}",
+            f"= Frames: draw={self._time_draw*1000:.0f}ms, update={self._time_update*1000:.0f}ms",
+            f"- Controls: zoom={str(self.simulation.camera.zoom)}, camera: \
+x={str(self.simulation.camera.position.x)}; y={str(self.simulation.camera.position.y)}",
             f"- Time: speed={str(self.simulation.times.speed)}, fpf={self.simulation.times.frame_per_frame}",
             f"- Elements: total={str(len(self.simulation.system))}",
             "---"
         ])
     
         self._time_update = time.perf_counter()
+        return
 
     def draw(self) -> None:
         """
@@ -120,3 +134,5 @@ class App:
         self.mouse.draw()
 
         self._time_draw = time.perf_counter() - self._time_draw
+        return
+    

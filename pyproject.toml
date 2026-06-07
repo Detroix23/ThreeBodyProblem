@@ -1,6 +1,6 @@
 [project]
 name = "tree_body_problem_detroix23"
-version = "1.4.1"
+version = "1.4.2"
 description = "Retro gravity simulator."
 authors = [
     { name="Detroix23", email="detroix23@gmail.com" }
@@ -29,3 +29,14 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["src"]
 namespaces = false
+
+[tool.mypy]
+strict = true
+
+[tool.pydeps]
+max_bacon = 0
+exclude = [
+    "os",
+    "sys",
+    "pyxel",
+]

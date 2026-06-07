@@ -7,7 +7,7 @@ import pyxel
 from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-	from gravity_detroix23.app import app
+	from gravity_detroix23.app.app import App
 from gravity_detroix23.physics import maths 
 from gravity_detroix23.modules import console
 
@@ -15,14 +15,14 @@ class Trail:
 	"""
 	Store the positions of an element, and allow to draw a line of its movement.
 	"""
-	app: 'app.App'
+	app: 'App'
 	positions: list[maths.Vector2D]
 	length: int
 	color: int
 
 	def __init__(
 		self, 
-		app: 'app.App',
+		app: 'App',
 		length: int,
 		color: int,
 		*,

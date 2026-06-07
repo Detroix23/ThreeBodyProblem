@@ -1,12 +1,12 @@
-# Logs.
-logs/
-
-# Virtual environement.
-.venv*
 
 # Python.
+.venv*
 **/__pycache__/
 *.pyc
+.mypy_cache
+
+# Logs.
+/logs/*
 
 # Documentation.
 !README.md

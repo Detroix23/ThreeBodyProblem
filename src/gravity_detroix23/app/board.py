@@ -7,39 +7,29 @@ import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from gravity_detroix23.app import app
+    from gravity_detroix23.app.app import App
+
 from gravity_detroix23.inputs import keyboard
-from gravity_detroix23.physics.maths import *
-from gravity_detroix23.modules import (
-	settings,
-    console,
-)
-from gravity_detroix23.physics import (
-	collisions, 
-	element,
-	grid,
-)
-from gravity_detroix23.app import (
-    support,
-    controls,
-)
+from gravity_detroix23.physics.maths import Vector2D
+from gravity_detroix23.modules import settings, console
+from gravity_detroix23.physics import collisions, element, grid
+from gravity_detroix23.app import controls
 
 class Board:
     """
     # Board.
     Runs the game, display elements, listen to player inputs.
     """
-    app: 'app.App'
+    app: 'App'
     buttons: keyboard.Buttons
     camera: controls.Camera
     times: controls.Time
-
     frames: int
 
     def __init__(
         self, 
-        app: 'app.App',
-        system: dict[str, settings.InputElem], 
+        app: 'App',
+        system: dict[str, settings.InputElement], 
         width: int, 
         height: int, 
         title: str, 
@@ -88,9 +78,6 @@ class Board:
         # True to move the points, False to fix the point but show the vectors
         self.grid_move_point: bool = not grid_draw_vector
 
-        # Debug
-        self.first_update: bool = True
-
         # Elements
         self.system: dict[str, element.Element] = {}
         for element_name, element_stats in system.items():
@@ -112,20 +99,15 @@ class Board:
             frequency=16, 
             zoom_dependence=False, 
             force_weight=2.3, 
-            color_grid=support.Color.YELLOW, 
-            color_point=support.Color.GREEN, 
-            board = self
+            color_grid=pyxel.COLOR_YELLOW, 
+            color_point=pyxel.COLOR_GREEN, 
+            board=self,
         )
 
     def update(self) -> None:
         """
         Update simulation
         """
-        # Debug
-        if self.first_update:
-            print("- Game running")
-            self.first_update = not self.first_update
-        
         self.frames += 1
 
         # Inputs

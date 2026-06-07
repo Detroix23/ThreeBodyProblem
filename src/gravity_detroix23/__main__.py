@@ -1,42 +1,59 @@
 """
-# Three Body Problem
+# Three Body Problem.
 src/gravity_detroix23/__main__.py  
+
 Simulation of planet movement. 
 Use of gravitational formula: F = (m1*m2) / d**2
 We consider that all elements are spherical
 """
 import sys
 
-from gravity_detroix23.modules import settings
-from gravity_detroix23.app import (
-	app,
-	ui,
-)
-from gravity_detroix23.modules import (
-    writter,
-    defaults,
-    console,
-)
+try:
+    import gravity_detroix23   # pyright: ignore[reportUnusedImport]
+
+except ModuleNotFoundError as module_not_found:
+    print("(X) Missing module `gravity_detroix23`.")
+    print(f"Full output: ```\n{module_not_found}\n```")
+    print("""(?) Try installing this code locally, in virtual environment: 
+    ```shell
+    python -m venv .venv
+
+    pip install .   
+    ```   
+""")
+
+from gravity_detroix23.modules import settings, writer
+from gravity_detroix23.app import app, ui
+from gravity_detroix23.modules import defaults, console
 
 
 def main(args: list[str]) -> None:
-    print("# Gravity.")
+    """
+    Three body problem entry point.
+    """
+    print("\n# Gravity.\n")
 
     if "--help" in args:
         print(console.HELP_STRING)
         return
 
-    print("*Starting...*\n")
+    print("## Set up the universe.\n")
 
-    system: dict[str, settings.InputElem] = ui.app_cmd()
-    system_string: dict[str, str] = {elem_name: elem_info.__str__() for elem_name, elem_info in system.items()}
+    system: dict[str, settings.InputElement] = ui.app_cmd()
+    system_string: dict[str, str] = {
+        name: str(info) 
+        for name, info in system.items()
+    }
     
-    writter.board_settings(
-        system = writter.system(system_string),
-        board_settings = ",".join([f"{name}={value}" for name, value in defaults.app_dict().items()])
+    writer.board_settings(
+        system = writer.system(system_string),
+        board_settings = ",".join([
+            f"{name}={value}" 
+            for name, value in defaults.app_dict().items()
+        ])
     )
     
-    app.App(
+    gravity = app.App(
         system=system, 
         width=defaults.APP.BOARD_WIDTH,      
         height=defaults.APP.BOARD_HEIGHT, 
@@ -54,6 +71,8 @@ def main(args: list[str]) -> None:
         draw_text=defaults.APP.DRAW_TEXT,
         draw_grid=defaults.APP.DRAW_GRID,
     )
+    
+    gravity.run()
 
     print("---\nEnd")
 

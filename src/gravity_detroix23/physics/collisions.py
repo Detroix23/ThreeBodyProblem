@@ -1,9 +1,9 @@
 """
-THREE BODY PROBLEM
-collisions.py
+# Three body problem.
+src/gravity_detroix23/physics/collisions.py
 """
 
-from gravity_detroix23.physics.maths import *
+from gravity_detroix23.physics.maths import Vector2D
 from gravity_detroix23.physics import element
 from gravity_detroix23.modules import settings
 
@@ -11,12 +11,15 @@ from gravity_detroix23.modules import settings
 def collision(a: element.Element, b: element.Element, behavior: settings.CollisionsBehavior) -> bool:
     """
     Collide two elements and change their velocity by inverting the direction and preserving the actual speed.
-    To avoid the effect to cancel itself, each Elem has a list of already collided elements.
-    Return True if collision actually happened, False otherwise
+    
+    To avoid the effect to cancel itself, each `Element` has a list of already collided elements.
+    
+    Return `True` if collision happened and vector got updated, `False` otherwise.
     """
     collision_state: bool = False
     if a not in b.collisions and b not in a.collisions:   
-        # Detroix23 collision simplification 4, using a medium vector n, affected by mass and direction, that reflect the velocity vectors.
+        # Detroix23 collision simplification 4, using a medium vector n, 
+        # affected by mass and direction, that reflect the velocity vectors.
         n: Vector2D = a.velocity * a.mass + b.velocity * b.mass
         n.normalize()
 
@@ -26,14 +29,18 @@ def collision(a: element.Element, b: element.Element, behavior: settings.Collisi
         a.collisions.append(b)
         b.collisions.append(a)
         collision_state = True
+
         # Check where the elements are going to land.
-        distance_min = a.size / 2 + b.size / 2
+        distance_min: float = a.size / 2 + b.size / 2
         future_position_a: Vector2D = a.position + a.velocity
         future_position_b: Vector2D = b.position + b.velocity
-        future_distance: float = math.sqrt((future_position_a.x - future_position_b.x) ** 2 + (future_position_a.y - future_position_b.y) ** 2)
-        # Try to unclip
-        if future_distance < distance_min:
-            # Collision unclip.
+        future_distance_squared: float = (
+            (future_position_a.x - future_position_b.x) ** 2 
+            + (future_position_a.y - future_position_b.y) ** 2
+        )
+        # Try to un-clip.
+        if future_distance_squared <= distance_min * distance_min:
+            # Collision un-clip.
             v: Vector2D = Vector2D(future_position_b.x - future_position_a.x, future_position_b.y - future_position_a.y)
             d: float = v.magnitude
             v.normalize()
@@ -43,10 +50,15 @@ def collision(a: element.Element, b: element.Element, behavior: settings.Collisi
 
             a.displacement = Vector2D(displacement.x, displacement.y) * n_a
             b.displacement = Vector2D(displacement.x, displacement.y) * n_b
-            # print(f"! C - Fu: {a.displacement=} {n_a}, {b.displacement=} {n_b}; ")
+            # print(f"(!) C  Fu: {a.displacement=} {n_a}, {b.displacement=} {n_b}; ")
+    
     return collision_state
     
-def interaction(main: element.Element, target: element.Element, collision_behavior: settings.CollisionsBehavior) -> None:
+def interaction(
+    main: element.Element, 
+    target: element.Element, 
+    collision_behavior: settings.CollisionsBehavior
+) -> None:
     """
     Compute the gravitational force exerted by `target` onto `main`.  
     Update by reference `main`'s force vector.

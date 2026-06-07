@@ -9,7 +9,7 @@ from typing import Self, Union
 
 class Vector2D:
     """
-    Define a simple 2D vector with methods
+    Define a simple mutable `float` `Vector2D`.
     """
     x: float
     y: float
@@ -22,7 +22,7 @@ class Vector2D:
         """
         Formatted `str`.
         """
-        return f"x: {self.x}, y: {self.y}, magnitude: {self.magnitude}"
+        return f"({self.x};{self.y})"
 
     def __repr__(self) -> str:
         """
@@ -73,8 +73,7 @@ class Vector2D:
             self.x,
             self.y,
         )
-
-
+    
     @property
     def magnitude(self) -> float:
         """

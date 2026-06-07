@@ -4,7 +4,7 @@ Settings and enumeration file
 """
 import enum
 
-from gravity_detroix23.physics.maths import *
+from gravity_detroix23.physics.maths import Vector2D
 
 # Gravity.
 class Edge(enum.Enum):
@@ -25,11 +25,18 @@ class CollisionsBehavior(enum.Enum):
     COLLIDE_WITH_BUMP = 4
 
 # Inputs.
-class InputElem:
+class InputElement:
     """
     Named tuple of the input infos.
     """
-    def __init__(self, mass: int, position: Vector2D, name: str, size: int, velocity: Vector2D) -> None:
+    def __init__(
+        self, 
+        mass: int, 
+        position: Vector2D, 
+        name: str, 
+        size: int, 
+        velocity: Vector2D
+    ) -> None:
         self.mass: int = mass
         self.position: Vector2D = position
         self.name: str = name
@@ -40,16 +47,18 @@ class InputElem:
         return f"{self.__class__!s}({self.__dict__!r})"
     
     def __str__(self) -> str:
-        return f"Elem: {self.name}, position: x={self.position.x}, y={self.position.y}, size={self.size}, velocity: x={self.velocity.x}, y={self.velocity.y}"
-
+        return (
+            f"InputElement({self.name}, position={self.position}, " 
+            f"size={self.size}, velocity={self.velocity})"
+        )
 
 
 # Defaults.
-DEFAULT_SYSTEM: dict[str, InputElem] = {
+DEFAULT_SYSTEM: dict[str, InputElement] = {
     # Mass, position, name, size, velocity.
-    # system_input["Plan1"] = InputElem(10500, Vector2D(445, 560), "Plan1", 100, Vector2D(0, 0)),
-    "Plan2": InputElem(2000, Vector2D(580, 450), "Plan2", 64, Vector2D(0, -1)),
-    "Plan3": InputElem(1000, Vector2D(400, 400), "Plan3", 48, Vector2D(0, -3)),
-    "Plan4": InputElem(200, Vector2D(300, 350), "Plan4", 8, Vector2D(2, 0)),
+    # system_input["Plan1"] = InputElement(10500, Vector2D(445, 560), "Plan1", 100, Vector2D(0, 0)),
+    "Plan2": InputElement(2000, Vector2D(580, 450), "Plan2", 64, Vector2D(0, -1)),
+    "Plan3": InputElement(1000, Vector2D(400, 400), "Plan3", 48, Vector2D(0, -3)),
+    "Plan4": InputElement(200, Vector2D(300, 350), "Plan4", 8, Vector2D(2, 0)),
 }
 

@@ -7,13 +7,11 @@ import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-	from gravity_detroix23.app import app
+	from gravity_detroix23.app.app import App
 
-from gravity_detroix23.physics import (
-	maths,
-	element,
-)
+from gravity_detroix23.physics import maths, element
 from gravity_detroix23.modules import defaults
+
 
 class Mouse:
 	"""
@@ -26,14 +24,14 @@ class Mouse:
 	SPRITE_COLKEY: int = defaults.SPRITE_COLKEY
 	MOUSE_BODY_NAME: str = "[Mouse body]"
 
-	app: 'app.App'
+	app: 'App'
 	size: float
 	show: bool
 	mouse_element: element.Element
 
 	def __init__(
 		self, 
-		app: 'app.App',
+		app: 'App',
 		size: float, 
 		show: bool = True,
 	) -> None:
