@@ -9,18 +9,18 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
 	from gravity_detroix23.app.app import App
 
-from gravity_detroix23.physics import maths, element
-from gravity_detroix23.modules import defaults
+from gravity_detroix23.physics import element, vectors
+from gravity_detroix23.modules import defaults, scene_objects
 
 
-class Mouse:
+class Mouse(scene_objects.SceneObject):
 	"""
 	# Mouse
 	Draw cursor and allow interaction.
 	"""
 	SPRITE_IMAGE: int = 0
-	TEMPLATE_POSITION: maths.Size = maths.Size(32, 0)
-	TEMPLATE_SIZE: maths.Size = maths.Size(16, 16)
+	TEMPLATE_POSITION: vectors.Size = vectors.Size(32, 0)
+	TEMPLATE_SIZE: vectors.Size = vectors.Size(16, 16)
 	SPRITE_COLKEY: int = defaults.SPRITE_COLKEY
 	MOUSE_BODY_NAME: str = "[Mouse body]"
 
@@ -41,8 +41,8 @@ class Mouse:
 		self.mouse_element = element.Element(
 			board=self.app.simulation,
 			mass=100,
-			position=maths.Vector2D(0, 0),
-			velocity=maths.Vector2D(0, 0),
+			position=vectors.Vector2D(0, 0),
+			velocity=vectors.Vector2D(0, 0),
 			size=0,
 			name=self.MOUSE_BODY_NAME,
 			trail_size=0,
@@ -64,7 +64,7 @@ class Mouse:
 			scale=self.size
 		)
 
-	def listen(self) -> None:
+	def update(self) -> None:
 		"""
 		Listen to mouse actions.
 		"""
@@ -85,7 +85,7 @@ class Mouse:
 		if Mouse.MOUSE_BODY_NAME not in self.app.simulation.system.keys():
 			self.app.simulation.system[Mouse.MOUSE_BODY_NAME] = self.mouse_element
 		self.app.simulation.system[Mouse.MOUSE_BODY_NAME].position = self.app.simulation.camera.transform(
-			maths.Vector2D(pyxel.mouse_x, pyxel.mouse_y), True
+			vectors.Vector2D(pyxel.mouse_x, pyxel.mouse_y), True
 		)
 
 		return

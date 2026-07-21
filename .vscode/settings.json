@@ -5,6 +5,7 @@
     "python.analysis.generateWithTypeAnnotation": true,
     "cSpell.words": [
         "btnr",
+        "colkey",
         "COLKEY",
         "detroix",
         "pydeps",

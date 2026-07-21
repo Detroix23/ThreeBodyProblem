@@ -2079,3 +2079,45 @@ System:
 	InputElement(Plan2, position=(580;450), size=64, velocity=(0;-1));
 Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
 
+Simulation: 2026-06-07 13:50:18.283034;
+System:
+	InputElement(Plan4, position=(300;350), size=8, velocity=(2;0));
+	InputElement(Plan3, position=(400;400), size=48, velocity=(0;-3));
+	InputElement(Plan2, position=(580;450), size=64, velocity=(0;-1));
+Settings: TITLE=Simulation,BOARD_WIDTH=1000,BOARD_HEIGHT=1000,FPS=25,G=667.0,EDGE=Edge.NONE,BOUNCE_FACTOR=1.0,MASS_SOFTENER=1.0,EXPONENT_SOFTENER=-0.0,DRAW_VELOCITY=True,DRAW_FORCE=False,DRAW_TEXT=True,DRAW_GRID=True,COLLISIONS=CollisionsBehavior.COLLIDE_WITH_FUSION,GRID_DRAW_VECTORS=False,DEFAULT_MODE=SimMode.DEFAULT
+
+Simulation: 2026-07-21 12:37:33.672031;
+System:
+	InputElement(Plan4, position=(300;350), size=8, velocity=(2;0));
+	InputElement(Plan3, position=(400;400), size=48, velocity=(0;-3));
+	InputElement(Plan2, position=(580;450), size=64, velocity=(0;-1));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE_WITH_FUSION,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True,to_dict=<classmethod(<function App.to_dict at 0x000001BF890C3690>)>
+
+Simulation: 2026-07-21 12:44:19.006082;
+System:
+	InputElement(Plan4, position=(300;350), size=8, velocity=(2;0));
+	InputElement(Plan3, position=(400;400), size=48, velocity=(0;-3));
+	InputElement(Plan2, position=(580;450), size=64, velocity=(0;-1));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE_WITH_FUSION,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-21 13:21:54.103051;
+System:
+	InputElement(Plan4, position=(300;350), size=8, velocity=(2;0));
+	InputElement(Plan3, position=(400;400), size=48, velocity=(0;-3));
+	InputElement(Plan2, position=(580;450), size=64, velocity=(0;-1));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE_WITH_FUSION,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-21 13:43:41.050241;
+System:
+	InputElement(Plan4, position=(300;350), size=8, velocity=(2;0));
+	InputElement(Plan3, position=(400;400), size=48, velocity=(0;-3));
+	InputElement(Plan2, position=(580;450), size=64, velocity=(0;-1));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE_WITH_FUSION,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-21 13:52:41.028270;
+System:
+	InputElement(Plan4, position=(300;350), size=8, velocity=(2;0));
+	InputElement(Plan3, position=(400;400), size=48, velocity=(0;-3));
+	InputElement(Plan2, position=(580;450), size=64, velocity=(0;-1));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE_WITH_FUSION,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+

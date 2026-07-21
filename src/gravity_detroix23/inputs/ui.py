@@ -2,42 +2,55 @@
 # Three body problem.
 src/gravity_detroix23/app/ui.py
 """
-
 import random
+from typing import Type, TypeVar
 
-from gravity_detroix23.physics.maths import Vector2D
+from gravity_detroix23.physics.vectors import Vector2D
 from gravity_detroix23.modules import defaults, settings
 
 class Layers:
     """
     Define what things and layers to show. 
     """
-    def __init__(self, elements: bool, grid: bool, hud: bool) -> None:
-        self.elements: bool = elements
-        self.grid: bool = grid
-        self.hud: bool = hud
-        
+    elements: bool
+    grid: bool
+    hud: bool
 
-def listing_input(text: str, allowed: str = 'int') -> str:
+    def __init__(
+        self, 
+        elements: bool, 
+        grid: bool, 
+        hud: bool,
+    ) -> None:
+        self.elements = elements
+        self.grid = grid
+        self.hud = hud
+        
+        return
+
+
+_T_INPUT = TypeVar("_T_INPUT")
+
+def listing_input(
+    text: str, 
+    allowed: Type[_T_INPUT]
+) -> _T_INPUT:
     listening: list[str] = ['q', 'quit']
     input_result: str = input(text)
     for i in range(1, len(listening)):
         if input_result.strip().lower() == listening[i]:
             raise ValueError('Exit')
 
-    if allowed == 'str':
-        str(input_result)
-    elif allowed == 'int':
-        int(input_result)
-
-    return input_result
+    return allowed(input_result)   # type: ignore
 
 def app_cmd() -> dict[str, settings.InputElement]:
     """
-    Basic starting sequence for the user, in CMD.
+    Basic starting sequence for the user as a CLI.
     """
-    ## Config
-    user_mode_str: str = input(f"Please select a mode (rand|conf|default)[{defaults.APP.DEFAULT_MODE}]: ")
+    # Config
+    user_mode_str: str = input(
+        f"Please select a mode (rand|conf|default)[{defaults.DEFAULT_MODE}]: "
+    )
     user_mode: settings.SimMode
     system_input: dict[str, settings.InputElement] = {}
 
@@ -48,17 +61,17 @@ def app_cmd() -> dict[str, settings.InputElement]:
     elif user_mode_str in {"c", "con", "conf", "config"}:
         user_mode = settings.SimMode.CONFIG
     else:
-        user_mode = defaults.APP.DEFAULT_MODE
+        user_mode = defaults.DEFAULT_MODE
         
     if user_mode == settings.SimMode.RANDOM:
         print("-> `rand` (random generation).")
         number_elements: int = random.randint(3, 5)
         border_coverage: float = 0.2
         borders: dict[str, int] = {
-            "West": int(defaults.APP.BOARD_WIDTH * border_coverage),
-            "East": int(defaults.APP.BOARD_WIDTH * (1 - border_coverage)),
-            "North": int(defaults.APP.BOARD_HEIGHT * border_coverage),
-            "South": int(defaults.APP.BOARD_HEIGHT * (1 - border_coverage))
+            "West": int(defaults.App.width * border_coverage),
+            "East": int(defaults.App.width * (1 - border_coverage)),
+            "North": int(defaults.App.height * border_coverage),
+            "South": int(defaults.App.height * (1 - border_coverage))
         }
         weight_min: int = 100
         weight_max: int = 10000
@@ -66,9 +79,8 @@ def app_cmd() -> dict[str, settings.InputElement]:
         velocity_y_max: float = 1.5
         velocity_x_min: float = -1.5
         velocity_y_min: float = -1.5
-        
-        i: int = 1
-        while i <= number_elements:
+
+        for i in range(number_elements + 1):
             name_random: str = "Plan" + str(i)
             mass_random: int = random.randint(weight_min, weight_max)
             position_x_random: int = random.randint(borders["West"], borders["East"])
@@ -78,9 +90,11 @@ def app_cmd() -> dict[str, settings.InputElement]:
                 Vector2D(position_x_random, position_y_random), 
                 name_random, 
                 int(mass_random / 100), 
-                Vector2D(random.uniform(velocity_x_min, velocity_x_max), random.uniform(velocity_y_min, velocity_y_max))
+                Vector2D(
+                    random.uniform(velocity_x_min, velocity_x_max), 
+                    random.uniform(velocity_y_min, velocity_y_max),
+                )
             )
-            i += 1
 
     elif user_mode == settings.SimMode.CONFIG:
         user_exit: bool = False
@@ -91,29 +105,31 @@ def app_cmd() -> dict[str, settings.InputElement]:
                 print("- " + element)
 
             print("New element: respect type, 'q' to validate to launch")
-            manual: dict[str, str] = {}
             try:
-                manual['name'] = listing_input("- Name (str): ", allowed='str')
-                manual['mass'] = listing_input("- Mass (int): ")
-                manual['position_x'] = listing_input("- Starting position (x): ")
-                manual['position_y'] = listing_input("- Starting position (y): ")
+                input_name: str = listing_input("- Name (str): ", str)
+                input_mass: int = listing_input("- Mass (int): ", int)
+                input_position_x: float = listing_input("- Starting position (x): ", float)
+                input_position_y: float = listing_input("- Starting position (y): ", float)
+                input_velocity_x: float = listing_input("- Starting velocity (x): ", float)
+                input_velocity_y: float = listing_input("- Starting velocity (y): ", float)
 
-                system_input[manual['name']] = settings.InputElement(
-                    int(manual['mass']), 
-                    Vector2D(float(manual['position_x']), float(manual['position_y'])), 
-                    manual['name'], 
-                    int(int(manual['mass']) / 100), 
-                    Vector2D(0, 0),
+                system_input[input_name] = settings.InputElement(
+                    input_mass, 
+                    Vector2D(input_position_x, input_position_y), 
+                    input_name, 
+                    input_mass // 100, 
+                    Vector2D(input_velocity_x, input_velocity_y),
                 )
+                
             except ValueError as exception:
-                if exception.__str__() == 'Exit':
+                if str(exception) == 'Exit':
                     user_exit = True
                     print("Choice validated.")
                 else:
                     print("(!) app.ui.app_cmd() Value error; input anew.\n")
 
-            except Exception as e:
-                print(f"(?) app.ui.app_cmd() Something else went wrong ({str(e)}). Retry.\n")
+            except Exception as exception:
+                print(f"(?) app.ui.app_cmd() Something else went wrong ({exception}). Retry.\n")
 
     else:
         if not user_mode_str:

@@ -19,7 +19,7 @@ src/gravity_detroix23/modules/defaults.py
 src/gravity_detroix23/modules/paths.py
 src/gravity_detroix23/modules/settings.py
 src/gravity_detroix23/modules/types.py
-src/gravity_detroix23/modules/writter.py
+src/gravity_detroix23/modules/writer.py
 src/gravity_detroix23/physics/__init__.py
 src/gravity_detroix23/physics/collisions.py
 src/gravity_detroix23/physics/element.py

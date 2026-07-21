@@ -7,11 +7,11 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from gravity_detroix23.app.app import App
+from gravity_detroix23.modules import scene_objects
 
-
-class Text:
+class Text(scene_objects.Drawable):
     """
-    Text in app.
+    # `Text` in app.
     """
     app: 'App'
     draw_main: bool
@@ -21,6 +21,8 @@ class Text:
         self.app = app
         self.draw_main = draw_main
         self.texts_main = []
+
+        return
 
     def text_main(self, text_color: int = 8) -> None:
         """
@@ -32,7 +34,9 @@ class Text:
         for txt in self.texts_main:
             pyxel.text(x, y, txt, text_color)
             y += 6
-    
+
+        return
+
     def draw(self) -> None:
         """
         Draw all text.
@@ -40,8 +44,13 @@ class Text:
         if self.draw_main:
             self.text_main()
 
+        return
+
     def update(self, text: list[str]) -> None:
         """
         Update the text body from given `text`.
         """
         self.texts_main = text
+
+        return
+    

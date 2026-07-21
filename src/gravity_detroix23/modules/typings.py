@@ -1,8 +1,7 @@
 """
 # Gravity.
-gravity/src/modules/types.py  
+gravity/src/modules/typings.py  
 """
-
 import typing
 
 import gravity_detroix23.modules.settings as settings

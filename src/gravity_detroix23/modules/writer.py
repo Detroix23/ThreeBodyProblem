@@ -1,5 +1,5 @@
 """
-THREE BODY PROBLEM.
+# Gravity.
 Logging and writing.
 """
 import datetime
@@ -12,7 +12,10 @@ def system(system: dict[str, str]) -> str:
         string += f"\t{elem};\n"    
     return string
 
-def board_settings(system: str, board_settings: str) -> None:
+def board_settings(
+    system: str, 
+    board_settings: str,
+) -> None:
     """
     Take the board settings, preformatted as a string, and write the logs. 
     """
@@ -24,4 +27,4 @@ def board_settings(system: str, board_settings: str) -> None:
             logs.write(f"Settings: {board_settings}\n")
             logs.write("\n")
     except OSError:
-        print(f"(!) - Directory not found `{paths.LOGS}`.")
+        print(f"(!) modules.writer.board_settings() Directory not found `{paths.LOGS}`.")

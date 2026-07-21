@@ -3,18 +3,24 @@
 src/gravity_detroix23/physics/collisions.py
 """
 
-from gravity_detroix23.physics.maths import Vector2D
+from gravity_detroix23.physics.vectors import Vector2D
 from gravity_detroix23.physics import element
 from gravity_detroix23.modules import settings
 
-
-def collision(a: element.Element, b: element.Element, behavior: settings.CollisionsBehavior) -> bool:
+def collision(
+    a: element.Element, 
+    b: element.Element, 
+    behavior: settings.CollisionsBehavior,
+) -> bool:
     """
-    Collide two elements and change their velocity by inverting the direction and preserving the actual speed.
+    Collide two elements and change their velocity by inverting the direction 
+    and preserving the actual speed.
     
-    To avoid the effect to cancel itself, each `Element` has a list of already collided elements.
+    To avoid the effect to cancel itself, each `Element` has 
+    a list of already collided elements.
     
-    Return `True` if collision happened and vector got updated, `False` otherwise.
+    Returns:
+        `bool`: if collision happened and vector got updated, 
     """
     collision_state: bool = False
     if a not in b.collisions and b not in a.collisions:   
@@ -23,8 +29,8 @@ def collision(a: element.Element, b: element.Element, behavior: settings.Collisi
         n: Vector2D = a.velocity * a.mass + b.velocity * b.mass
         n.normalize()
 
-        a.velocity = ((n * 2) * (a.velocity.dot(n))) - a.velocity
-        b.velocity = ((n * 2) * (b.velocity.dot(n))) - b.velocity
+        a.velocity =  n * 2 * a.velocity.dot(n) - a.velocity
+        b.velocity =  n * 2 * b.velocity.dot(n) - b.velocity
 
         a.collisions.append(b)
         b.collisions.append(a)
@@ -34,15 +40,12 @@ def collision(a: element.Element, b: element.Element, behavior: settings.Collisi
         distance_min: float = a.size / 2 + b.size / 2
         future_position_a: Vector2D = a.position + a.velocity
         future_position_b: Vector2D = b.position + b.velocity
-        future_distance_squared: float = (
-            (future_position_a.x - future_position_b.x) ** 2 
-            + (future_position_a.y - future_position_b.y) ** 2
-        )
+        future_distance_squared: float = (future_position_a - future_position_b).magnitude2()
         # Try to un-clip.
         if future_distance_squared <= distance_min * distance_min:
             # Collision un-clip.
             v: Vector2D = Vector2D(future_position_b.x - future_position_a.x, future_position_b.y - future_position_a.y)
-            d: float = v.magnitude
+            d: float = v.magnitude()
             v.normalize()
             displacement: Vector2D = v * (a.size / 2 - d + b.size / 2)
             n_a: float = - b.mass / (a.mass + b.mass)
@@ -61,10 +64,11 @@ def interaction(
 ) -> None:
     """
     Compute the gravitational force exerted by `target` onto `main`.  
-    Update by reference `main`'s force vector.
+    
+    **Update** by reference `main`'s force vector.
     """
     if main != target:
-        distance: float = main.distance_to(target)
+        distance: float = main.distance(target)
         if distance > (main.size / 2 + target.size / 2):
             target_force: Vector2D = main.gravitational_force_from(target)
             main.force_vector.add(target_force)
@@ -75,3 +79,5 @@ def interaction(
             settings.CollisionsBehavior.COLLIDE_WITH_BUMP
         }:
             collision(main, target, behavior=collision_behavior)
+    
+    return

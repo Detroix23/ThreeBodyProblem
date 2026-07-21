@@ -4,7 +4,7 @@ Settings and enumeration file
 """
 import enum
 
-from gravity_detroix23.physics.maths import Vector2D
+from gravity_detroix23.physics.vectors import Vector2D
 
 # Gravity.
 class Edge(enum.Enum):
@@ -13,10 +13,12 @@ class Edge(enum.Enum):
     BOUNCE = 3
     TOR = 4
     
+    
 class SimMode(enum.Enum):
     RANDOM = 1
     CONFIG = 2
     DEFAULT = 3 
+
 
 class CollisionsBehavior(enum.Enum):
     NONE = 1
@@ -24,7 +26,7 @@ class CollisionsBehavior(enum.Enum):
     COLLIDE_WITH_FUSION = 3
     COLLIDE_WITH_BUMP = 4
 
-# Inputs.
+
 class InputElement:
     """
     Named tuple of the input infos.

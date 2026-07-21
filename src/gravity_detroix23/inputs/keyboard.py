@@ -8,8 +8,9 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
 	from gravity_detroix23.app.board import Board
+from gravity_detroix23.modules import scene_objects
 
-class Buttons:
+class Buttons(scene_objects.Updatable):
 	"""
 	Manage user presses.  
 	Uses mainly `pyxel.btn` method.   
@@ -18,8 +19,9 @@ class Buttons:
 
 	def __init__(self, board: 'Board') -> None:
 		self.board = board
+		return
 
-	def listen(self) -> None:
+	def update(self) -> None:
 		"""
 		Listen to user inputs
 		"""
@@ -87,3 +89,6 @@ class Buttons:
 			self.board.draw_velocity = not self.board.draw_velocity
 		elif pyxel.btnr(pyxel.KEY_Y):
 			self.board.draw_trails = not self.board.draw_trails
+
+		return
+	

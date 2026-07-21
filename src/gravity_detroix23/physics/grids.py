@@ -1,6 +1,6 @@
 """
-THREE BODY PROBLEM.
-Grid.
+# Gravity.
+src/gravity_detroix23/physics/grid.py
 """
 import math
 from typing import TYPE_CHECKING
@@ -9,56 +9,13 @@ import pyxel
 
 if TYPE_CHECKING:
     from gravity_detroix23.app.board import Board
-from gravity_detroix23.physics.maths import Vector2D
+from gravity_detroix23.physics.vectors import Vector2D, Size
+from gravity_detroix23.modules import scene_objects
+from gravity_detroix23.physics.points import Point
 from gravity_detroix23.app import drawing
 
-class Point:
-    """
-    Point of the grid 
-    """
-    board: 'Board'
-    position: Vector2D
-    
-    def __init__(self, position: Vector2D, board: 'Board') -> None:
-        self.position = position
-        self.board: 'Board' = board
-        self.force: Vector2D = Vector2D(0, 0)
-        
-    def distance_to(self, target: Vector2D) -> float:
-        """
-        Compute distance between `self` point and the `target` point.
-        """
-        physical_position: Vector2D = self.board.camera.transform(self.position, True)
-        return math.sqrt(
-            (target.x - physical_position.x) * (target.x - physical_position.x) 
-            + (target.y - physical_position.y) * (target.y - physical_position.y)
-        )
-    
-    def gravitational_force_from(self, target: Vector2D, target_mass: float) -> Vector2D:
-        """
-        Find the gravitational force vector between `self` point and `target` point.
-        """
-        physical_position: Vector2D = self.board.camera.transform(self.position, True)
-        # Direction
-        vector_distance: Vector2D = Vector2D(target.x - physical_position.x, target.y - physical_position.y)
-        vector_distance.normalize()
-        # Distance
-        distance: float = self.distance_to(target)
-        if distance < 1.0:
-            distance = 1.0
-        
-        # F force value
-        force: float = (self.board.gravitational_constant * target_mass) / (distance ** (2 + self.board.exponent_softener))
-        if force > distance:
-            force = distance
-        # Force vector
-        vector_force: Vector2D = Vector2D(force * vector_distance.x, force * vector_distance.y)
-        
-        
-        return vector_force
 
-
-class Grid:
+class Grid(scene_objects.SceneObject):
     """
     Represent the space-time grid
     """
@@ -80,22 +37,25 @@ class Grid:
         self.force_exponent: float = 0.5
         # Use lists index to find neighbors, Point cords to draw lines
         self.points: list[list[Point]] = []
-    
-    def generate_points(self) -> None:
+        return
+
+    def update(self) -> None:
         """
         Fill the `self.points` `list[list[Point]]` by computing each point. 
         """
         self.points = []
         
-        dx: int = int(float(self.board.width)  / self.frequency)
-        dy: int = int(float(self.board.height) / self.frequency)
+        d = Size(
+            int(math.floor(float(self.board.width)  / self.frequency)),
+            int(math.floor(float(self.board.height) / self.frequency)),
+        )
 
-        for y in range(0, self.board.height + 2 * dy, dy):
+        for y in range(0, self.board.height + 2 * d.y, d.y):
             points_x: list[Point] = []
-            for x in range(0, self.board.width + 2 * dx, dx):
+            for x in range(0, self.board.width + 2 * d.x, d.x):
                 # Screen position
                 point: Point = Point(
-                    Vector2D(x - dx, y - dy),
+                    Vector2D(x - d.x, y - d.y),
                     board=self.board
                 )
                 point.force = Vector2D(0, 0)
@@ -103,7 +63,7 @@ class Grid:
                 for target in self.board.system.values():
                     target_force: Vector2D = point.gravitational_force_from(target.position, target.mass)
                     # Tweak the display force.
-                    force_value: float = target_force.magnitude
+                    force_value: float = target_force.magnitude()
                     target_force.normalize()
                     target_force.multiply(pow(force_value, self.force_exponent) * self.force_weight)
                     point.force.x += target_force.x
@@ -116,6 +76,7 @@ class Grid:
                 points_x.append(point)
             self.points.append(points_x)
 
+        return
 
     def draw(self) -> None:
         """
@@ -153,5 +114,7 @@ class Grid:
                         )
                 
                 j += 1
-            
             i += 1
+
+        return
+    

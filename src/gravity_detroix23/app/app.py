@@ -7,12 +7,12 @@ Load and generate a `pyxel` game.
 import time
 import pyxel
 
-from gravity_detroix23.modules import settings, paths
+from gravity_detroix23.modules import scene_objects, settings, paths
 from gravity_detroix23.app import board, text
 from gravity_detroix23.inputs import mouse
 
 
-class App:
+class App(scene_objects.SceneObject):
     """
     # App.
     Contains all the simulation, parallel workers, and initialize the pyxel runtime.
@@ -107,7 +107,7 @@ class App:
         self._time_update = time.perf_counter() - self._time_update
 
         self.simulation.update()
-        self.mouse.listen()
+        self.mouse.update()
         # Text.
         self.text.update([
             f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, \

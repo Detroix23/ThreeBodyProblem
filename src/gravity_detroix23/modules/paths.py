@@ -1,5 +1,5 @@
 """
-THREE BODY PROBLEM.
+# Gravity.
 paths.py
 """
 from pathlib import Path

@@ -1,11 +1,11 @@
 """
-THREE BODY PROBLEM.
-Maths functions.
+# Gravity.
+src/gravity/physics/vectors.py  
 """
-
 import math
 import pyxel
 from typing import Self, Union
+
 
 class Vector2D:
     """
@@ -56,8 +56,7 @@ class Vector2D:
         Do not update the content of the vector
         """
         return Vector2D(self.x * factor, self.y * factor)
-
-
+    
     def __truediv__(self, factor: float) -> 'Vector2D':
         """
         Divide all value of the vector, emulating numeric objects.
@@ -74,18 +73,26 @@ class Vector2D:
             self.y,
         )
     
-    @property
+    def magnitude2(self) -> float:
+        """
+        Return the length _squared_ of the vector.
+        """
+        return self.x ** 2 + self.y ** 2
+
     def magnitude(self) -> float:
         """
         Return the length of the vector.
         """
-        return math.sqrt(self.x ** 2 + self.y ** 2)
+        return math.sqrt(self.magnitude2())
+
+    def __abs__(self) -> float:
+        return self.magnitude()
 
     def normalize(self) -> None:
         """
         Update the vector so that its magnitude is 1.  
         """
-        magnitude: float = self.magnitude
+        magnitude: float = self.magnitude()
         self.x = self.x / magnitude
         self.y = self.y / magnitude
     

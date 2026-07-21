@@ -7,20 +7,22 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
 	from gravity_detroix23.app.board import Board
-from gravity_detroix23.physics import maths
+from gravity_detroix23.physics import vectors
+from gravity_detroix23.modules import scene_objects
 
-class Camera:
+class Camera(scene_objects.Updatable):
 	"""
 	Controls the app's camera.
 	"""
 	board: 'Board'
-	position: maths.Vector2D
+	position: vectors.Vector2D
 	zoom: float
 
 	def __init__(self, board: 'Board') -> None:
 		self.board = board
-		self.position = maths.Vector2D(0, 0)
+		self.position = vectors.Vector2D(0, 0)
 		self.zoom = 1
+		return
 
 	def update(self) -> None:
 		"""
@@ -32,6 +34,7 @@ class Camera:
 		if self.zoom < 0.0:
 			self.zoom = 0.01
 
+		return
 
 	def reset(self) -> None:
 		"""
@@ -41,10 +44,15 @@ class Camera:
 		self.position.x = 0
 		self.position.y = 0
 		# pyxel.camera()
+		return
 
-	def transform(self, other: maths.Vector2D, inverted: bool = False) -> maths.Vector2D:
+	def transform(
+		self, 
+		other: vectors.Vector2D, 
+		inverted: bool = False,
+	) -> vectors.Vector2D:
 		"""
-		Apply camera shift and zoom, creating a new `Vector2D` from an `other` `Vector2D`.
+		Apply camera shift and zoom, creating a new copy `Vector2D` from an `other` `Vector2D`.
 		"""
 		if inverted:
 			return (other / self.zoom) - self.position	

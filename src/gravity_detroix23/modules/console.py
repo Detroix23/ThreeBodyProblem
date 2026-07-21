@@ -2,7 +2,7 @@
 # Gravity.
 src/gravity/modules/console.py  
 """
-from gravity_detroix23.modules import types
+from gravity_detroix23.modules import typings
 
 HELP_STRING: str = """## Help.
 
@@ -28,7 +28,7 @@ More info:
 """
 
 def pretty(
-    element: types.pretty_supported, 
+    element: typings.pretty_supported, 
     recursive: bool = True,
     tab: str = "  ",
     end: str = "\n",
@@ -43,7 +43,7 @@ def pretty(
     if isinstance(element, dict):
         display.append("{")
         for name, value in element.items():
-            if recursive and types.is_pretty_supported(value):
+            if recursive and typings.is_pretty_supported(value):
                 value_pretty: str = pretty(value, True, tab, depth=depth + 1)
                 display.append(f"{tab * depth}{name}: {value_pretty}, ")      
             else:    
@@ -54,7 +54,7 @@ def pretty(
     else:
         display.append("[")
         for value in element:
-            if recursive and types.is_pretty_supported(value):
+            if recursive and typings.is_pretty_supported(value):
                 display.append(f"{tab * depth}{pretty(value)}, ")      
             else:    
                 display.append(f"{tab * depth}{value}, ")
@@ -62,6 +62,3 @@ def pretty(
         display.append(tab * (depth - 1) + "]" + end)
 
     return "\n".join(display)
-
-
-

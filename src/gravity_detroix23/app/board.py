@@ -10,12 +10,12 @@ if TYPE_CHECKING:
     from gravity_detroix23.app.app import App
 
 from gravity_detroix23.inputs import keyboard
-from gravity_detroix23.physics.maths import Vector2D
-from gravity_detroix23.modules import settings, console
-from gravity_detroix23.physics import collisions, element, grid
+from gravity_detroix23.physics.vectors import Vector2D
+from gravity_detroix23.modules import scene_objects, settings, console
+from gravity_detroix23.physics import collisions, element, grids
 from gravity_detroix23.app import controls
 
-class Board:
+class Board(scene_objects.SceneObject):
     """
     # Board.
     Runs the game, display elements, listen to player inputs.
@@ -79,9 +79,8 @@ class Board:
         self.grid_move_point: bool = not grid_draw_vector
 
         # Elements
-        self.system: dict[str, element.Element] = {}
-        for element_name, element_stats in system.items():
-            self.system[element_name] = element.Element(
+        self.system: dict[str, element.Element] = {
+            element_name: element.Element(
                 self, 
                 mass=element_stats.mass,
                 position=element_stats.position,
@@ -89,13 +88,16 @@ class Board:
                 size=element_stats.size,
                 velocity=element_stats.velocity,
             )
+            for element_name, element_stats in system.items()
+        }
+
         print("- Provided system: ")
         print(console.pretty(system))
         print("- Saved system: ")
         print(console.pretty(self.system))
 
         # Grid
-        self.grid_main: grid.Grid = grid.Grid(
+        self.grid_main: grids.Grid = grids.Grid(
             frequency=16, 
             zoom_dependence=False, 
             force_weight=2.3, 
@@ -103,6 +105,7 @@ class Board:
             color_point=pyxel.COLOR_GREEN, 
             board=self,
         )
+        return
 
     def update(self) -> None:
         """
@@ -111,11 +114,11 @@ class Board:
         self.frames += 1
 
         # Inputs
-        self.buttons.listen()
+        self.buttons.update()
 
         # Grid
         if self.draw_grid:
-            self.grid_main.generate_points()
+            self.grid_main.update()
 
         # Frame limiter for the game
         if not self.times.frame_skip():      
@@ -127,9 +130,10 @@ class Board:
                 
             # Move
             for element in self.system.values():
-                element.move()
+                element.update()
                 element.collisions = []
         
+        return
         
     def draw(self) -> None:
         """
@@ -152,13 +156,16 @@ class Board:
 
         # All elements, layer 2.
         for element in self.system.values():
+            position: Vector2D
+
             if self.draw_elements:
                 element.draw()
             if self.draw_force:
-                position = self.app.simulation.camera.transform(Vector2D(element.position.x, element.position.y))
+                position = self.app.simulation.camera.transform(element.position.copy())
                 element.force_vector.draw_on(position.x, position.y, size=1, color=3) 
             if self.draw_velocity:
                 position = self.app.simulation.camera.transform(Vector2D(element.position.x, element.position.y))
                 element.velocity.draw_on(position.x, position.y, size=1, color=5)
             
+        return
 
