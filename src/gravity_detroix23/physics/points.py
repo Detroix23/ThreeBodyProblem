@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from gravity_detroix23.app.board import Board
 from gravity_detroix23.physics.vectors import Vector2D
-
+from gravity_detroix23.physics import forces
 
 class Point:
     """
@@ -50,10 +50,15 @@ class Point:
             distance = 1.0
         
         # F force value
-        force: float = (self.board.gravitational_constant * target_mass) / (distance ** (2 + self.board.exponent_softener))
+        force: float = forces.gravity(
+            distance,
+            target_mass,
+            self.board.gravitational_constant,
+            self.board.exponent_softener
+        )
         if force > distance:
             force = distance
         # Force vector
-        vector_force: Vector2D = Vector2D(force * vector_distance.x, force * vector_distance.y)
+        vector_force: Vector2D = vector_distance * force
         
         return vector_force

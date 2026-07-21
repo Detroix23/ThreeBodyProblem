@@ -18,7 +18,7 @@ class App:
 	height: int = 1000
 	title: str = "Simulation"
 	fps: int = 25
-	gravitational_constant: float = (6.67*(10**2))
+	gravitational_constant: float = 6.67 * 10**2
 	edges: settings.Edge = settings.Edge.NONE
 	bounce_factor: float = 1.0
 	mass_softener: float = 1.0

@@ -3,7 +3,7 @@
 src/gravity_detroix23/__main__.py  
 
 Simulation of planet movement. 
-Use of gravitational formula: F = (m1*m2) / d**2
+Use of gravitational formula: F = (m1*m2) / d^2
 We consider that all elements are spherical
 """
 import sys

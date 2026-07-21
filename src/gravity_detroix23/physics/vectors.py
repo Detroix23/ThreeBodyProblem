@@ -77,7 +77,7 @@ class Vector2D:
         """
         Return the length _squared_ of the vector.
         """
-        return self.x ** 2 + self.y ** 2
+        return self.x * self.x + self.y * self.y
 
     def magnitude(self) -> float:
         """
@@ -97,18 +97,32 @@ class Vector2D:
         self.y = self.y / magnitude
     
         
+    def to_tuple(self) -> tuple[float, float]:
+        return (self.x, self.y)
+
     def to_list(self) -> list[float]:
         return [self.x, self.y]
     
     def to_dict(self) -> dict[str, float]:
         return {"x": self.x, "y": self.y} 
-    
-    def to_tuple(self) -> tuple[float, float]:
-        return (self.x, self.y)
 
-    def draw_on(self, x: float, y: float, size: float, color: int) -> None:
-        if not (math.isclose(self.x, 0) and math.isclose(self.y, 0)): 
-            pyxel.line(x, y, x + self.x * size, y + self.y * size, col=color)
+    def draw_on(
+        self, 
+        x: float, 
+        y: float, 
+        size: float, 
+        color: int,
+    ) -> None:
+        if not self.is_zero(): 
+            pyxel.line(
+                x, 
+                y, 
+                x + self.x * size, 
+                y + self.y * size, 
+                col=color,
+            )
+
+        return
 
     def add(self, value: Union[float, int, 'Vector2D']) -> Self:
         """
@@ -171,9 +185,15 @@ class Vector2D:
         """
         self.x = 0.0
         self.y = 0.0
+        return
 
+    def is_zero(self) -> bool:
+        """
+        Returns if the `Vector2D` is a 0 vector.
+        """
+        return math.isclose(self.x, 0.0) and math.isclose(self.y, 0.0)
 
-    def is_close(self, other: 'Vector2D', offset: float) -> bool:
+    def is_close(self, other: 'Vector2D', offset: float = 0.05) -> bool:
         """
         Return if the `other` vector if close enough in `offset`.   
         Linear.

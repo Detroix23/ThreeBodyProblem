@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from gravity_detroix23.app.board import Board 
 
 from gravity_detroix23.modules import defaults, entity
-from gravity_detroix23.physics import trails, vectors
+from gravity_detroix23.physics import trails, vectors, forces
 from gravity_detroix23.app import drawing
 
 class Element(entity.Entity):
@@ -143,9 +143,10 @@ class Element(entity.Entity):
             distance = math.sqrt(distance2)
 
         # F force value
-        force: float = (
-            (self.board.gravitational_constant * target.mass) 
-            / (distance ** (2 + self.board.exponent_softener))
+        force: float = forces.gravity(
+            distance, target.mass,
+            self.board.gravitational_constant,
+            self.board.exponent_softener,
         )
         
         # Force vector
