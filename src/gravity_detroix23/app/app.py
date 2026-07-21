@@ -73,8 +73,8 @@ class App(scene_objects.SceneObject):
         self.text: text.Text = text.Text(self, draw_main=True)
         self.mouse: mouse.Mouse = mouse.Mouse(self, size=2, show=True)
 
-        self._time_draw = 0.0
-        self._time_update = 0.0
+        self._time_draw = time.perf_counter()
+        self._time_update = time.perf_counter()
 
         # Simulation screen.
         pyxel.init(width, height, title=title, fps=fps)
@@ -108,15 +108,14 @@ class App(scene_objects.SceneObject):
 
         self.simulation.update()
         self.mouse.update()
-        # Text.
-        self.text.update([
-            f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, \
-fps={self.simulation.fps}, frames={pyxel.frame_count}",
+        self.text.update_text([
+            f"# Three Body Problem - title={self.simulation.title}; edges={self.simulation.edges}, "
+            f"fps={self.simulation.fps}, frames={pyxel.frame_count}",
             f"= Frames: draw={self._time_draw*1000:.0f}ms, update={self._time_update*1000:.0f}ms",
-            f"- Controls: zoom={str(self.simulation.camera.zoom)}, camera: \
-x={str(self.simulation.camera.position.x)}; y={str(self.simulation.camera.position.y)}",
-            f"- Time: speed={str(self.simulation.times.speed)}, fpf={self.simulation.times.frame_per_frame}",
-            f"- Elements: total={str(len(self.simulation.system))}",
+            f"- Controls: zoom={self.simulation.camera.zoom}, camera: "
+            f"x={self.simulation.camera.position.x}; y={self.simulation.camera.position.y}",
+            f"- Time: speed={self.simulation.times.speed}",
+            f"- Elements: total={len(self.simulation.system)}",
             "---"
         ])
     

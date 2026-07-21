@@ -12,5 +12,8 @@
         "pyxel",
         "pyxres",
         "rectb"
-    ]
+    ],
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
 }

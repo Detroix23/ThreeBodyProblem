@@ -16,37 +16,40 @@ class Text(scene_objects.Drawable):
     app: 'App'
     draw_main: bool
     texts_main: list[str]
+    line_spacing: int
+    color: int
 
-    def __init__(self, app: 'App', draw_main: bool) -> None:
+    def __init__(
+        self, 
+        app: 'App', 
+        draw_main: bool,
+        line_spacing: int = 6,
+        color: int = 8
+    ) -> None:
         self.app = app
         self.draw_main = draw_main
         self.texts_main = []
+        self.line_spacing = line_spacing
+        self.color = color
 
         return
-
-    def text_main(self, text_color: int = 8) -> None:
-        """
-        Draw main text.  
-        Is on top of the camera, fixed.
-        """
-        x: int = 10
-        y: int = 10
-        for txt in self.texts_main:
-            pyxel.text(x, y, txt, text_color)
-            y += 6
-
-        return
-
+    
     def draw(self) -> None:
         """
         Draw all text.
+
+        Text is on top of the camera, fixed.
         """
         if self.draw_main:
-            self.text_main()
+            x: int = 10
+            y: int = 10
+            for text in self.texts_main:
+                pyxel.text(x, y, text, self.color)
+                y += self.line_spacing
 
         return
 
-    def update(self, text: list[str]) -> None:
+    def update_text(self, text: list[str]) -> None:
         """
         Update the text body from given `text`.
         """

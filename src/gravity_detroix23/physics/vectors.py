@@ -6,6 +6,8 @@ import math
 import pyxel
 from typing import Self, Union
 
+Scalar = Union[int, float]
+ScalarOrVector = Union[Scalar, 'Vector2D']
 
 class Vector2D:
     """
@@ -14,10 +16,24 @@ class Vector2D:
     x: float
     y: float
 
-    def __init__(self, x: float, y: float) -> None:
-        self.x = x
-        self.y = y
+    def __init__(self, x: Scalar, y: Scalar) -> None:
+        self.x = float(x)
+        self.y = float(y)
     
+    @staticmethod
+    def duplicate(value: Scalar) -> 'Vector2D':
+        """
+        Create a `Vector2D(value, value)` from a single value.
+        """
+        return Vector2D(value, value)
+
+    @staticmethod
+    def null() -> 'Vector2D':
+        """
+        Creates a `(0; 0)` vector.
+        """
+        return Vector2D(0.0, 0.0)
+
     def __str__(self) -> str:
         """
         Formatted `str`.
@@ -30,39 +46,86 @@ class Vector2D:
         """
         return f"Vector2D(x={self.x}, y={self.y})"
 
-    def __add__(self, value: Union[float, int, 'Vector2D']) -> 'Vector2D':
+    def __add__(self, value: ScalarOrVector) -> 'Vector2D':
         """
         Add values to the vector, emulating numeric objects.
         Do not update the content of the vector
         """
         if isinstance(value, Vector2D):
-            return Vector2D(self.x + value.x, self.y + value.y)
+            return Vector2D(
+                self.x + value.x, 
+                self.y + value.y,
+            )
+        elif isinstance(value, float) or isinstance(value, int):  # pyright: ignore[reportUnnecessaryIsInstance]
+            return Vector2D(
+                self.x + float(value), 
+                self.y + float(value),
+            )
         else:
-            return Vector2D(self.x + float(value), self.y + float(value))
+            return NotImplemented
 
-    def __sub__(self, value: Union[float, int, 'Vector2D']) -> 'Vector2D':
+
+    def __radd__(self, value: ScalarOrVector) -> 'Vector2D':
+        """
+        Swap addition members for `__add__`.  
+        """
+        return (
+            self.__add__(value)
+            if value != 0
+            else self
+        )
+    
+    def __sub__(self, value: ScalarOrVector) -> 'Vector2D':
         """
         Add values to the vector, emulating numeric objects.
         Do not update the content of the vector
         """
         if isinstance(value, Vector2D):
-            return Vector2D(self.x - value.x, self.y - value.y)
+            return Vector2D(
+                self.x - value.x, 
+                self.y - value.y,
+            )
+        elif isinstance(value, float) or isinstance(value, int):  # pyright: ignore[reportUnnecessaryIsInstance]
+            return Vector2D(
+                self.x - float(value), 
+                self.y - float(value),
+            )
         else:
-            return Vector2D(self.x - float(value), self.y - float(value))
-    
-    def __mul__(self, factor: float) -> 'Vector2D':
+            return NotImplemented
+
+    def __rsub__(self, value: ScalarOrVector) -> 'Vector2D':
+        """
+        Swap addition members for `__add__`.  
+        """
+        return (
+            self.__sub__(value)
+            if value != 0
+            else self
+        )
+
+    def __mul__(self, factor: Scalar) -> 'Vector2D':
         """
         Multiply the values of the vector, emulating numeric objects.
         Do not update the content of the vector
         """
-        return Vector2D(self.x * factor, self.y * factor)
+        return Vector2D(
+            self.x * float(factor), 
+            self.y * float(factor),
+        )
     
-    def __truediv__(self, factor: float) -> 'Vector2D':
+    __rmul__ = __mul__
+
+    def __truediv__(self, factor: Scalar) -> 'Vector2D':
         """
         Divide all value of the vector, emulating numeric objects.
         Do not update the content of the vector
         """
-        return Vector2D(self.x / factor, self.y / factor)
+        return Vector2D(
+            self.x / float(factor), 
+            self.y / float(factor),
+        )
+
+    __rtruediv__ = __truediv__
 
     def copy(self) -> 'Vector2D':
         """
@@ -124,7 +187,7 @@ class Vector2D:
 
         return
 
-    def add(self, value: Union[float, int, 'Vector2D']) -> Self:
+    def add(self, value: ScalarOrVector) -> Self:
         """
         Add values to the vector.
         Do update the value of the vector.
@@ -138,7 +201,7 @@ class Vector2D:
 
         return self
     
-    def sub(self, value: Union[float, int, 'Vector2D']) -> Self:
+    def sub(self, value: ScalarOrVector) -> Self:
         """
         Add values to the vector.
         Do update the value of the vector.
@@ -152,23 +215,23 @@ class Vector2D:
 
         return self
 
-    def multiply(self, factor: float) -> Self:
+    def multiply(self, factor: Scalar) -> Self:
         """
         Multiply the values of the vector.
         Do update the value of the vector.
         """
-        self.x = self.x * factor
-        self.y = self.y * factor
+        self.x = self.x * float(factor)
+        self.y = self.y * float(factor)
 
         return self
 
-    def div(self, factor: float) -> Self:
+    def div(self, factor: Scalar) -> Self:
         """
         Divide all value of the vector.
         Do update the value of the vector. 
         """
-        self.x = self.x / factor
-        self.y = self.y / factor
+        self.x = self.x / float(factor)
+        self.y = self.y / float(factor)
         
         return self
     
@@ -193,12 +256,15 @@ class Vector2D:
         """
         return math.isclose(self.x, 0.0) and math.isclose(self.y, 0.0)
 
-    def is_close(self, other: 'Vector2D', offset: float = 0.05) -> bool:
+    def is_close(self, other: 'Vector2D', offset: Scalar = 0.05) -> bool:
         """
         Return if the `other` vector if close enough in `offset`.   
         Linear.
         """
-        return abs(self.x - other.x) < offset and abs(self.y - other.y) < offset
+        return (
+            abs(self.x - other.x) < float(offset) 
+            and abs(self.y - other.y) < float(offset)
+        )
 
 
 class Size:

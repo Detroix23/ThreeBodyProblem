@@ -44,40 +44,16 @@ def collision(
         # Try to un-clip.
         if future_distance_squared <= distance_min * distance_min:
             # Collision un-clip.
-            v: Vector2D = Vector2D(future_position_b.x - future_position_a.x, future_position_b.y - future_position_a.y)
+            v: Vector2D = future_position_b - future_position_a
             d: float = v.magnitude()
             v.normalize()
             displacement: Vector2D = v * (a.size / 2 - d + b.size / 2)
             n_a: float = - b.mass / (a.mass + b.mass)
             n_b: float = a.mass / (a.mass + b.mass)
 
-            a.displacement = Vector2D(displacement.x, displacement.y) * n_a
-            b.displacement = Vector2D(displacement.x, displacement.y) * n_b
+            a.position += Vector2D(displacement.x, displacement.y) * n_a
+            b.position += Vector2D(displacement.x, displacement.y) * n_b
             # print(f"(!) C  Fu: {a.displacement=} {n_a}, {b.displacement=} {n_b}; ")
     
     return collision_state
     
-def interaction(
-    main: element.Element, 
-    target: element.Element, 
-    collision_behavior: settings.CollisionsBehavior
-) -> None:
-    """
-    Compute the gravitational force exerted by `target` onto `main`.  
-    
-    **Update** by reference `main`'s force vector.
-    """
-    if main != target:
-        distance: float = main.distance(target)
-        if distance > (main.size / 2 + target.size / 2):
-            target_force: Vector2D = main.gravitational_force_from(target)
-            main.force_vector.add(target_force)
-        
-        elif collision_behavior in {
-            settings.CollisionsBehavior.COLLIDE, 
-            settings.CollisionsBehavior.COLLIDE_WITH_FUSION, 
-            settings.CollisionsBehavior.COLLIDE_WITH_BUMP
-        }:
-            collision(main, target, behavior=collision_behavior)
-    
-    return

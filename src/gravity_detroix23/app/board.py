@@ -12,8 +12,8 @@ if TYPE_CHECKING:
 from gravity_detroix23.inputs import keyboard
 from gravity_detroix23.physics.vectors import Vector2D
 from gravity_detroix23.modules import scene_objects, settings, console
-from gravity_detroix23.physics import collisions, element, grids
-from gravity_detroix23.app import controls
+from gravity_detroix23.physics import element, grids
+from gravity_detroix23.app import cameras, times
 
 class Board(scene_objects.SceneObject):
     """
@@ -21,10 +21,28 @@ class Board(scene_objects.SceneObject):
     Runs the game, display elements, listen to player inputs.
     """
     app: 'App'
-    buttons: keyboard.Buttons
-    camera: controls.Camera
-    times: controls.Time
     frames: int
+    exponent_softener: float
+    gravitational_constant: float
+    mass_softener: float
+    width: int
+    height: int
+    title: str
+    fps: int
+    bounce_factor: float
+    edges: settings.Edge
+    collisions: settings.CollisionsBehavior
+    system: dict[str, element.Element]
+    buttons: keyboard.Buttons
+    camera: cameras.Camera
+    times: times.Time
+    draw_elements: bool
+    draw_velocity: bool
+    draw_force: bool
+    draw_text: bool
+    draw_grid: bool
+    draw_trails: bool
+    grid_move_point: bool
 
     def __init__(
         self, 
@@ -51,35 +69,35 @@ class Board(scene_objects.SceneObject):
         """
         self.app = app
         self.frames = 0
-        self.exponent_softener: float = exponent_softener    
-        self.gravitational_constant: float = gravitational_constant
-        self.mass_softener: float = mass_softener      
-        self.width: int = width
-        self.height: int = height
-        self.title: str = title
-        self.fps: int = fps
-        self.bounce_factor: float = bounce_factor
-        self.edges: settings.Edge = edges
-        self.collisions: settings.CollisionsBehavior = collisions
+        self.exponent_softener = exponent_softener    
+        self.gravitational_constant = gravitational_constant
+        self.mass_softener = mass_softener      
+        self.width = width
+        self.height = height
+        self.title = title
+        self.fps = fps
+        self.bounce_factor = bounce_factor
+        self.edges = edges
+        self.collisions = collisions
 
         # Workers
         self.buttons = keyboard.Buttons(self)
-        self.camera = controls.Camera(self)
-        self.times = controls.Time(self)
+        self.camera = cameras.Camera(self)
+        self.times = times.Time(self)
 
         # UI
-        self.draw_elements: bool = True
-        self.draw_velocity: bool = draw_velocity
-        self.draw_force: bool = draw_force
-        self.draw_text: bool = draw_text
-        self.draw_grid: bool = draw_grid
-        self.draw_trails: bool = True
+        self.draw_elements = True
+        self.draw_velocity = draw_velocity
+        self.draw_force = draw_force
+        self.draw_text = draw_text
+        self.draw_grid = draw_grid
+        self.draw_trails = True
 
         # True to move the points, False to fix the point but show the vectors
-        self.grid_move_point: bool = not grid_draw_vector
+        self.grid_move_point = not grid_draw_vector
 
         # Elements
-        self.system: dict[str, element.Element] = {
+        self.system= {
             element_name: element.Element(
                 self, 
                 mass=element_stats.mass,
@@ -109,63 +127,52 @@ class Board(scene_objects.SceneObject):
 
     def update(self) -> None:
         """
-        Update simulation
+        Update simulation.
         """
         self.frames += 1
 
-        # Inputs
+        # 1. Inputs.
         self.buttons.update()
 
-        # Grid
+        # 2. Grid.
         if self.draw_grid:
             self.grid_main.update()
 
-        # Frame limiter for the game
-        if not self.times.frame_skip():      
-            # Interactions for each element, all elements.
-            for element_main in self.system.values():
-                element_main.force_vector = Vector2D(0, 0)
-                for element_target in self.system.values():
-                    collisions.interaction(element_main, element_target, self.collisions)
-                
-            # Move
-            for element in self.system.values():
-                element.update()
-                element.collisions = []
+        # 3. Elements.
+        for element in self.system.values():
+            element.update()
         
         return
         
     def draw(self) -> None:
         """
-        Draw all simulation
+        Draw all simulation.
         """
-        # Clear all
         pyxel.cls(0)
-
-        # Camera
         self.camera.update()
-       
-        # Trails.
+
+        # 1. Trails.
         if self.draw_trails:
             for element in self.system.values():
                 element.trail.draw()
 
-        # Grid
+        # 2. Grid
         if self.draw_grid:
             self.grid_main.draw()
 
-        # All elements, layer 2.
+        # 3. All elements.
         for element in self.system.values():
             position: Vector2D
 
             if self.draw_elements:
                 element.draw()
+            
             if self.draw_force:
                 position = self.app.simulation.camera.transform(element.position.copy())
-                element.force_vector.draw_on(position.x, position.y, size=1, color=3) 
+                element.acceleration.draw_on(position.x, position.y, size=1, color=3) 
+            
             if self.draw_velocity:
                 position = self.app.simulation.camera.transform(Vector2D(element.position.x, element.position.y))
                 element.velocity.draw_on(position.x, position.y, size=1, color=5)
             
         return
-

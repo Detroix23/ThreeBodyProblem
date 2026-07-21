@@ -1,8 +1,7 @@
 """
 # Gravity.  
-src/gravity_detroix23/app/controls.py    
+src/gravity_detroix23/app/cameras.py    
 """
-import pyxel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -58,29 +57,3 @@ class Camera(scene_objects.Updatable):
 			return (other / self.zoom) - self.position	
 		else:
 			return (other + self.position) * self.zoom
-
-
-
-class Time:
-	"""
-	Control time and execution speed.
-	"""
-	board: 'Board'
-	time_speed: float
-	time_speed_previous: float
-	frame_per_frame: int
-	frame_per_frame_previous: int
-
-	def __init__(self, board: 'Board') -> None:
-		self.board = board
-		self.speed = 0.0
-		self.speed_previous = 1.0
-		self.frame_per_frame = 9999999
-		self.frame_per_frame_previous = 1
-
-	def frame_skip(self) -> bool:
-		"""
-		`frame_per_frame` prevent updates on frames not congruent.  
-		This method return `True` if this frame is skipped.
-		"""
-		return pyxel.frame_count % self.frame_per_frame != 0

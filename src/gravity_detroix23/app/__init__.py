@@ -3,5 +3,5 @@
 src/gravity/app/__init__.py  
 """
 from . import (
-    app, board, controls, drawing, text  # pyright: ignore[reportUnusedImport]
+    app, board, cameras, times, drawing, text  # pyright: ignore[reportUnusedImport]
 )

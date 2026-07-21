@@ -9,28 +9,27 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from gravity_detroix23.app.board import Board 
 
-from gravity_detroix23.modules import defaults, entity
-from gravity_detroix23.physics import trails, vectors, forces
+from gravity_detroix23.modules import defaults, entity, settings
+from gravity_detroix23.physics import trails, forces, collisions
 from gravity_detroix23.app import drawing
+from gravity_detroix23.physics.vectors import Vector2D
 
 class Element(entity.Entity):
     """
     Define a stellar element
     """
     CHECK_RADIUS: int = 100
-    SPRITE_POSITION: vectors.Vector2D = vectors.Vector2D(16, 0)
-    SPRITE_SIZE: vectors.Vector2D = vectors.Vector2D(16, 16)
+    SPRITE_POSITION: Vector2D = Vector2D(16.0, 0.0)
+    SPRITE_SIZE: Vector2D = Vector2D(16.0, 16.0)
     SPRITE_IMAGE: int = 0
     SPRITE_COLKEY: int = defaults.SPRITE_COLKEY
     SPRITE_SIZE_FACTOR: float = 1/16
 
     board: 'Board'
     mass: float
-    displacement: vectors.Vector2D
-    position: vectors.Vector2D
-    velocity: vectors.Vector2D
-    acceleration: vectors.Vector2D
-    force_vector: vectors.Vector2D
+    position: Vector2D
+    velocity: Vector2D
+    acceleration: Vector2D
     trail: trails.Trail
     collisions: list['Element']
 
@@ -43,8 +42,8 @@ class Element(entity.Entity):
         self, 
         board: 'Board', 
         mass: int, 
-        position: vectors.Vector2D, 
-        velocity: vectors.Vector2D,
+        position: Vector2D, 
+        velocity: Vector2D,
         color: int = 5, 
         size: int = 2, 
         name: str = "",
@@ -55,11 +54,9 @@ class Element(entity.Entity):
         """
         self.board = board
         self.mass = mass  
-        self.displacement = vectors.Vector2D(0.0, 0.0)
         self.position = position
         self.velocity = velocity
-        self.acceleration = vectors.Vector2D(0.0, 0.0)
-        self.force_vector = vectors.Vector2D(0.0, 0.0)
+        self.acceleration = Vector2D.null()
         self.collisions = []
 
 
@@ -76,14 +73,15 @@ class Element(entity.Entity):
 
     def __str__(self) -> str:
         return (
-            f"Element({self.name}, position={self.position}, "
-            f"mass: m={self.mass}, force={self.force_vector})"
+            f"{self.name}, mass={self.mass} position={self.position}, "
+            f"velocity={self.velocity}, acceleration={self.acceleration})"
         )
 
     def __repr__(self) -> str:
         return (
-            f"Element(name={self.name}, position={self.position}, mass={self.mass}, "
-            f"velocity={self.force_vector}, color={self.color}, size={self.size})"
+            f"Element(name={self.name}, mass={self.mass}, position={self.position},"
+            f"velocity={self.velocity}, acceleration={self.acceleration}, "
+            f"color={self.color}, size={self.size})"
         )
     
     def get_position(self) -> entity.Vector2D:
@@ -120,85 +118,101 @@ class Element(entity.Entity):
         """
         return math.sqrt(self.distance2(target))
     
-    def gravitational_force_from(self, target: 'Element') -> vectors.Vector2D:
+    def gravitational_force_from(self, target: 'Element') -> Vector2D:
         """
         Find the gravitational force vector between `self` and `target`.
         """
-        direction: int = 1
         # Direction
-        vector_distance: vectors.Vector2D = vectors.Vector2D(
+        way: int = 1
+        normal: Vector2D = Vector2D(
             target.position.x - self.position.x,
             target.position.y - self.position.y,
         )
-        vector_distance.normalize()
+        normal.normalize()
         
         # Distance.
         distance2: float = self.distance2(target)
         # Limit artificially distance and prevent division by 0
-        distance: float
         distance_min: float = (self.size + target.size + 2) / 2
-        if distance2 < distance_min * distance_min:
-            distance = distance_min
-        else:
-            distance = math.sqrt(distance2)
+        distance: float = (
+            distance_min
+            if distance2 < distance_min * distance_min
+            else math.sqrt(distance2)
+        )
 
-        # F force value
+        # F force value.
         force: float = forces.gravity(
-            distance, target.mass,
+            distance, 
+            target.mass,
             self.board.gravitational_constant,
             self.board.exponent_softener,
         )
         
         # Force vector
-        vector_force: vectors.Vector2D = vectors.Vector2D(
-            force * vector_distance.x * direction,
-            force * vector_distance.y * direction,
-        )
-        
-        # Watch for overshot of planets
-        velocity_next: vectors.Vector2D = (
-            self.velocity
-            + self.force_vector 
-            / (self.mass * self.board.mass_softener)
-        )
-
-        if velocity_next.magnitude() >= distance:
-            direction = -1
-            velocity_next_magnitude: float = velocity_next.magnitude()
-            velocity_next.normalize()
-            velocity_next.multiply((velocity_next_magnitude - distance) * direction)
+        vector_force: Vector2D = normal * force * way
         
         return vector_force
 
+    def interaction(self, target: Element) -> None:
+        """
+        Manage the potential side-effects of an `interaction` between
+        `self` and `element`.  
+        """
+        distance2: float = self.distance2(target)
+        if (
+            distance2 <= (self.size + target.size) * (self.size + target.size) / 4
+            and self.board.collisions is not settings.CollisionsBehavior.NONE, 
+        ):
+            collisions.collision(
+                self, 
+                target, 
+                behavior=self.board.collisions,
+            )
+    
+        return
 
     def update(self) -> None:
         """
-        Move the elem, according to force vector at a scale (mass) and checking collision.
+        Move the element, according to force vector at a scale (mass) and checking collision.
         """ 
+        net_force: Vector2D = Vector2D.null()
+        for element in self.board.system.values():
+            if self != element:
+                net_force += self.gravitational_force_from(element)
+                self.interaction(element)
+
         # Apply force.
-        self.velocity.add(
-            self.force_vector 
+        dt: float = self.board.times.speed
+        
+        self.acceleration.add( 
+            net_force
             / (self.mass * self.board.mass_softener)
         )
-
-        # Apply velocity.
-        self.position.add(self.velocity)
-
-        # Displacement.
-        self.position.add(self.displacement) 
-        self.displacement.zero()
+        self.velocity.add(
+            self.acceleration * dt
+        )
+        self.position.add(
+            self.velocity * self.board.times.speed
+            + 0.5 * self.acceleration * dt * dt
+        )
 
         # Update trail.
         if self.trail and not self.position.is_close(self.trail.first, 1):
             self.trail.push(self.position.copy())
 
-    def compute_position(self) -> vectors.Vector2D:
-        initial: vectors.Vector2D = vectors.Vector2D(
-            self.position.x - 2 * self.SPRITE_SIZE_FACTOR,
-            self.position.y - 2 * self.SPRITE_SIZE_FACTOR,
+
+        self.collisions = list()
+
+        return
+    
+    def compute_position(self) -> Vector2D:
+        """
+        Get the on-screen position, transformed by the `camera`.
+        """    
+        return self.board.camera.transform(
+             self.position 
+            - Vector2D.duplicate(self.SPRITE_SIZE_FACTOR) * 2
         )
-        
-        return self.board.camera.transform(initial)
 
     def draw(self) -> None:
         """
@@ -206,7 +220,7 @@ class Element(entity.Entity):
         """
         # Draw on computed values.
         size: int = int(self.size)
-        position: vectors.Vector2D = vectors.Vector2D(
+        position: Vector2D = Vector2D(
             int(self.position.x),
             int(self.position.y)
         )
@@ -231,4 +245,5 @@ class Element(entity.Entity):
         
             # Center
             drawing.draw_point(int(position.x), int(position.y), 16)
-    
+
+        return
