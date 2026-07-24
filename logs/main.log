@@ -2450,3 +2450,73 @@ System:
 	InputElement(Plan2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
 Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
 
+Simulation: 2026-07-24 17:15:22.083028;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 17:17:25.431539;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 17:18:07.666943;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 17:21:57.763864;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 17:22:03.239914;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 17:23:13.721137;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 17:23:28.220211;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 17:25:20.198700;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 17:33:41.433008;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 17:34:05.009932;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+

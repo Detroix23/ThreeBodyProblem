@@ -4,6 +4,7 @@
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.generateWithTypeAnnotation": true,
     "cSpell.words": [
+        "btnp",
         "btnr",
         "colkey",
         "COLKEY",

@@ -15,6 +15,7 @@ class Updatable(metaclass=abc.ABCMeta):
         """
         ...
 
+
 class Drawable(metaclass=abc.ABCMeta):
     """
     # Generic trait for all `Drawable` objets.
@@ -25,6 +26,7 @@ class Drawable(metaclass=abc.ABCMeta):
         Draw the objet and its children.
         """
         ...
+
 
 class SceneObject(Updatable, Drawable, metaclass=abc.ABCMeta):
     """

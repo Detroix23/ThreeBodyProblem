@@ -137,7 +137,7 @@ def app_cmd() -> dict[str, settings.InputElement]:
         else:
             print("-> `default` (use default value).")
 
-        system_input = settings.DEFAULT_SYSTEM
+        system_input = defaults.DEFAULT_SYSTEM
 
     # Warnings.
     if not system_input:

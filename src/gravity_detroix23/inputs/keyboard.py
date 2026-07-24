@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
 	from gravity_detroix23.app.board import Board
-from gravity_detroix23.modules import scene_objects
+from gravity_detroix23.modules import scene_objects, keys
 
 class Buttons(scene_objects.Updatable):
     """
@@ -26,8 +26,8 @@ class Buttons(scene_objects.Updatable):
         Listen to user inputs
         """
         # Time controls
-        self.board.times.update()
-
+        keys.apply_bindings(self.board.times.get_bindings())
+        
         # Zoom
         if pyxel.btn(pyxel.KEY_PAGEUP):
             self.board.camera.zoom -= 0.05 * self.board.camera.zoom
@@ -42,13 +42,13 @@ class Buttons(scene_objects.Updatable):
 
         # Camera position
         if pyxel.btn(pyxel.KEY_RIGHT):
-            self.board.camera.position.x -= int(10 / self.board.camera.zoom)
+            self.board.camera.position.x -= 10.0 / self.board.camera.zoom
         elif pyxel.btn(pyxel.KEY_LEFT):
-            self.board.camera.position.x += int(10 / self.board.camera.zoom)
+            self.board.camera.position.x += 10.0 / self.board.camera.zoom
         if pyxel.btn(pyxel.KEY_UP):
-            self.board.camera.position.y += int(10 / self.board.camera.zoom)
+            self.board.camera.position.y += 10.0 / self.board.camera.zoom
         elif pyxel.btn(pyxel.KEY_DOWN):
-            self.board.camera.position.y -= int(10 / self.board.camera.zoom)
+            self.board.camera.position.y -= 10.0 / self.board.camera.zoom
 
         # Displays
         if pyxel.btnr(pyxel.KEY_G):
