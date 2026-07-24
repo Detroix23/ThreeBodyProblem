@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 from gravity_detroix23.modules import keys
     
 SPEED_ZERO_THRESHOLD: Final[float] = 0.00001 
-SPEED_SCALES: Final[list[float]] = [0.01, 0.1, 0.5, 1.0, 2.0, 4.0]
+SPEED_SCALES: Final[list[float]] = [0.001, 0.01, 0.1, 0.5, 1.0, 2.0, 4.0]
 
 class Time(keys.KeySensitive):
     """
@@ -29,14 +29,14 @@ class Time(keys.KeySensitive):
         self.bindings = [
             keys.KeyBinding(
                 getattr(pyxel, f"KEY_{index}"),
-                f"Time: speed preset {index}",
+                f"Time: speed = {speed}.",
                 self.set_speed_factory(speed),
             )
             for index, speed in enumerate(SPEED_SCALES)
             if hasattr(pyxel, f"KEY_{index}")
         ] + [keys.KeyBinding(
             pyxel.KEY_SPACE,
-            "Time: toggle pause",
+            "Time: toggle pause.",
             lambda: self.board.times.toggle(),
             keys.Trigger.RELEASED,
         )]

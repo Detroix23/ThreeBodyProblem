@@ -8,6 +8,12 @@ from typing import Callable
 
 import pyxel
 
+PYXEL_KEYS: dict[int, str] = {
+    code: name[4:]
+    for name, code in pyxel.__dict__.items()
+    if name.startswith("KEY_")
+}
+""" Dictionary of `int` key codes to `str` key name. """
 
 class Trigger(enum.Enum):
     """

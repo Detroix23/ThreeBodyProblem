@@ -9,6 +9,8 @@
         "colkey",
         "COLKEY",
         "detroix",
+        "PAGEDOWN",
+        "PAGEUP",
         "pydeps",
         "pyxel",
         "pyxres",

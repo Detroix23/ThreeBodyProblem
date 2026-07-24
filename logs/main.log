@@ -2520,3 +2520,80 @@ System:
 	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
 Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
 
+Simulation: 2026-07-24 17:56:35.218253;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 17:57:32.044462;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 18:07:56.062480;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 18:13:20.848433;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 18:13:39.624378;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 18:14:52.986943;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 18:15:06.454932;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 18:15:13.418106;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 18:29:31.023681;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 18:31:11.265551;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+
+Simulation: 2026-07-24 18:31:40.512812;
+System:
+	InputElement(Planet4, position=(300.0;350.0), size=8, velocity=(2.0;0.0));
+	InputElement(Planet3, position=(400.0;400.0), size=48, velocity=(0.0;-3.0));
+	InputElement(Planet2, position=(580.0;450.0), size=64, velocity=(0.0;-1.0));
+Settings: width=1000,height=1000,title=Simulation,fps=25,gravitational_constant=667.0,edges=Edge.NONE,bounce_factor=1.0,mass_softener=1.0,exponent_softener=-0.0,collisions=CollisionsBehavior.COLLIDE,grid_draw_vector=False,draw_velocity=True,draw_force=False,draw_text=True,draw_grid=True
+

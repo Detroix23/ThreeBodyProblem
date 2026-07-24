@@ -81,9 +81,9 @@ class Board(scene_objects.SceneObject):
         self.collisions = collisions
 
         # Workers
-        self.buttons = keyboard.Buttons(self)
         self.camera = cameras.Camera(self)
         self.times = times.Time(self)
+        self.buttons = keyboard.Buttons(self)
 
         # UI
         self.draw_elements = True
