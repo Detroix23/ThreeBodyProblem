@@ -23,7 +23,7 @@ class App:
 	bounce_factor: float = 1.0
 	mass_softener: float = 1.0
 	exponent_softener: float = -0.0
-	collisions: settings.CollisionsBehavior = settings.CollisionsBehavior.COLLIDE_WITH_FUSION
+	collisions: settings.CollisionsBehavior = settings.CollisionsBehavior.COLLIDE
 	grid_draw_vector: bool = False
 	draw_velocity: bool = True
 	draw_force: bool = False

@@ -32,7 +32,7 @@ class Board(scene_objects.SceneObject):
     bounce_factor: float
     edges: settings.Edge
     collisions: settings.CollisionsBehavior
-    system: dict[str, element.Element]
+    system: dict[int, element.Element]
     buttons: keyboard.Buttons
     camera: cameras.Camera
     times: times.Time
@@ -97,16 +97,17 @@ class Board(scene_objects.SceneObject):
         self.grid_move_point = not grid_draw_vector
 
         # Elements
-        self.system= {
-            element_name: element.Element(
+        self.system = {
+            index: element.Element(
                 self, 
-                mass=element_stats.mass,
-                position=element_stats.position,
-                name=element_stats.name,
-                size=element_stats.size,
-                velocity=element_stats.velocity,
+                mass=stats.mass,
+                id=index,
+                position=stats.position,
+                name=stats.name,
+                size=stats.size,
+                velocity=stats.velocity,
             )
-            for element_name, element_stats in system.items()
+            for index, (_, stats) in enumerate(system.items())
         }
 
         print("- Provided system: ")
@@ -124,6 +125,19 @@ class Board(scene_objects.SceneObject):
             board=self,
         )
         return
+
+    def next_free_id(self) -> int:
+        """
+        Get next free `int` ID for the elements `system`'s.
+        """
+        last: int = max(self.system.keys())
+        index: int = 0
+        while index < last:
+            if last not in self.system.keys():
+                last = index 
+            index += 1
+
+        return last + 1
 
     def update(self) -> None:
         """
@@ -169,10 +183,20 @@ class Board(scene_objects.SceneObject):
             
             if self.draw_force:
                 position = self.app.simulation.camera.transform(element.position.copy())
-                element.acceleration.draw_on(position.x, position.y, size=1, color=3) 
+                element.acceleration.draw_on(
+                    position.x, 
+                    position.y, 
+                    size=1, 
+                    color=pyxel.COLOR_RED,
+                ) 
             
             if self.draw_velocity:
-                position = self.app.simulation.camera.transform(Vector2D(element.position.x, element.position.y))
-                element.velocity.draw_on(position.x, position.y, size=1, color=5)
+                position = self.app.simulation.camera.transform(element.position.copy())
+                element.velocity.draw_on(
+                    position.x, 
+                    position.y, 
+                    size=1, 
+                    color=pyxel.COLOR_LIGHT_BLUE,
+                )
             
         return

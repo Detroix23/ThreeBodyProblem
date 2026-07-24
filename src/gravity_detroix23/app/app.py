@@ -114,11 +114,11 @@ class App(scene_objects.SceneObject):
             f"= Frames: draw={self._time_draw*1000:.0f}ms, update={self._time_update*1000:.0f}ms",
             f"- Controls: zoom={self.simulation.camera.zoom}, camera: "
             f"x={self.simulation.camera.position.x}; y={self.simulation.camera.position.y}",
-            f"- Time: speed={self.simulation.times.speed}",
+            f"- Time: speed={self.simulation.times.speed} paused={self.simulation.times.paused}",
             f"- Elements: total={len(self.simulation.system)}",
             "---"
         ])
-    
+        
         self._time_update = time.perf_counter()
         return
 

@@ -24,6 +24,8 @@ def collision(
     """
     collision_state: bool = False
     if a not in b.collisions and b not in a.collisions:   
+        # print(f"(?) physics.collisions.collision(a={a}, b={b}) True.")
+
         # Detroix23 collision simplification 4, using a medium vector n, 
         # affected by mass and direction, that reflect the velocity vectors.
         n: Vector2D = a.velocity * a.mass + b.velocity * b.mass

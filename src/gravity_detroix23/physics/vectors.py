@@ -11,7 +11,7 @@ ScalarOrVector = Union[Scalar, 'Vector2D']
 
 class Vector2D:
     """
-    Define a simple mutable `float` `Vector2D`.
+    # Simple mutable `float` `Vector2D`.
     """
     x: float
     y: float
@@ -19,6 +19,8 @@ class Vector2D:
     def __init__(self, x: Scalar, y: Scalar) -> None:
         self.x = float(x)
         self.y = float(y)
+
+        return
     
     @staticmethod
     def duplicate(value: Scalar) -> 'Vector2D':
@@ -156,9 +158,11 @@ class Vector2D:
         Update the vector so that its magnitude is 1.  
         """
         magnitude: float = self.magnitude()
-        self.x = self.x / magnitude
-        self.y = self.y / magnitude
-    
+        if magnitude > 0.0:
+            self.x = self.x / magnitude
+            self.y = self.y / magnitude
+
+        return
         
     def to_tuple(self) -> tuple[float, float]:
         return (self.x, self.y)
@@ -269,8 +273,7 @@ class Vector2D:
 
 class Size:
     """
-    # Size.
-    Define an (int; int) couple.
+    # `Size`, a (`int`; `int`) couple.
     """
     x: int
     y: int
@@ -278,6 +281,7 @@ class Size:
     def __init__(self, x: int, y: int) -> None:
         self.x = x
         self.y = y
+        return
 
 
 def dot_product(a: Vector2D, b: Vector2D) -> float:

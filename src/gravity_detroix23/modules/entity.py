@@ -12,6 +12,12 @@ class Entity(SceneObject, metaclass=abc.ABCMeta):
     # Trait for all "real" `Entity` and physical objects.
     """
 
+    def get_id(self) -> int:
+        """
+        Returns the unique ID of the `Entity`.
+        """
+        ...
+
     def get_position(self) -> Vector2D:
         """
         Returns the position of the `Entity`.

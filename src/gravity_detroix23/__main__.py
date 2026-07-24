@@ -28,9 +28,8 @@ python -m pip install .
 """)
 
 from gravity_detroix23.inputs import ui
-from gravity_detroix23.modules import settings, writer
+from gravity_detroix23.modules import settings, writer, defaults, console
 from gravity_detroix23.app import app
-from gravity_detroix23.modules import defaults, console
 
 
 def main(args: list[str]) -> None:
@@ -70,12 +69,12 @@ def main(args: list[str]) -> None:
         defaults.App.bounce_factor,
         defaults.App.mass_softener,
         defaults.App.exponent_softener,
-        defaults.App.collisions,
+        settings.CollisionsBehavior.COLLIDE,
         defaults.App.grid_draw_vector,
-        defaults.App.draw_velocity,
-        defaults.App.draw_force,
-        defaults.App.draw_text,
-        defaults.App.draw_grid,
+        draw_velocity=True,
+        draw_force=True,
+        draw_text=defaults.App.draw_text,
+        draw_grid=defaults.App.draw_grid,
     )
     
     gravity.run()

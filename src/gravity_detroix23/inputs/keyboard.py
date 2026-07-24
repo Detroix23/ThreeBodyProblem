@@ -26,20 +26,7 @@ class Buttons(scene_objects.Updatable):
         Listen to user inputs
         """
         # Time controls
-        if pyxel.btnr(pyxel.KEY_SPACE):
-            self.board.times.toggle()
-        elif pyxel.btn(pyxel.KEY_1):
-            self.board.times.speed = 0.1
-        elif pyxel.btn(pyxel.KEY_2):
-            self.board.times.speed = 0.5
-        elif pyxel.btn(pyxel.KEY_3):
-            self.board.times.speed = 1
-        elif pyxel.btn(pyxel.KEY_4):
-            self.board.times.speed = 2
-        elif pyxel.btn(pyxel.KEY_5):
-            self.board.times.speed = 4
-        elif pyxel.btn(pyxel.KEY_6):
-            self.board.times.speed = 10
+        self.board.times.update()
 
         # Zoom
         if pyxel.btn(pyxel.KEY_PAGEUP):

@@ -63,4 +63,3 @@ DEFAULT_SYSTEM: dict[str, InputElement] = {
     "Plan3": InputElement(1000, Vector2D(400, 400), "Plan3", 48, Vector2D(0, -3)),
     "Plan4": InputElement(200, Vector2D(300, 350), "Plan4", 8, Vector2D(2, 0)),
 }
-

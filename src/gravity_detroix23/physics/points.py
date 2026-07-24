@@ -27,8 +27,10 @@ class Point:
         Compute the distance _squared_ between `self` and `target`.
         Doesn't do a square root.
         """
-        physical_position: Vector2D = self.board.camera.transform(self.position, True)
-        return (target - physical_position).magnitude2()
+        return (
+            target 
+            - self.board.camera.transform(self.position, True)
+        ).magnitude2()
 
     def distance(self, target: Vector2D) -> float:
         """
@@ -42,7 +44,7 @@ class Point:
         """
         physical_position: Vector2D = self.board.camera.transform(self.position, True)
         # Direction
-        vector_distance: Vector2D = Vector2D(target.x - physical_position.x, target.y - physical_position.y)
+        vector_distance: Vector2D = target - physical_position
         vector_distance.normalize()
         # Distance
         distance: float = self.distance(target)
@@ -52,6 +54,7 @@ class Point:
         # F force value
         force: float = forces.gravity(
             distance,
+            1.0,
             target_mass,
             self.board.gravitational_constant,
             self.board.exponent_softener
