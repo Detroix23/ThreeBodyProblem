@@ -153,7 +153,7 @@ class Vector2D:
     def __abs__(self) -> float:
         return self.magnitude()
 
-    def normalize(self) -> None:
+    def normalize(self) -> 'Vector2D':
         """
         Update the vector so that its magnitude is 1.  
         """
@@ -162,7 +162,7 @@ class Vector2D:
             self.x = self.x / magnitude
             self.y = self.y / magnitude
 
-        return
+        return self
         
     def to_tuple(self) -> tuple[float, float]:
         return (self.x, self.y)
@@ -289,3 +289,12 @@ def dot_product(a: Vector2D, b: Vector2D) -> float:
     Given two vector, compute their dot product.
     """
     return a.dot(b)
+
+def orthogonal(vector: Vector2D) -> Vector2D:
+    """
+    Returns a π/2 rotated vector.
+    """
+    return Vector2D(
+        -vector.y,
+        vector.x,
+    )

@@ -32,8 +32,6 @@ class Element(entity.Entity):
     velocity: Vector2D
     acceleration: Vector2D
     trail: trails.Trail
-    collisions: list['Element']
-
     draw_sprite: bool
     size: int
     color: int
@@ -60,8 +58,6 @@ class Element(entity.Entity):
         self.position = position
         self.velocity = velocity
         self.acceleration = Vector2D.null()
-        self.collisions = []
-
 
         # Drawing sprite will use the pyxres template, else, a square will be drawn.
         self.trail = trails.Trail(
@@ -165,18 +161,12 @@ class Element(entity.Entity):
         Manage the potential side-effects of an `interaction` between
         `self` and `element`.  
         """
-        distance2: float = self.distance2(target)
-        distance_min: float = float(self.size + target.size) / 2.0
-        if (
-            distance2 <= distance_min * distance_min
-            and self.board.collisions is not settings.CollisionsBehavior.NONE
-        ):
+        if self.board.collisions is not settings.CollisionsBehavior.NONE:
             collisions.collision(
                 self, 
                 target, 
                 behavior=self.board.collisions,
             )
-
         return
 
     def update(self) -> None:
@@ -214,8 +204,6 @@ class Element(entity.Entity):
         for element in self.board.system.values():
             if self != element:
                 self.interaction(element)
-
-        self.collisions = list()
 
         return
     

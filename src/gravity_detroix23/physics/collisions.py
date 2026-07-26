@@ -2,10 +2,28 @@
 # Three body problem.
 src/gravity_detroix23/physics/collisions.py
 """
+import math
 
-from gravity_detroix23.physics.vectors import Vector2D
-from gravity_detroix23.physics import element
+from gravity_detroix23.physics import element, vectors
 from gravity_detroix23.modules import settings
+from gravity_detroix23.physics.vectors import Vector2D
+
+
+def momentum(
+    a: element.Element,
+    b: element.Element,
+    direction: Vector2D
+) -> float:
+    """
+    Compute the velocity after collision of element `a`.
+    Total kinetic energy remains the same in an elastic collision.
+    """
+    return (
+        a.velocity.dot(direction) 
+        * (a.mass - b.mass) 
+        + b.velocity.dot(direction) 
+        * 2 * b.mass
+    ) / (a.mass + b.mass)
 
 def collision(
     a: element.Element, 
@@ -15,47 +33,40 @@ def collision(
     """
     Collide two elements and change their velocity by inverting the direction 
     and preserving the actual speed.
-    
-    To avoid the effect to cancel itself, each `Element` has 
-    a list of already collided elements.
-    
+
     Returns:
-        `bool`: if collision happened and vector got updated, 
-    """
-    collision_state: bool = False
-    if a not in b.collisions and b not in a.collisions:   
-        # print(f"(?) physics.collisions.collision(a={a}, b={b}) True.")
-
-        # Detroix23 collision simplification 4, using a medium vector n, 
-        # affected by mass and direction, that reflect the velocity vectors.
-        n: Vector2D = a.velocity * a.mass + b.velocity * b.mass
-        n.normalize()
-
-        a.velocity =  n * 2 * a.velocity.dot(n) - a.velocity
-        b.velocity =  n * 2 * b.velocity.dot(n) - b.velocity
-
-        a.collisions.append(b)
-        b.collisions.append(a)
-        collision_state = True
-
-        # Check where the elements are going to land.
-        distance_min: float = a.size / 2 + b.size / 2
-        future_position_a: Vector2D = a.position + a.velocity
-        future_position_b: Vector2D = b.position + b.velocity
-        future_distance_squared: float = (future_position_a - future_position_b).magnitude2()
-        # Try to un-clip.
-        if future_distance_squared <= distance_min * distance_min:
-            # Collision un-clip.
-            v: Vector2D = future_position_b - future_position_a
-            d: float = v.magnitude()
-            v.normalize()
-            displacement: Vector2D = v * (a.size / 2 - d + b.size / 2)
-            n_a: float = - b.mass / (a.mass + b.mass)
-            n_b: float = a.mass / (a.mass + b.mass)
-
-            a.position += Vector2D(displacement.x, displacement.y) * n_a
-            b.position += Vector2D(displacement.x, displacement.y) * n_b
-            # print(f"(!) C  Fu: {a.displacement=} {n_a}, {b.displacement=} {n_b}; ")
+        `bool`: if collision happened and vector got updated.
     
-    return collision_state
+    Sources:
+    - https://splashkit.io/guides/physics/4-collision-detection-using-vectors/#handling-collisions
+    """
+    vector: Vector2D = a.get_position() - b.get_position()
+    distance2: float = vector.magnitude2()
+    radii: float = float(a.size + b.size) / 2.0
+    if distance2 > radii * radii:
+        return False
+
+    distance: float = math.sqrt(distance2)
+
+    # Direction.
+    direction: Vector2D = vector.copy().normalize()
+
+    # Overlap
+    overlap: float = max(radii - distance, 0.0) / 2.0
+    a.position += overlap * direction
+    b.position -= overlap * direction
+    
+    orthogonal: Vector2D = vectors.orthogonal(direction)
+
+
+    a.set_velocity(
+        orthogonal * a.velocity.dot(orthogonal)
+        + direction * momentum(a, b, direction)
+    )
+    b.set_velocity(
+        orthogonal * b.velocity.dot(orthogonal)
+        + direction * momentum(b, a, direction)
+    )
+
+    return True
     
