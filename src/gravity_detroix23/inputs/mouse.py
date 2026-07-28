@@ -89,11 +89,15 @@ class Mouse(scene_objects.SceneObject):
         """
         if self.mouse_element.id not in self.app.simulation.system.keys():
             self.app.simulation.system[self.mouse_element.id] = self.mouse_element
-            
-        self.app.simulation.system[self.mouse_element.id].position = self.app.simulation.camera.transform(
-            vectors.Vector2D(pyxel.mouse_x, pyxel.mouse_y), True
-        )
 
+        element: element.Element = self.app.simulation.system[self.mouse_element.id]            
+        element.set_position(self.app.simulation.camera.transform(
+            vectors.Vector2D(pyxel.mouse_x, pyxel.mouse_y), 
+            inverted=True
+        ))
+        element.set_velocity(vectors.Vector2D.null())
+        element.set_acceleration(vectors.Vector2D.null())
+        
         return
 
     def delete_mouse_body(self) -> None:

@@ -132,6 +132,12 @@ class Vector2D:
 
     __rtruediv__ = __truediv__
 
+    def __neg__(self):
+        return Vector2D(
+            -self.x,
+            -self.y,
+        )
+
     def copy(self) -> 'Vector2D':
         """
         Return a true copy of `self`.
@@ -297,11 +303,21 @@ def dot_product(a: Vector2D, b: Vector2D) -> float:
     """
     return a.dot(b)
 
-def orthogonal(vector: Vector2D) -> Vector2D:
+def orthogonal(vector: Vector2D, negative: bool = False) -> Vector2D:
     """
-    Returns a π/2 rotated vector.
+    Returns a `π/2` (or `-π/2`) rotated `vector`.
     """
     return Vector2D(
-        -vector.y,
-        vector.x,
+        vector.y * (-1 if not negative else 1),
+        vector.x * (-1 if negative else 1),
     )
+
+def rotate(vector: Vector2D, angle: float) -> Vector2D:
+    """
+    Rotates a `vector` by `angle` radians.
+    """
+    return Vector2D(
+        vector.x * math.cos(angle) - vector.y * math.sin(angle),
+        vector.x * math.sin(angle) + vector.y * math.cos(angle),
+    )
+

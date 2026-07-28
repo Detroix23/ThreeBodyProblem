@@ -89,7 +89,7 @@ def collision(
     # representing the direction from `b` to `a`.
     direction: Vector2D = vector.copy().normalize()
 
-    # Overlap.z
+    # Overlap.
     overlap: float = (radii - distance) / 2.0
     a.position += overlap * direction
     b.position -= overlap * direction
@@ -97,17 +97,16 @@ def collision(
     # Collision normal vector, orthogonal to `direction`.
     orthogonal: Vector2D = vectors.orthogonal(direction)
 
-    print(f"(?) physics.collisions.collision(a, b) Before: ")
-    print(f"- v_a = {a.velocity}")
-    print(f"- v_b = {b.velocity}")
+    # print(f"(?) physics.collisions.collision(a, b) Before: ")
+    # print(f"- v_a = {a.velocity}")
+    # print(f"- v_b = {b.velocity}")
+
     a.set_velocity(responses_sum(a, b, direction, orthogonal))
     b.set_velocity(responses_sum(b, a, direction, orthogonal))
 
-    print("After: ")
-    print(f"- v_a = {a.velocity}")
-    print(f"- v_b = {b.velocity}")
-
-    #exit(-1)
+    # print("After: ")
+    # print(f"- v_a = {a.velocity}")
+    # print(f"- v_b = {b.velocity}")
 
     return True
     
