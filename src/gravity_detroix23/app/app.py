@@ -3,7 +3,6 @@
 src/gravity/app/game.py  
 Load and generate a `pyxel` game.
 """
-
 import time
 import pyxel
 

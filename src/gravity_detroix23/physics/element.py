@@ -72,8 +72,8 @@ class Element(entity.Entity):
 
     def __str__(self) -> str:
         return (
-            f"{self.name}, mass={self.mass} position={self.position}, "
-            f"velocity={self.velocity}, acceleration={self.acceleration})"
+            f"{self.name} mass={self.mass} position={self.position} "
+            f"velocity={self.velocity} acceleration={self.acceleration})"
         )
 
     def __repr__(self) -> str:
@@ -138,14 +138,12 @@ class Element(entity.Entity):
         # Distance.
         distance2: float = self.distance2(target)
         # Limit artificially distance and prevent division by 0.
-        distance_min: float = (self.size + target.size + 2) / 2
+        radii: float = (self.size + target.size) / 2
         distance: float = (
-            distance_min
-            if distance2 < distance_min * distance_min
+            radii
+            if distance2 < radii * radii
             else math.sqrt(distance2)
         )
-
-        # F force value.
         force: float = forces.gravity(
             distance, 
             self.mass,
@@ -153,7 +151,6 @@ class Element(entity.Entity):
             self.board.gravitational_constant,
             self.board.exponent_softener,
         )
-
         return normal * force
 
     def interaction(self, target: Element) -> None:
@@ -161,12 +158,19 @@ class Element(entity.Entity):
         Manage the potential side-effects of an `interaction` between
         `self` and `element`.  
         """
-        if self.board.collisions is not settings.CollisionsBehavior.NONE:
-            collisions.collision(
-                self, 
-                target, 
-                behavior=self.board.collisions,
+        if (
+            self.board.collisions is not settings.CollisionsBehavior.NONE
+            and self != target
+        ):
+            collisions.collision(self, target)
+
+            # DEBUG: collision line.
+            pyxel.line(
+                *self.position,
+                *target.position,
+                col=pyxel.COLOR_LIME,
             )
+
         return
 
     def update(self) -> None:
@@ -200,11 +204,6 @@ class Element(entity.Entity):
         if self.trail and not self.position.is_close(self.trail.first, 1):
             self.trail.push(self.position.copy())
 
-
-        for element in self.board.system.values():
-            if self != element:
-                self.interaction(element)
-
         return
     
     def compute_position(self) -> Vector2D:
@@ -212,7 +211,7 @@ class Element(entity.Entity):
         Get the on-screen position, transformed by the `camera`.
         """    
         return self.board.camera.transform(
-             self.position 
+            self.position 
             - Vector2D.duplicate(self.SPRITE_SIZE_FACTOR) * 2
         )
 
@@ -261,3 +260,4 @@ class Element(entity.Entity):
             )
 
         return
+    

@@ -50,6 +50,6 @@ class InputElement:
     
     def __str__(self) -> str:
         return (
-            f"InputElement({self.name}, position={self.position}, " 
-            f"size={self.size}, velocity={self.velocity})"
+            f"{self.name} position={self.position} " 
+            f"size={self.size} velocity={self.velocity}"
         )

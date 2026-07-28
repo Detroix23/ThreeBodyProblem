@@ -93,10 +93,10 @@ class Board(scene_objects.SceneObject):
         self.draw_grid = draw_grid
         self.draw_trails = True
 
-        # True to move the points, False to fix the point but show the vectors
+        # `True` to move the points, `False` to fix the point but show the vectors.
         self.grid_move_point = not grid_draw_vector
 
-        # Elements
+        # Elements.
         self.system = {
             index: element.Element(
                 self, 
@@ -110,12 +110,12 @@ class Board(scene_objects.SceneObject):
             for index, (_, stats) in enumerate(system.items())
         }
 
-        print("- Provided system: ")
-        print(console.pretty(system))
-        print("- Saved system: ")
-        print(console.pretty(self.system))
+        # print("Provided system:", end=" ")
+        # print(console.pretty(system, tab="- "))
+        print("(?) app.board.Board.__init__() Saved system:", end=" ")
+        print(console.pretty(self.system, tab="- "))
 
-        # Grid
+        # Grid.
         self.grid_main: grids.Grid = grids.Grid(
             frequency=16, 
             zoom_dependence=False, 
@@ -155,7 +155,12 @@ class Board(scene_objects.SceneObject):
         # 3. Elements.
         for element in self.system.values():
             element.update()
-        
+
+        # 4. Collisions.
+        for a in self.system.values():
+            for b in self.system.values():
+                a.interaction(b)
+                    
         return
         
     def draw(self) -> None:

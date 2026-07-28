@@ -4,7 +4,7 @@ src/gravity/physics/vectors.py
 """
 import math
 import pyxel
-from typing import Self, Union
+from typing import Iterator, Self, Union
 
 Scalar = Union[int, float]
 ScalarOrVector = Union[Scalar, 'Vector2D']
@@ -47,6 +47,9 @@ class Vector2D:
         `exec` compatible `str`.
         """
         return f"Vector2D(x={self.x}, y={self.y})"
+
+    def __iter__(self) -> Iterator[float]:
+        return iter((self.x, self.y))
 
     def __add__(self, value: ScalarOrVector) -> 'Vector2D':
         """
@@ -241,7 +244,11 @@ class Vector2D:
     
     def dot(self, other: 'Vector2D') -> float:
         """
-        Compute the dot-product using the analytic way: a.x * b.x + a.y * b.y.
+        Compute the dot-product using the analytic way: 
+        ```
+        a.x * b.x + a.y * b.y
+        ```
+        
         Do not update the content of the vector
         """
         return self.x * other.x + self.y * other.y

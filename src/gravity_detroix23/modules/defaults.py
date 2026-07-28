@@ -15,17 +15,17 @@ DEFAULT_MODE: settings.SimMode = settings.SimMode.DEFAULT
 DEFAULT_SYSTEM: dict[str, settings.InputElement] = {
     # Mass, position, name, size, velocity.
     # system_input["Plan1"] = InputElement(10500, Vector2D(445, 560), "Plan1", 100, Vector2D(0, 0)),
-    "Planet2": settings.InputElement(2000, Vector2D(580.0, 450.0), "Planet2", 64, Vector2D(0.0, -1.0)),
-    "Planet3": settings.InputElement(1000, Vector2D(400.0, 400.0), "Planet3", 48, Vector2D(0.0, -3.0)),
-    "Planet4": settings.InputElement(200,  Vector2D(300.0, 350.0), "Planet4", 8,  Vector2D(2.0,  0.0)),
+    "Planet2": settings.InputElement(2000, Vector2D(580.0, 450.0), "Planet2", 64, Vector2D(0.0, 50.0)),
+    "Planet3": settings.InputElement(1000, Vector2D(400.0, 400.0), "Planet3", 48, Vector2D(0.0, -70.0)),
+    #"Planet4": settings.InputElement(200,  Vector2D(300.0, 350.0), "Planet4", 8,  Vector2D(2.0,  0.0)),
 }
 
 class App:
-	width: int = 1000
-	height: int = 1000
+	width: int = 1024
+	height: int = 1024
 	title: str = "Simulation"
 	fps: int = 25
-	gravitational_constant: float = 6.67 * 10**2
+	gravitational_constant: float = 6.67 * 10 ** 2
 	edges: settings.Edge = settings.Edge.NONE
 	bounce_factor: float = 1.0
 	mass_softener: float = 1.0
@@ -45,7 +45,7 @@ class App:
 		return {
 			name: value 
 			for name, value in cls.__dict__.items() 
-			if not (name.startswith("_") or name.startswith("to_"))
+			if not (name.startswith("_") or name == "to_dict")
 		}
 
  

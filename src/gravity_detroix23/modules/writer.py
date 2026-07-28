@@ -7,10 +7,13 @@ import datetime
 from gravity_detroix23.modules import paths
 
 def system(system: dict[str, str]) -> str:
-    string: str = ""
-    for _, elem in system.items():
-        string += f"\t{elem};\n"    
-    return string
+    """
+    Format `system` values.
+    """
+    return "\n\t".join(
+        f"{element};"
+        for element in system.values()
+    )
 
 def board_settings(
     system: str, 
@@ -28,3 +31,5 @@ def board_settings(
             logs.write("\n")
     except OSError:
         print(f"(!) modules.writer.board_settings() Directory not found `{paths.LOGS}`.")
+
+    return

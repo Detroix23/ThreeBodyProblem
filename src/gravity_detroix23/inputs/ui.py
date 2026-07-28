@@ -148,8 +148,10 @@ def app_cmd() -> dict[str, settings.InputElement]:
     # Sorting the element by size. 
     system_input = {
         element[0]: element[1]
-        for element in sorted(system_input.items(), key=lambda item: item[1].size)
+        for element in sorted(
+            system_input.items(), 
+            key=lambda item: item[1].size,
+        )
     }
-
-    # Completion.
+    
     return system_input
